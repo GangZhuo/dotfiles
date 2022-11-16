@@ -13,6 +13,42 @@ nvim_tree.setup {
   open_on_tab = false,
   sort_by = "name",
   update_cwd = false,
+  remove_keymaps = false,
+  on_attach = function(bufnr)
+    local inject_node = require("nvim-tree.utils").inject_node
+    local function edit(mode, node)
+      local path = node.absolute_path
+      if node.link_to and not node.nodes then
+        path = node.link_to
+      end
+      require("nvim-tree.actions.node.open-file").fn(mode, path)
+    end
+    local expand = function(node)
+      if node.nodes then
+        if not node.open then
+          require("nvim-tree.lib").expand_or_collapse(node)
+        end
+      else
+        edit("edit", node)
+      end
+    end
+    local collapse = function(node)
+      if node.nodes and node.open then
+        require("nvim-tree.lib").expand_or_collapse(node)
+        return
+      end
+      -- TODO: find parent node, and collapse it
+      if node.parent then
+        require("nvim-tree.lib").expand_or_collapse(node.parent)
+        require("nvim-tree.utils").focus_file(node.parent.absolute_path)
+      end
+    end
+    local set_keymap = function(key, fun)
+      vim.keymap.set("n", key, inject_node(fun), { buffer = bufnr, noremap = true })
+    end
+    set_keymap("l", expand)
+    set_keymap("h", collapse)
+  end,
   view = {
     width = 30,
     hide_root_folder = false,
@@ -29,6 +65,7 @@ nvim_tree.setup {
     },
   },
   renderer = {
+    group_empty = true,
     indent_markers = {
       enable = false,
       icons = {
@@ -113,6 +150,7 @@ nvim_tree.setup {
   },
 }
 
-keymap.set("n", "<space>s", function()
-  return require("nvim-tree").toggle(false, true)
+keymap.set("n", "<leader>f", function()
+  local api = require("nvim-tree.api")
+  return api.tree.toggle(true, false)
 end, { silent = true, desc = "toggle nvim-tree" })
