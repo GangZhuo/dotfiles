@@ -11,19 +11,6 @@ keymap.set("i", "<c-u>", "<Esc>viwUea")
 -- Turn the current word into title case
 keymap.set("i", "<c-t>", "<Esc>b~lea")
 
--- Paste non-linewise text above or below current line, see https://stackoverflow.com/a/1346777/6064933
---keymap.set("n", "<leader>p", "m`o<ESC>p``", { desc = "paste below current line" })
---keymap.set("n", "<leader>P", "m`O<ESC>p``", { desc = "paste above current line" })
-
--- Shortcut for faster save and quit
---keymap.set("n", "<leader>w", "<cmd>update<cr>", { silent = true, desc = "save buffer" })
-
--- Saves the file if modified and quit
---keymap.set("n", "<leader>q", "<cmd>x<cr>", { silent = true, desc = "quit current window" })
-
--- Quit all opened buffers
---keymap.set("n", "<leader>Q", "<cmd>qa!<cr>", { silent = true, desc = "quit nvim" })
-
 -- Navigation in the location and quickfix list
 keymap.set("n", "[l", "<cmd>lprevious<cr>zv", { silent = true, desc = "previous location item" })
 keymap.set("n", "]l", "<cmd>lnext<cr>zv", { silent = true, desc = "next location item" })
@@ -106,9 +93,6 @@ keymap.set("n", "<leader>v", "printf('`[%s`]', getregtype()[0])", {
 -- Always use very magic mode for searching
 keymap.set("n", "/", [[/\v]])
 
--- Search in selected region
--- xnoremap / :<C-U>call feedkeys('/\%>'.(line("'<")-1).'l\%<'.(line("'>")+1)."l")<CR>
-
 -- Change current working directory locally and print cwd after that,
 -- see https://vim.fandom.com/wiki/Set_working_directory_to_the_current_file
 keymap.set("n", "<leader>cd", "<cmd>lcd %:p:h<cr><cmd>pwd<cr>", { desc = "change cwd" })
@@ -179,26 +163,6 @@ keymap.set({ "x", "o" }, "iu", "<cmd>call text_obj#URL()<cr>", { desc = "URL tex
 
 -- Text objects for entire buffer
 keymap.set({ "x", "o" }, "iB", "<cmd>call text_obj#Buffer()<cr>", { desc = "buffer text object" })
-
--- Do not move my cursor when joining lines.
-keymap.set("n", "J", function()
-  vim.cmd([[
-      normal! mzJ`z
-      delmarks z
-    ]])
-end, {
-  desc = "join line",
-})
-
-keymap.set("n", "gJ", function()
-  -- we must use `normal!`, otherwise it will trigger recursive mapping
-  vim.cmd([[
-      normal! zmgJ`z
-      delmarks z
-    ]])
-end, {
-  desc = "join visual lines",
-})
 
 -- Break inserted text into smaller undo units when we insert some punctuation chars.
 local undo_ch = { ",", ".", "!", "?", ";", ":" }
