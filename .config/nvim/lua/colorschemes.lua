@@ -4,31 +4,32 @@ local utils = require("utils")
 
 local M = {}
 
+-- all colorschemes that used by M.next() function
+M.colorschemes = {}
+
+-- current selected colorscheme
+M.colorscheme = nil
+
 -- Colorscheme to its directory name mapping, because colorscheme repo name is not necessarily
 -- the same as the colorscheme name itself.
 M.colorscheme2dir = {
-  gruvbox8 = "vim-gruvbox8",
   onedark = "onedark.nvim",
   edge = "edge",
   sonokai = "sonokai",
   gruvbox_material = "gruvbox-material",
   nord = "nord.nvim",
-  doom_one = "doom-one.nvim",
   everforest = "everforest",
   nightfox = "nightfox.nvim",
   kanagawa = "kanagawa.nvim",
   catppuccin = "catppuccin",
+  rose_pine = "rose-pine",
+  onedarkpro = "onedarkpro.nvim",
+  monokai = "monokai.nvim",
+  material = "material.nvim",
 }
 
-M.gruvbox8 = function()
-  -- Italic options should be put before colorscheme setting,
-  -- see https://github.com/morhetz/gruvbox/wiki/Terminal-specific#1-italics-is-disabled
-  vim.g.gruvbox_italics = 1
-  vim.g.gruvbox_italicize_strings = 1
-  vim.g.gruvbox_filetype_hi_groups = 1
-  vim.g.gruvbox_plugin_hi_groups = 1
-
-  vim.cmd([[colorscheme gruvbox8_hard]])
+for k,_ in pairs(M.colorscheme2dir) do
+  table.insert(M.colorschemes, k)
 end
 
 M.onedark = function()
@@ -50,6 +51,10 @@ M.sonokai = function()
 end
 
 M.gruvbox_material = function()
+  -- foreground option can be material, mix, or original
+  vim.g.gruvbox_material_foreground = "material"
+  --background option can be hard, medium, soft
+  vim.g.gruvbox_material_background = "soft"
   vim.g.gruvbox_material_enable_italic = 1
   vim.g.gruvbox_material_better_performance = 1
 
@@ -58,10 +63,6 @@ end
 
 M.nord = function()
   vim.cmd([[colorscheme nord]])
-end
-
-M.doom_one = function()
-  vim.cmd([[colorscheme doom-one]])
 end
 
 M.everforest = function()
@@ -88,6 +89,34 @@ M.catppuccin = function()
   vim.cmd([[colorscheme catppuccin]])
 end
 
+M.rose_pine = function()
+  require('rose-pine').setup({
+    --- @usage 'main' | 'moon'
+    dark_variant = 'moon',
+  })
+
+  -- set colorscheme after options
+  vim.cmd('colorscheme rose-pine')
+end
+
+M.onedarkpro = function()
+  require("onedarkpro").setup({
+    dark_theme = "onedark", -- The default dark theme
+  })
+
+  -- set colorscheme after options
+  vim.cmd('colorscheme onedarkpro')
+end
+
+M.monokai = function()
+  vim.cmd('colorscheme monokai_pro')
+end
+
+M.material = function ()
+  vim.g.material_style = "oceanic"
+  vim.cmd('colorscheme material')
+end
+
 M.set_colorscheme = function(colorscheme)
   if not vim.tbl_contains(vim.tbl_keys(M), colorscheme) then
     local msg = "Invalid colorscheme: " .. colorscheme
@@ -109,11 +138,30 @@ M.set_colorscheme = function(colorscheme)
   -- Load the colorscheme and its settings
   M[colorscheme]()
 
+  M.colorscheme = colorscheme
+
   if vim.g.logging_level == "debug" then
     local msg = "Colorscheme: " .. colorscheme
 
     vim.notify(msg, vim.log.levels.DEBUG, { title = "nvim-config" })
   end
+end
+
+M.next = function()
+  local next
+  for i,v in ipairs(M.colorschemes) do
+    if v == M.colorscheme then
+      next = i + 1
+      break
+    end
+  end
+  if next == nil or next > #M.colorschemes then
+    next = 1
+  end
+  local colorscheme = M.colorschemes[next]
+  M.set_colorscheme(colorscheme)
+  vim.notify(string.format("Colorscheme changed to \"%s\".", colorscheme),
+    vim.log.levels.NOTICE, { title = "nvim-config" })
 end
 
 --- Use a random colorscheme from the pre-defined list of colorschemes.
@@ -122,7 +170,4 @@ M.rand_colorscheme = function()
   M.set_colorscheme(colorscheme)
 end
 
--- Load a random colorscheme
---M.rand_colorscheme()
-
-M.set_colorscheme("sonokai")
+return M

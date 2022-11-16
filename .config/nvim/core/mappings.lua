@@ -218,3 +218,8 @@ end)
 
 keymap.set("n", "<BackSpace>", "<cmd>nohl<cr>")
 
+keymap.set("n", "<leader>c", "<cmd>lua require('colorschemes').next()<cr>",
+  {
+    silent = true,
+    desc = "choose next colorscheme"
+})

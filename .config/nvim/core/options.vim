@@ -192,3 +192,8 @@ set shiftwidth=4
 set noexpandtab
 set listchars&vim
 set showbreak&vim
+
+" Set colorscheme
+"lua require("colorschemes").rand_colorscheme()
+lua require("colorschemes").set_colorscheme("sonokai")
+
