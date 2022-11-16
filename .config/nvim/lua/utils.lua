@@ -87,7 +87,7 @@ function M.add_pack(name)
 end
 
 function M.load_config(name)
-  local path = string.format("%s/config/%s.vim", vim.fn.stdpath("config"), name)
+  local path = string.format("%s/lua/config/%s.vim", vim.fn.stdpath("config"), name)
   local source_cmd = "source " .. path
   local status, error = pcall(vim.cmd, source_cmd)
   return status

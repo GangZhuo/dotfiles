@@ -151,7 +151,7 @@ packer.startup {
     use { "tpope/vim-repeat", event = "VimEnter" }
 
     use { "nvim-zh/better-escape.vim", event = { "InsertEnter" },
-      config = function()
+      setup = function()
         vim.cmd([[
 	  let g:better_escape_interval = 200
 	]])
