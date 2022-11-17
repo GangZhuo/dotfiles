@@ -1,7 +1,6 @@
 local keymap = vim.keymap
 local nvim_tree = require("nvim-tree")
-
-local inject_node = require("nvim-tree.utils").inject_node
+local api = require("nvim-tree.api")
 
 local function edit(mode, node)
   local path = node.absolute_path
@@ -43,17 +42,18 @@ local collapse = function(node)
   end
 end
 
-local set_keymap = function(key, fun, desc)
-  vim.keymap.set("n", key, inject_node(fun), {
-    silent = true,
-    buffer = bufnr,
-    desc = desc
-  })
-end
-
 local attach = function(bufnr)
-    set_keymap("l", expand, "expand folder/edit file")
-    set_keymap("h", collapse, "collapse folder")
+  local inject_node = require("nvim-tree.utils").inject_node
+  local set_keymap = function(key, fun, desc)
+    vim.keymap.set("n", key, inject_node(fun), {
+      silent = true,
+      buffer = bufnr,
+      desc = desc
+    })
+  end
+  set_keymap("l", expand, "open a file or folder")
+  set_keymap("h", collapse, "collapse the folder")
+  set_keymap("?", api.tree.toggle_help, "toggle help")
 end
 
 nvim_tree.setup {
@@ -63,14 +63,23 @@ nvim_tree.setup {
     debounce_delay = 1000,
     show_on_dirs = true,
   },
-  on_attach = attach,
+  remove_keymaps = {},
+  on_attach = "disable",
   view = {
     adaptive_size = false,
     centralize_selection = true,
+    width = 40,
     side = "left",
     number = true,
     relativenumber = true,
     signcolumn = "yes",
+    mappings = {
+      list = {
+        { key = "l", action_cb = expand,   action = "open a file or folder" },
+        { key = "h", action_cb = collapse, action = "collapse the folder" },
+        { key = "?", action = "toggle_help" },
+      },
+    },
   },
   renderer = {
     group_empty = true,
@@ -78,6 +87,5 @@ nvim_tree.setup {
 }
 
 keymap.set("n", "<leader>f", function()
-  local api = require("nvim-tree.api")
   return api.tree.toggle(true, false)
 end, { silent = true, desc = "toggle nvim-tree" })
