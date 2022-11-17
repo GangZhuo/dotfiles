@@ -158,7 +158,7 @@ end
 
 set_keymap('<leader>q', use_layout(telescope_builtin.quickfix,    'ivy_plus'))
 set_keymap('<leader>l', use_layout(telescope_builtin.loclist,     'ivy_plus'))
-set_keymap('<leader>t', use_layout(telescope_builtin.builtin,     'popup_list'))
+set_keymap('<leader>h', use_layout(telescope_builtin.builtin,     'popup_list'))
 set_keymap('<leader>o', use_layout(telescope_builtin.find_files,  'popup_list'))
 set_keymap('<leader>p', use_layout(telescope_builtin.commands,    'command_pane'))
 set_keymap('<leader>b', use_layout(telescope_builtin.buffers,     'popup_extended'))
