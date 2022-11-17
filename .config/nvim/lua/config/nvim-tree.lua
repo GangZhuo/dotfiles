@@ -37,10 +37,20 @@ nvim_tree.setup {
         require("nvim-tree.lib").expand_or_collapse(node)
         return
       end
-      -- TODO: find parent node, and collapse it
-      if node.parent then
-        require("nvim-tree.lib").expand_or_collapse(node.parent)
-        require("nvim-tree.utils").focus_file(node.parent.absolute_path)
+
+      -- find parent node which is opened
+      local p = node
+      while p.parent do
+          p = p.parent
+          if p.open then
+              break
+          end
+      end
+
+      -- if found and not a root node, collapse the node
+      if p and p ~= node and p.parent and p.open then
+        require("nvim-tree.lib").expand_or_collapse(p)
+        require("nvim-tree.utils").focus_file(p.absolute_path)
       end
     end
     local set_keymap = function(key, fun)
