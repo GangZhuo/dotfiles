@@ -28,7 +28,7 @@ nvim_tree.setup {
         if not node.open then
           require("nvim-tree.lib").expand_or_collapse(node)
         end
-      else
+      elseif node.parent then
         edit("edit", node)
       end
     end
