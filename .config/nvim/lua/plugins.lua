@@ -68,17 +68,6 @@ packer.startup {
       config = [[require('config.treesitter')]],
     }
 
-    -- Super fast buffer jump
-    use {
-      "phaazon/hop.nvim",
-      event = "VimEnter",
-      config = function()
-        vim.defer_fn(function()
-          require("config.nvim_hop")
-        end, 2000)
-      end,
-    }
-
     -- Show match number and index for searching
     use {
       "kevinhwang91/nvim-hlslens",
