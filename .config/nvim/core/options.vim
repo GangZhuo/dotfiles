@@ -40,13 +40,13 @@ let &backupdir=g:backupdir
 
 " Skip backup for patterns in option wildignore
 let &backupskip=&wildignore
-set backup  " create backup for files
+set nobackup  " create backup for files
 set backupcopy=yes  " copy the original file to backupdir and overwrite it
 
 " General tab settings
-set tabstop=2       " number of visual spaces per TAB
-set softtabstop=2   " number of spaces in tab when editing
-set shiftwidth=2    " number of spaces to use for autoindent
+set tabstop=4       " number of visual spaces per TAB
+set softtabstop=4   " number of spaces in tab when editing
+set shiftwidth=4    " number of spaces to use for autoindent
 set expandtab       " expand tab to spaces so that tabs are spaces
 
 " Set matching pairs of characters and highlight matching brackets
@@ -63,8 +63,6 @@ set fileencodings=ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1
 
 " Break line at predefined characters
 set linebreak
-" Character to show before the lines that have been soft-wrapped
-set showbreak=↪
 
 " List all matches and complete till longest common string
 set wildmode=list:longest
@@ -89,7 +87,7 @@ set visualbell noerrorbells  " Do not use visual and errorbells
 set history=500  " The number of command and search history to keep
 
 " Use list mode and customized listchars
-set list listchars=tab:▸\ ,extends:❯,precedes:❮,nbsp:␣
+set list
 
 " Auto-write the file based on some condition
 set autowrite
@@ -177,20 +175,9 @@ set diffopt+=closeoff  " turn off diff when one file window is closed
 set diffopt+=context:3  " context for diff
 set diffopt+=internal,indent-heuristic,algorithm:histogram
 
-set nowrap  " do no wrap
-set noruler
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" My Options
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set wrap
-set nobackup
+set noruler
 set colorcolumn=80
-set tabstop=4
-set softtabstop=4
-set shiftwidth=4
-set listchars&vim
-set showbreak&vim
 
 " Set colorscheme
 "lua require("colorschemes").rand_colorscheme()
