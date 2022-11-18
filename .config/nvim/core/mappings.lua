@@ -59,7 +59,7 @@ keymap.set("n", "0", "g0")
 keymap.set("x", "$", "g_")
 
 -- Go to start or end of line easier
-keymap.set({ "n", "x" }, "H", "^")
+keymap.set({ "n", "x" }, "H", "g^")
 keymap.set({ "n", "x" }, "L", "g_")
 
 -- Continuous visual shifting (does not exit Visual mode), `gv` means
