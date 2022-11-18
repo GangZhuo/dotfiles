@@ -49,6 +49,7 @@ packer.startup {
     use { "kyazdani42/nvim-web-devicons", event = "VimEnter" }
 
     use { "onsails/lspkind-nvim", event = "VimEnter" }
+
     -- auto-completion engine
     use { "hrsh7th/nvim-cmp", after = "lspkind-nvim", config = [[require('config.nvim-cmp')]] }
 
@@ -57,6 +58,9 @@ packer.startup {
     use { "hrsh7th/cmp-path", after = "nvim-cmp" }
     use { "hrsh7th/cmp-buffer", after = "nvim-cmp" }
     use { "hrsh7th/cmp-omni", after = "nvim-cmp" }
+    use { "uga-rosa/cmp-dictionary", after = "nvim-cmp", config = [[require('config.cmp-dictionary')]] }
+    use { "hrsh7th/cmp-cmdline", after = "nvim-cmp" }
+    use { "dmitmel/cmp-cmdline-history", after = "nvim-cmp" }
 
     -- nvim-lsp configuration (it relies on cmp-nvim-lsp, so it should be loaded after cmp-nvim-lsp).
     use { "neovim/nvim-lspconfig", after = "cmp-nvim-lsp", config = [[require('config.lsp')]] }

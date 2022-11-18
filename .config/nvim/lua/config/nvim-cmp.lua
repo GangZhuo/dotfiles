@@ -26,7 +26,6 @@ cmp.setup {
     end,
     ["<CR>"] = cmp.mapping.confirm { select = true },
     ["<C-e>"] = cmp.mapping.abort(),
-    ["<Esc>"] = cmp.mapping.close(),
     ["<C-b>"] = cmp.mapping.scroll_docs(-4),
     ["<C-f>"] = cmp.mapping.scroll_docs(4),
   },
@@ -34,16 +33,9 @@ cmp.setup {
     { name = "nvim_lsp" }, -- For nvim-lsp
     --{ name = "ultisnips" }, -- For ultisnips user.
     { name = "path" }, -- for path completion
-    { name = "buffer", keyword_length = 2 }, -- for buffer word completion
+    { name = "buffer" }, -- for buffer word completion
     { name = "omni" },
-    --{ name = "emoji", insert = true }, -- emoji completion
-  },
-  completion = {
-    keyword_length = 1,
-    completeopt = "menu,noselect",
-  },
-  view = {
-    entries = "custom",
+    { name = "dictionary", keyword_length = 2, },
   },
   formatting = {
     format = lspkind.cmp_format {
@@ -61,23 +53,45 @@ cmp.setup {
   },
 }
 
+-- `/` cmdline setup.
+cmp.setup.cmdline('/', {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = {
+    { name = 'buffer' }
+  }
+})
+
+-- `:` cmdline setup.
+cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = cmp.config.sources({
+    { name = 'path' },
+    {
+      name = 'cmdline',
+      option = {
+        ignore_cmds = { 'Man', '!' }
+      }
+    },
+    { name = 'cmdline_history' },
+  })
+})
+
 --  see https://github.com/hrsh7th/nvim-cmp/wiki/Menu-Appearance#how-to-add-visual-studio-code-dark-theme-colors-to-the-menu
 vim.cmd([[
-  highlight! link CmpItemMenu Comment
   " gray
   highlight! CmpItemAbbrDeprecated guibg=NONE gui=strikethrough guifg=#808080
   " blue
   highlight! CmpItemAbbrMatch guibg=NONE guifg=#569CD6
-  highlight! CmpItemAbbrMatchFuzzy guibg=NONE guifg=#569CD6
+  highlight! link CmpItemAbbrMatchFuzzy CmpItemAbbrMatch
   " light blue
   highlight! CmpItemKindVariable guibg=NONE guifg=#9CDCFE
-  highlight! CmpItemKindInterface guibg=NONE guifg=#9CDCFE
-  highlight! CmpItemKindText guibg=NONE guifg=#9CDCFE
+  highlight! link CmpItemKindInterface CmpItemKindVariable
+  highlight! link CmpItemKindText CmpItemKindVariable
   " pink
   highlight! CmpItemKindFunction guibg=NONE guifg=#C586C0
-  highlight! CmpItemKindMethod guibg=NONE guifg=#C586C0
+  highlight! link CmpItemKindMethod CmpItemKindFunction
   " front
   highlight! CmpItemKindKeyword guibg=NONE guifg=#D4D4D4
-  highlight! CmpItemKindProperty guibg=NONE guifg=#D4D4D4
-  highlight! CmpItemKindUnit guibg=NONE guifg=#D4D4D4
+  highlight! link CmpItemKindProperty CmpItemKindKeyword
+  highlight! link CmpItemKindUnit CmpItemKindKeyword
 ]])
