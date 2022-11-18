@@ -52,10 +52,6 @@ keymap.set("n", "<space>O", "printf('m`%sO<ESC>``', v:count1)", {
 keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true })
 keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true })
 
--- Do not include white space characters when using $ in visual mode,
--- see https://vi.stackexchange.com/q/12607/15292
-keymap.set("x", "$", "g_")
-
 -- Go to start or end of line easier
 keymap.set({ "n", "x" }, "H", "g^")
 keymap.set({ "n", "x" }, "L", "g_")
