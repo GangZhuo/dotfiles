@@ -117,12 +117,6 @@ packer.startup {
     use { "akinsho/bufferline.nvim", event = "VimEnter",
       config = [[require('config.bufferline')]] }
 
-    use {
-      "lukas-reineke/indent-blankline.nvim",
-      event = "VimEnter",
-      config = [[require('config.indent-blankline')]],
-    }
-
     -- notification plugin
     use {
       "rcarriga/nvim-notify",
