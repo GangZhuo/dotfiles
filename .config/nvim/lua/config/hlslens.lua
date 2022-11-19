@@ -6,10 +6,11 @@ local hlslens = require("hlslens")
 hlslens.setup {
   calm_down = true,
   nearest_only = true,
+  nearest_float_when = 'auto'
 }
 
 local activate_hlslens = function(direction)
-  local cmd = string.format("normal! %s%szzzv", vim.v.count1, direction)
+  local cmd = string.format("normal! %s%s", vim.v.count1, direction)
   local status, msg = pcall(vim.cmd, cmd)
 
   if not status then
