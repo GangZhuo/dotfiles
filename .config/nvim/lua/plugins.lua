@@ -88,6 +88,11 @@ packer.startup {
     use { "tanvirtin/monokai.nvim",      opt = true }
     use { "marko-cerovac/material.nvim", opt = true }
 
+    use { "chentoast/marks.nvim",
+      event = "VimEnter",
+      config = [[require('config.marks')]],
+    }
+
     use { "nvim-lualine/lualine.nvim",
       event = "VimEnter",
       config = [[require('config.statusline')]],
