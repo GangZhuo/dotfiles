@@ -2,14 +2,45 @@ local keymap = vim.keymap
 local api = vim.api
 local uv = vim.loop
 
--- Save key strokes (now we do not need to press shift to enter command mode).
-keymap.set({ "n", "x" }, ";", ":")
-
 -- Turn the word under cursor to upper case
 keymap.set("i", "<c-u>", "<Esc>viwUea")
 
 -- Turn the current word into title case
 keymap.set("i", "<c-t>", "<Esc>b~lea")
+
+-- insert semicolon in the end
+keymap.set("i", "<A-;>", "<Esc>miA;<Esc>`ii")
+
+-- Go to the beginning and end of current line in insert mode quickly
+keymap.set("i", "<C-A>", "<HOME>")
+keymap.set("i", "<C-E>", "<END>")
+
+-- Delete the character to the right of the cursor
+keymap.set("i", "<C-D>", "<DEL>")
+
+-- Go to beginning of command in command-line mode
+keymap.set("c", "<C-A>", "<HOME>")
+
+-- Save key strokes (now we do not need to press shift to enter command mode).
+keymap.set({ "n", "x" }, ";", ":")
+
+-- Paste non-linewise text above or below current line, see https://stackoverflow.com/a/1346777/6064933
+keymap.set("n", "<leader>p", "m`o<ESC>p``", { desc = "paste below current line" })
+keymap.set("n", "<leader>P", "m`O<ESC>p``", { desc = "paste above current line" })
+
+-- Copy entire buffer.
+keymap.set("n", "<leader>y", "<cmd>%yank<cr>", { desc = "yank entire buffer" })
+
+-- Move current line up and down
+keymap.set("n", "<A-k>", '<cmd>call utils#SwitchLine(line("."), "up")<cr>', { desc = "move line up" })
+keymap.set("n", "<A-j>", '<cmd>call utils#SwitchLine(line("."), "down")<cr>', { desc = "move line down" })
+
+-- Move current visual-line selection up and down
+keymap.set("x", "<A-k>", '<cmd>call utils#MoveSelection("up")<cr>', { desc = "move selection up" })
+keymap.set("x", "<A-j>", '<cmd>call utils#MoveSelection("down")<cr>', { desc = "move selection down" })
+
+-- Shortcut for faster save and quit
+keymap.set("n", "<leader>w", "<cmd>update<cr>", { silent = true, desc = "save buffer" })
 
 -- Navigation in the location and quickfix list
 keymap.set("n", "[l", "<cmd>lprevious<cr>zv", { silent = true, desc = "previous location item" })
@@ -111,20 +142,8 @@ keymap.set("n", "<leader><space>", "<cmd>StripTrailingWhitespace<cr>", { desc = 
 -- check the syntax group of current cursor position
 keymap.set("n", "<leader>st", "<cmd>call utils#SynGroup()<cr>", { desc = "check syntax group" })
 
--- Copy entire buffer.
-keymap.set("n", "<leader>y", "<cmd>%yank<cr>", { desc = "yank entire buffer" })
-
 -- Toggle cursor column
 keymap.set("n", "<leader>cl", "<cmd>call utils#ToggleCursorCol()<cr>", { desc = "toggle cursor column" })
-
--- Move current line up and down
-keymap.set("n", "<A-k>", '<cmd>call utils#SwitchLine(line("."), "up")<cr>', { desc = "move line up" })
-keymap.set("n", "<A-j>", '<cmd>call utils#SwitchLine(line("."), "down")<cr>', { desc = "move line down" })
-
--- Move current visual-line selection up and down
-keymap.set("x", "<A-k>", '<cmd>call utils#MoveSelection("up")<cr>', { desc = "move selection up" })
-
-keymap.set("x", "<A-j>", '<cmd>call utils#MoveSelection("down")<cr>', { desc = "move selection down" })
 
 -- Replace visual selection with text in register, but not contaminate the register,
 -- see also https://stackoverflow.com/q/10723700/6064933.
@@ -164,19 +183,6 @@ for _, ch in ipairs(undo_ch) do
   keymap.set("i", ch, ch .. "<c-g>u")
 end
 
--- insert semicolon in the end
-keymap.set("i", "<A-;>", "<Esc>miA;<Esc>`ii")
-
--- Go to the beginning and end of current line in insert mode quickly
-keymap.set("i", "<C-A>", "<HOME>")
-keymap.set("i", "<C-E>", "<END>")
-
--- Go to beginning of command in command-line mode
-keymap.set("c", "<C-A>", "<HOME>")
-
--- Delete the character to the right of the cursor
-keymap.set("i", "<C-D>", "<DEL>")
-
 keymap.set("n", "<leader>cb", function()
   local cnt = 0
   local blink_times = 7
@@ -198,8 +204,14 @@ end)
 
 keymap.set("n", "<BackSpace>", "<cmd>nohl<cr>")
 
-keymap.set("n", "<leader>c", "<cmd>lua require('colorschemes').next()<cr>",
+keymap.set("n", "<leader>cn", "<cmd>lua require('colorschemes').next()<cr>",
   {
     silent = true,
     desc = "choose next colorscheme"
+})
+
+keymap.set("n", "<leader>cp", "<cmd>lua require('colorschemes').prev()<cr>",
+  {
+    silent = true,
+    desc = "choose previous colorscheme"
 })

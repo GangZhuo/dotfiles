@@ -147,6 +147,23 @@ M.set_colorscheme = function(colorscheme)
   end
 end
 
+M.prev = function()
+  local prev
+  for i,v in ipairs(M.colorschemes) do
+    if v == M.colorscheme then
+      prev = i - 1
+      break
+    end
+  end
+  if prev == nil or prev == 0 then
+    prev = #M.colorschemes
+  end
+  local colorscheme = M.colorschemes[prev]
+  M.set_colorscheme(colorscheme)
+  vim.notify(string.format("Colorscheme changed to \"%s\".", colorscheme),
+    vim.log.levels.NOTICE, { title = "nvim-config" })
+end
+
 M.next = function()
   local next
   for i,v in ipairs(M.colorschemes) do

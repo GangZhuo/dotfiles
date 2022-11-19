@@ -6,34 +6,51 @@ local diagnostic = vim.diagnostic
 
 local utils = require("utils")
 
+local map = function(mode, l, r, desc)
+  local opts = {
+    noremap = true,
+    silent = true,
+    desc = desc,
+  }
+  keymap.set(mode, l, r, opts)
+end
+
+map('n', '<space>e', diagnostic.open_float, "put diagnostic to qf")
+map('n', '[d',       diagnostic.goto_prev,  "previous diagnostic")
+map('n', ']d',       diagnostic.goto_next,  "next diagnostic")
+map('n', '<space>l', diagnostic.setloclist, "put diagnostic to loclist")
+map("n", "<space>q", diagnostic.setqflist,  "put diagnostic to qf")
+
 local custom_attach = function(client, bufnr)
-  -- Mappings.
-  local map = function(mode, l, r, opts)
-    opts = opts or {}
-    opts.silent = true
-    opts.buffer = bufnr
+
+  local bufmap = function(mode, l, r, desc)
+    local opts = {
+      noremap = true,
+      silent = true,
+      buffer = bufnr,
+      desc = desc,
+    }
     keymap.set(mode, l, r, opts)
   end
 
-  map("n", "gd", vim.lsp.buf.definition, { desc = "go to definition" })
-  map("n", "<C-]>", vim.lsp.buf.definition)
-  map("n", "K", vim.lsp.buf.hover)
-  map("n", "<C-k>", vim.lsp.buf.signature_help)
-  map("n", "<leader>rn", vim.lsp.buf.rename, { desc = "varialbe rename" })
-  map("n", "gr", vim.lsp.buf.references, { desc = "show references" })
-  map("n", "[d", diagnostic.goto_prev, { desc = "previous diagnostic" })
-  map("n", "]d", diagnostic.goto_next, { desc = "next diagnostic" })
-  map("n", "<leader>qf", diagnostic.setqflist, { desc = "put diagnostic to qf" })
-  map("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "LSP code action" })
-  map("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, { desc = "add workspace folder" })
-  map("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, { desc = "remove workspace folder" })
-  map("n", "<leader>wl", function()
-    inspect(vim.lsp.buf.list_workspace_folders())
-  end, { desc = "list workspace folder" })
+  bufmap("n", "gD",        vim.lsp.buf.declaration,    "go to declaration")
+  bufmap("n", "gd",        vim.lsp.buf.definition,     "go to definition")
+  bufmap("n", "gi",        vim.lsp.buf.implementation, "go to implementation")
+  bufmap("n", "gr",        vim.lsp.buf.references,     "show references")
+  bufmap("n", "K",         vim.lsp.buf.hover,          "show help")
+  bufmap("n", "<C-k>",     vim.lsp.buf.signature_help, "show signature help")
+  bufmap("n", "<space>rn", vim.lsp.buf.rename,         "varialbe rename")
+  bufmap("n", "<space>ca", vim.lsp.buf.code_action,    "LSP code action")
+  bufmap("n", "<space>wa", vim.lsp.buf.add_workspace_folder, "add workspace folder")
+  bufmap("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, "remove workspace folder")
+  bufmap("n", "<space>wl",
+    function()
+      inspect(vim.lsp.buf.list_workspace_folders())
+    end,                                               "list workspace folder")
 
   -- Set some key bindings conditional on server capabilities
   if client.server_capabilities.documentFormattingProvider then
-    map("n", "<leader>fc", vim.lsp.buf.format, { desc = "format code" })
+    bufmap("n", "<space>fc", vim.lsp.buf.format,       "format code")
   end
 
   api.nvim_create_autocmd("CursorHold", {
@@ -61,32 +78,6 @@ local custom_attach = function(client, bufnr)
       vim.b.diagnostics_pos = cursor_pos
     end,
   })
-
-  -- The blow command will highlight the current variable and its usages in the buffer.
-  if client.server_capabilities.documentHighlightProvider then
-    vim.cmd([[
-      hi! link LspReferenceRead Visual
-      hi! link LspReferenceText Visual
-      hi! link LspReferenceWrite Visual
-    ]])
-
-    local gid = api.nvim_create_augroup("lsp_document_highlight", { clear = true })
-    api.nvim_create_autocmd("CursorHold" , {
-      group = gid,
-      buffer = bufnr,
-      callback = function ()
-        lsp.buf.document_highlight()
-      end
-    })
-
-    api.nvim_create_autocmd("CursorMoved" , {
-      group = gid,
-      buffer = bufnr,
-      callback = function ()
-        lsp.buf.clear_references()
-      end
-    })
-  end
 
   if vim.g.logging_level == "debug" then
     local msg = string.format("Language server %s started!", client.name)
