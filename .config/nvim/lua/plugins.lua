@@ -41,86 +41,66 @@ packer.startup {
   function(use)
     -- it is recommended to put impatient.nvim before any other plugins
     use { "lewis6991/impatient.nvim", config = [[require('impatient')]] }
-
     use { "wbthomason/packer.nvim", opt = true }
 
-    use { "nvim-lua/plenary.nvim" }
-
-    use { "kyazdani42/nvim-web-devicons", event = "VimEnter" }
-
-    use { "onsails/lspkind-nvim", event = "VimEnter" }
-
-    -- auto-completion engine
-    use { "hrsh7th/nvim-cmp", event = "VimEnter",
-      after = "lspkind-nvim", config = [[require('config.nvim-cmp')]] }
-
-    -- nvim-cmp completion sources
-    use { "hrsh7th/cmp-nvim-lsp", after = "nvim-cmp" }
-    use { "hrsh7th/cmp-path", after = "nvim-cmp" }
-    use { "hrsh7th/cmp-buffer", after = "nvim-cmp" }
-    use { "hrsh7th/cmp-omni", after = "nvim-cmp" }
-    use { "uga-rosa/cmp-dictionary", after = "nvim-cmp", config = [[require('config.cmp-dictionary')]] }
-    use { "hrsh7th/cmp-cmdline", after = "nvim-cmp" }
-    use { "dmitmel/cmp-cmdline-history", after = "nvim-cmp" }
-
-    -- nvim-lsp configuration (it relies on cmp-nvim-lsp, so it should be loaded after cmp-nvim-lsp).
-    use { "neovim/nvim-lspconfig", after = "cmp-nvim-lsp", config = [[require('config.lsp')]] }
-
-    use {
-      "nvim-treesitter/nvim-treesitter",
-      event = "BufEnter",
+    use { "nvim-treesitter/nvim-treesitter",
+      event = "VimEnter",
       run = ":TSUpdate",
       config = [[require('config.treesitter')]],
     }
 
-    -- Show match number and index for searching
-    use {
-      "kevinhwang91/nvim-hlslens",
-      branch = "main",
-      keys = { { "n", "*" }, { "n", "#" }, { "n", "n" }, { "n", "N" } },
-      config = [[require('config.hlslens')]],
+    -- auto-completion engine
+    use { "hrsh7th/nvim-cmp",
+      event = "VimEnter",
+      requires = {
+        "onsails/lspkind-nvim"
+      },
+      config = [[require('config.nvim-cmp')]],
     }
 
-    -- fuzzy finder
-    use {'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
-    use {
-      "nvim-telescope/telescope.nvim",
-      --cmd = "Telescope",
-      requires = {
-        { "nvim-lua/plenary.nvim" },
-        { "nvim-telescope/telescope-live-grep-args.nvim" }
-      },
-      config = [[require('config.telescope')]],
+    -- nvim-cmp completion sources
+    use { "hrsh7th/cmp-nvim-lsp",        after = "nvim-cmp" }
+    use { "hrsh7th/cmp-path",            after = "nvim-cmp" }
+    use { "hrsh7th/cmp-buffer",          after = "nvim-cmp" }
+    use { "hrsh7th/cmp-omni",            after = "nvim-cmp" }
+    use { "uga-rosa/cmp-dictionary",     after = "nvim-cmp", config = [[require('config.cmp-dictionary')]] }
+    use { "hrsh7th/cmp-cmdline",         after = "nvim-cmp" }
+    use { "dmitmel/cmp-cmdline-history", after = "nvim-cmp" }
+
+    -- nvim-lsp configuration (it relies on cmp-nvim-lsp, so it should be loaded after cmp-nvim-lsp).
+    use { "neovim/nvim-lspconfig",
+      after = "cmp-nvim-lsp",
+      config = [[require('config.lsp')]],
     }
 
     -- A list of colorscheme plugin you may want to try. Find what suits you.
-    use { "navarasu/onedark.nvim", opt = true }
-    use { "sainnhe/edge", opt = true }
-    use { "sainnhe/sonokai", opt = true }
-    use { "sainnhe/gruvbox-material", opt = true }
-    use { "shaunsingh/nord.nvim", opt = true }
-    use { "sainnhe/everforest", opt = true }
-    use { "EdenEast/nightfox.nvim", opt = true }
-    use { "rebelot/kanagawa.nvim", opt = true }
-    use { "catppuccin/nvim", as = "catppuccin", opt = true }
-    use { "rose-pine/neovim", as = 'rose-pine', opt = true }
-    use { "olimorris/onedarkpro.nvim", opt = true }
-    use { "tanvirtin/monokai.nvim", opt = true }
+    use { "navarasu/onedark.nvim",       opt = true }
+    use { "sainnhe/edge",                opt = true }
+    use { "sainnhe/sonokai",             opt = true }
+    use { "sainnhe/gruvbox-material",    opt = true }
+    use { "shaunsingh/nord.nvim",        opt = true }
+    use { "sainnhe/everforest",          opt = true }
+    use { "EdenEast/nightfox.nvim",      opt = true }
+    use { "rebelot/kanagawa.nvim",       opt = true }
+    use { "catppuccin/nvim",             opt = true, as = "catppuccin" }
+    use { "rose-pine/neovim",            opt = true, as = 'rose-pine' }
+    use { "olimorris/onedarkpro.nvim",   opt = true }
+    use { "tanvirtin/monokai.nvim",      opt = true }
     use { "marko-cerovac/material.nvim", opt = true }
 
-    use {
-      "nvim-lualine/lualine.nvim",
+    use { "nvim-lualine/lualine.nvim",
       event = "VimEnter",
       config = [[require('config.statusline')]],
     }
 
-    use { "akinsho/bufferline.nvim", event = "VimEnter",
-      config = [[require('config.bufferline')]] }
+    use { "akinsho/bufferline.nvim",
+      event = "VimEnter",
+      config = [[require('config.bufferline')]],
+    }
 
     -- notification plugin
-    use {
-      "rcarriga/nvim-notify",
-      event = "BufEnter",
+    use { "rcarriga/nvim-notify",
+      event = "VimEnter",
       config = function()
         vim.defer_fn(function()
           require("config.nvim-notify")
@@ -128,39 +108,72 @@ packer.startup {
       end,
     }
 
-    -- Only install these plugins if ctags are installed on the system
-    --if utils.executable("ctags") then
-    --  -- show file tags in vim window
-    --  use { "liuchengxu/vista.vim", cmd = "Vista" }
-    --end
-
-    -- Automatic insertion and deletion of a pair of characters
-    use { "Raimondi/delimitMate", event = "InsertEnter" }
-
     -- Repeat vim motions
-    use { "tpope/vim-repeat", event = "VimEnter" }
+    use { "tpope/vim-repeat",
+      event = "VimEnter",
+    }
 
-    use { "nvim-zh/better-escape.vim", event = { "InsertEnter" },
+    -- Modern matchit implementation
+    use { "andymass/vim-matchup",
+      event = "VimEnter",
+      setup = [[require('utils').load_config('matchup')]],
+    }
+
+    -- show and trim trailing whitespaces
+    use { "jdhao/whitespace.nvim",
+      event = "VimEnter",
+    }
+
+    -- Best quickfix
+    use { "kevinhwang91/nvim-bqf",
+      ft = "qf",
+      config = [[require('config.bqf')]],
+    }
+
+    -- Escape from insert mode by 'jk'
+    use { "nvim-zh/better-escape.vim",
+      event = "InsertEnter",
       setup = function()
-        vim.cmd([[
-	  let g:better_escape_interval = 200
-	]])
+        vim.cmd([[let g:better_escape_interval = 200]])
       end,
     }
 
-    use { "kevinhwang91/nvim-bqf", ft = "qf", config = [[require('config.bqf')]] }
+    -- Automatic insertion and deletion of a pair of characters
+    use { "Raimondi/delimitMate",
+      event = "InsertEnter",
+    }
 
-    -- Modern matchit implementation
-    use { "andymass/vim-matchup", event = "VimEnter", setup = [[require('utils').load_config('matchup')]] }
-
-    -- show and trim trailing whitespaces
-    use { "jdhao/whitespace.nvim", event = "VimEnter" }
+    -- Show match number and index for searching
+    use { "kevinhwang91/nvim-hlslens",
+      branch = "main",
+      keys = { { "n", "*" }, { "n", "#" }, { "n", "n" }, { "n", "N" } },
+      config = [[require('config.hlslens')]],
+    }
 
     -- file explorer
-    use {
-      "kyazdani42/nvim-tree.lua",
-      requires = { "kyazdani42/nvim-web-devicons" },
+    use { "kyazdani42/nvim-tree.lua",
+      event = "VimEnter",
+      requires = {
+        "kyazdani42/nvim-web-devicons",
+      },
       config = [[require('config.nvim-tree')]],
+    }
+
+    -- show file tags in vim window
+    use { "liuchengxu/vista.vim",
+      event = "VimEnter",
+      config = [[require('config.vista')]],
+    }
+
+    -- fuzzy finder
+    use { "nvim-telescope/telescope.nvim",
+      event = "VimEnter",
+      requires = {
+        { "nvim-lua/plenary.nvim" },
+        { "nvim-telescope/telescope-fzf-native.nvim", run = 'make' },
+        { "nvim-telescope/telescope-live-grep-args.nvim" },
+      },
+      config = [[require('config.telescope')]],
     }
 
   end,

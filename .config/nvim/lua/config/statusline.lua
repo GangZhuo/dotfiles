@@ -97,6 +97,10 @@ local diff = function()
   return info
 end
 
+local function nearest_function()
+  return vim.b.vista_nearest_method_or_function or ""
+end
+
 require("lualine").setup {
   options = {
     icons_enabled = true,
@@ -105,7 +109,7 @@ require("lualine").setup {
     -- section_separators = { left = "", right = "" },
     section_separators = "",
     component_separators = "",
-    disabled_filetypes = {},
+    disabled_filetypes = { "vista" },
     always_divide_middle = true,
   },
   sections = {
@@ -119,6 +123,7 @@ require("lualine").setup {
     },
     lualine_c = {
       "filename",
+      nearest_function,
       --{
       --  ime_state,
       --  color = { fg = "black", bg = "#f46868" },
