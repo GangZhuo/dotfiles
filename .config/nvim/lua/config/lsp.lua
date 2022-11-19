@@ -85,13 +85,21 @@ local custom_attach = function(client, bufnr)
   end
 end
 
+local attach = function(lang_server)
+  return function(...)
+    vim.notify(string.format("lsp setup language server '%s'!", lang_server),
+      vim.log.levels.INFO, { title = "Nvim-config" })
+    custom_attach(...)
+  end
+end
+
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 local lspconfig = require("lspconfig")
 
 if utils.executable("pylsp") then
   lspconfig.pylsp.setup {
-    on_attach = custom_attach,
+    on_attach = attach("pylsp"),
     settings = {
       pylsp = {
         plugins = {
@@ -109,49 +117,41 @@ if utils.executable("pylsp") then
     },
     capabilities = capabilities,
   }
-else
-  vim.notify("pylsp not found!", vim.log.levels.WARN, { title = "Nvim-config" })
 end
 
--- if utils.executable('pyright') then
---   lspconfig.pyright.setup{
---     on_attach = custom_attach,
---     capabilities = capabilities
---   }
--- else
---   vim.notify("pyright not found!", vim.log.levels.WARN, {title = 'Nvim-config'})
--- end
+if utils.executable('pyright') then
+  lspconfig.pyright.setup{
+    on_attach = attach("pyright"),
+    capabilities = capabilities
+  }
+end
 
 if utils.executable("clangd") then
   lspconfig.clangd.setup {
-    on_attach = custom_attach,
+    on_attach = attach("clangd"),
     capabilities = capabilities,
     filetypes = { "c", "cpp", "cc" },
     flags = {
       debounce_text_changes = 500,
     },
   }
-else
-  vim.notify("clangd not found!", vim.log.levels.WARN, { title = "Nvim-config" })
 end
 
 -- set up vim-language-server
 if utils.executable("vim-language-server") then
   lspconfig.vimls.setup {
-    on_attach = custom_attach,
+    on_attach = attach("vim-language-server"),
     flags = {
       debounce_text_changes = 500,
     },
     capabilities = capabilities,
   }
-else
-  vim.notify("vim-language-server not found!", vim.log.levels.WARN, { title = "Nvim-config" })
 end
 
 -- set up bash-language-server
 if utils.executable("bash-language-server") then
   lspconfig.bashls.setup {
-    on_attach = custom_attach,
+    on_attach = attach("bash-language-server"),
     capabilities = capabilities,
   }
 end
@@ -159,7 +159,7 @@ end
 if utils.executable("lua-language-server") then
   -- settings for lua-language-server can be found on https://github.com/sumneko/lua-language-server/wiki/Settings .
   lspconfig.sumneko_lua.setup {
-    on_attach = custom_attach,
+    on_attach = attach("lua-language-server"),
     settings = {
       Lua = {
         runtime = {
