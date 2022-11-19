@@ -1,5 +1,8 @@
 local api = vim.api
 
+vim.opt.list = true
+vim.opt.listchars:append "space:⋅"
+
 local exclude_ft = { "help", "git", "markdown", "snippets", "text", "gitconfig", "alpha" }
 require("indent_blankline").setup {
   -- U+2502 may also be a good choice, it will be on the middle of cursor.
