@@ -109,7 +109,7 @@ require("lualine").setup {
     -- section_separators = { left = "", right = "" },
     section_separators = "",
     component_separators = "",
-    disabled_filetypes = { "vista" },
+    disabled_filetypes = { "vista_kind" },
     always_divide_middle = true,
   },
   sections = {
