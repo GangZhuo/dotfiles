@@ -16,10 +16,9 @@ local map = function(mode, l, r, desc)
 end
 
 map('n', '<space>e', diagnostic.open_float, "put diagnostic to qf")
+map('n', '<space>l', diagnostic.setloclist, "put diagnostic to loclist")
 map('n', '[d',       diagnostic.goto_prev,  "previous diagnostic")
 map('n', ']d',       diagnostic.goto_next,  "next diagnostic")
-map('n', '<space>l', diagnostic.setloclist, "put diagnostic to loclist")
-map("n", "<space>q", diagnostic.setqflist,  "put diagnostic to qf")
 
 local custom_attach = function(client, bufnr)
 
