@@ -61,11 +61,11 @@ vim.g.vista_executive_for = {
 }
 
 -- Show symbol list
-vim.keymap.set("n", "<leader>s", "<cmd>Vista!!<cr>", {
-  noremap = true,
-  silent = true,
-  desc = "Toggle vista view window",
-})
+--vim.keymap.set("n", "<leader>t", "<cmd>Vista!!<cr>", {
+--  noremap = true,
+--  silent = true,
+--  desc = "Toggle vista view window",
+--})
 
 -- Show the nearest method/function in the statusline
 vim.cmd([[call vista#RunForNearestMethodOrFunction()]])
