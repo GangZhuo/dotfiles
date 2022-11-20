@@ -85,10 +85,14 @@ local custom_attach = function(client, bufnr)
   end
 end
 
+local notifies = {}
 local attach = function(lang_server)
   return function(...)
-    vim.notify(string.format("lsp setup language server '%s'!", lang_server),
-      vim.log.levels.INFO, { title = "Nvim-config" })
+    if not notifies[lang_server] then
+      notifies[lang_server] = true
+      vim.notify(string.format("lsp setup language server '%s'!", lang_server),
+        vim.log.levels.INFO, { title = "Nvim-config" })
+    end
     custom_attach(...)
   end
 end
