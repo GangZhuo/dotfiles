@@ -1,8 +1,6 @@
 local api = vim.api
 local fn = vim.fn
 
-local utils = require("utils")
-
 -- The root dir to install all plugins. Plugins are under opt/ or start/ sub-directory.
 vim.g.plugin_home = fn.stdpath("data") .. "/site/pack/packer"
 
