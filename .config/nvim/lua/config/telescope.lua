@@ -129,6 +129,7 @@ telescope.setup({
     mappings = {
       n = {
         ["l"] = require("telescope.actions").select_default,
+        ["o"] = require("telescope.actions").select_default, -- Open the file
       },
     }
   },
