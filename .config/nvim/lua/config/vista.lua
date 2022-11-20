@@ -60,7 +60,8 @@ vim.g.vista_executive_for = {
   ["php"] = "nvim_lsp",
 }
 
-vim.keymap.set("n", "<leader>t", "<cmd>Vista!!<cr>", {
+-- Show symbol list
+vim.keymap.set("n", "<leader>s", "<cmd>Vista!!<cr>", {
   noremap = true,
   silent = true,
   desc = "Toggle vista view window",

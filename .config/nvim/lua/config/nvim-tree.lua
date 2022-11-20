@@ -86,6 +86,7 @@ nvim_tree.setup {
   },
 }
 
-keymap.set("n", "<leader>f", function()
+-- Show workspace file tree
+keymap.set("n", "<leader>t", function()
   return api.tree.toggle(true, false)
 end, { silent = true, desc = "toggle nvim-tree" })

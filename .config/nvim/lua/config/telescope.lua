@@ -1,7 +1,7 @@
 -- Telescope configuration
 local map = vim.keymap.set
 local telescope = require('telescope')
-local telescope_builtin = require('telescope.builtin')
+local builtin = require('telescope.builtin')
 
 vim.cmd([[
   highlight link TelescopePromptCounter TelescopeNormal
@@ -113,8 +113,6 @@ telescope.setup({
     entry_prefix = '   ',
     file_ignore_patterns = {'node_modules'},
     path_display = { 'truncate' },
-    results_title = false,
-    prompt_title =false,
     preview = {
       treesitter = {
         enable = {
@@ -129,10 +127,8 @@ telescope.setup({
       }
     },
     mappings = {
-      i = {
-        ['<esc>'] = require('telescope.actions').close,
-        ['<C-l>'] = require('telescope.actions').smart_send_to_loclist,
-        ['<C-p>'] = require('telescope.actions.layout').toggle_preview,
+      n = {
+        ["l"] = require("telescope.actions").select_default,
       },
     }
   },
@@ -149,21 +145,87 @@ telescope.setup({
 telescope.load_extension('fzf')
 telescope.load_extension("live_grep_args")
 
-local use_layout = function(picker, layout)
-  return function() picker(themes[layout]) end
-end
-local set_keymap = function(lhs, rhs)
-  map('n', lhs, rhs, { noremap = true })
+local get_visual_selection = function ()
+	vim.cmd('noau normal! "vy"')
+	local text = vim.fn.getreg('v')
+	vim.fn.setreg('v', {})
+
+	text = string.gsub(text, "\n", "")
+	if #text > 0 then
+		return text
+	else
+		return ''
+	end
 end
 
-set_keymap('<leader>q', use_layout(telescope_builtin.quickfix,    'ivy_plus'))
-set_keymap('<leader>l', use_layout(telescope_builtin.loclist,     'ivy_plus'))
-set_keymap('<leader>h', use_layout(telescope_builtin.builtin,     'popup_list'))
-set_keymap('<leader>o', use_layout(telescope_builtin.find_files,  'popup_list'))
-set_keymap('<leader>p', use_layout(telescope_builtin.commands,    'command_pane'))
-set_keymap('<leader>b', use_layout(telescope_builtin.buffers,     'popup_extended'))
-set_keymap('<leader>g', use_layout(telescope_builtin.git_status,  'popup_extended'))
-set_keymap('<leader>w', use_layout(telescope_builtin.grep_string, 'popup_extended'))
-set_keymap('<F1>',      use_layout(telescope_builtin.help_tags,   'popup_extended'))
-set_keymap('<leader>s', use_layout(telescope.extensions.live_grep_args.live_grep_args,  'popup_extended'))
+local set_keymap = function (key, picker, layout, desc, opts)
+  local map_opts = { noremap = true, silent = true, desc = desc }
+
+  local n_opts = {}
+  if layout then
+    n_opts = vim.deepcopy(themes[layout])
+  end
+  n_opts.prompt_title = desc
+  if type(opts) == "table" then
+    for k,v in pairs(opts) do
+        n_opts[k] = v
+    end
+  end
+
+  local n_rhs = function()
+      if vim.g.telescope_search_hidden then
+        n_opts.additional_args = { '--hidden' }
+      end
+      if opts and opts.grep_current_buffer then
+          n_opts.search_dirs = { vim.api.nvim_buf_get_name(0) }
+      end
+      picker(n_opts)
+  end
+  map('n', key, n_rhs, map_opts)
+
+  local x_opts = vim.deepcopy(n_opts)
+  local x_rhs = function()
+      x_opts.default_text = get_visual_selection()
+      if vim.g.telescope_search_hidden then
+        n_opts.additional_args = { '--hidden' }
+      end
+      if opts and opts.grep_current_buffer then
+          x_opts.search_dirs = { vim.api.nvim_buf_get_name(0) }
+      end
+      picker(x_opts)
+  end
+  map('x', key, x_rhs, map_opts)
+end
+
+vim.api.nvim_create_user_command(
+    'TelescopeToggleHidden',
+    function()
+      vim.g.telescope_search_hidden = (not vim.g.telescope_search_hidden)
+      local msg
+      if vim.g.telescope_search_hidden then
+        msg = "Telescope search hidden files 'on'!"
+      else
+        msg = "Telescope search hidden files 'off'!"
+      end
+      vim.notify(msg, vim.log.levels.INFO, { title = "Nvim-config" })
+    end,
+    { nargs = 0 }
+)
+
+local live_grep_args = telescope.extensions.live_grep_args.live_grep_args
+
+set_keymap('<leader>h', builtin.builtin,     'popup_list',     "Find Builtin Pickers")
+set_keymap('<leader>f', builtin.find_files,  'popup_extended', "Find Files")
+set_keymap('<leader>b', builtin.buffers,     'popup_list',     "Find Buffers")
+set_keymap('<leader>w', builtin.live_grep,   'popup_extended', "Search in Workspace")
+set_keymap('<leader>c', builtin.live_grep,   'popup_extended', "Search in Curent Buffer", { grep_current_buffer = true })
+set_keymap('<leader>g', live_grep_args,      'popup_extended', "Search by Ripgrep")
+set_keymap('<leader>k', builtin.tags,        'popup_extended', "Find Tags")
+set_keymap('<leader>d', builtin.lsp_document_symbols, 'popup_extended', "Find LSP Symbols in Current Buffer")
+set_keymap('<leader>m', builtin.marks,       'popup_extended', "Find Marks")
+set_keymap('<leader>M', builtin.keymaps,     nil,              "Keymaps")
+set_keymap('<leader>r', builtin.registers,   'popup_list',     "Find Registers")
+set_keymap('<leader>q', builtin.quickfix,    'ivy_plus',       "Find Quickfix")
+set_keymap('<leader>l', builtin.loclist,     'ivy_plus',       "Find Location List")
+
 
