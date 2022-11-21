@@ -9,3 +9,9 @@ require("nvim-treesitter.configs").setup {
     enable = true,
   },
 }
+
+vim.cmd([[
+set foldmethod=expr
+set foldexpr=nvim_treesitter#foldexpr()
+set foldenable
+]])
