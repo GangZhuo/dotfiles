@@ -41,10 +41,40 @@ packer.startup {
     use { "lewis6991/impatient.nvim", config = [[require('impatient')]] }
     use { "wbthomason/packer.nvim", opt = true }
 
-    use { "nvim-treesitter/nvim-treesitter",
+    -- Escape from insert mode by 'jk'
+    use { "nvim-zh/better-escape.vim",
+      event = "InsertEnter",
+      setup = function()
+        vim.cmd([[let g:better_escape_interval = 200]])
+      end,
+    }
+
+    -- Repeat vim motions
+    use { "tpope/vim-repeat",
       event = "VimEnter",
-      run = ":TSUpdate",
-      config = [[require('config.treesitter')]],
+    }
+
+    -- show and trim trailing whitespaces
+    use { "jdhao/whitespace.nvim",
+      event = "VimEnter",
+    }
+
+    -- Automatic insertion and deletion of a pair of characters
+    use { "Raimondi/delimitMate",
+      event = "InsertEnter",
+    }
+
+    -- Snippet
+    use { "hrsh7th/vim-vsnip",
+      event = "VimEnter",
+      config = [[require('config.vsnip')]],
+    }
+    use { "hrsh7th/vim-vsnip-integ",
+      event = "VimEnter",
+      requires = { "vim-vsnip" },
+    }
+    use { "rafamadriz/friendly-snippets",
+      event = "VimEnter",
     }
 
     -- auto-completion engine
@@ -68,95 +98,43 @@ packer.startup {
 
     -- nvim-lsp configuration (it relies on cmp-nvim-lsp, so it should be loaded after cmp-nvim-lsp).
     use { "neovim/nvim-lspconfig",
-      after = "cmp-nvim-lsp",
+      after = {
+        "cmp-nvim-lsp",
+      },
       config = [[require('config.lsp')]],
     }
 
-    -- Snippet
-    use { "hrsh7th/vim-vsnip",
+    -- build a concrete syntax tree, and highlight by syntax tree
+    use { "nvim-treesitter/nvim-treesitter",
       event = "VimEnter",
-      config = [[require('config.vsnip')]],
-    }
-    use { "hrsh7th/vim-vsnip-integ",
-      requires = { "vim-vsnip" },
-    }
-    use { "rafamadriz/friendly-snippets",
-      event = "VimEnter",
+      run = ":TSUpdate",
+      config = [[require('config.treesitter')]],
     }
 
-    -- A list of colorscheme plugin you may want to try. Find what suits you.
-    use { "navarasu/onedark.nvim",       opt = true }
-    use { "sainnhe/edge",                opt = true }
-    use { "sainnhe/sonokai",             opt = true }
-    use { "sainnhe/gruvbox-material",    opt = true }
-    use { "shaunsingh/nord.nvim",        opt = true }
-    use { "sainnhe/everforest",          opt = true }
-    use { "EdenEast/nightfox.nvim",      opt = true }
-    use { "rebelot/kanagawa.nvim",       opt = true }
-    use { "catppuccin/nvim",             opt = true, as = "catppuccin" }
-    use { "rose-pine/neovim",            opt = true, as = 'rose-pine' }
-    use { "olimorris/onedarkpro.nvim",   opt = true }
-    use { "tanvirtin/monokai.nvim",      opt = true }
-    use { "marko-cerovac/material.nvim", opt = true }
-
-    use { "chentoast/marks.nvim",
+    -- Ultra fold in Neovim base on lsp, treesitter and indent
+    use { "kevinhwang91/nvim-ufo",
       event = "VimEnter",
-      config = [[require('config.marks')]],
+      after = {
+        "cmp-nvim-lsp",
+        "nvim-treesitter",
+      },
+      requires = { "kevinhwang91/promise-async" },
+      config = [[require('config.ufo')]],
     }
 
-    use { "nvim-lualine/lualine.nvim",
-      event = "VimEnter",
-      config = [[require('config.statusline')]],
-    }
-
-    use { "akinsho/bufferline.nvim",
-      event = "VimEnter",
-      config = [[require('config.bufferline')]],
-    }
-
-    -- notification plugin
-    use { "rcarriga/nvim-notify",
-      event = "VimEnter",
-      config = function()
-        vim.defer_fn(function()
-          require("config.nvim-notify")
-        end, 2000)
-      end,
-    }
-
-    -- Repeat vim motions
-    use { "tpope/vim-repeat",
-      event = "VimEnter",
-    }
-
-    -- Modern matchit implementation
+    -- Modern matchit implementation base on treesitter
     use { "andymass/vim-matchup",
       event = "VimEnter",
+      after = {
+        "nvim-treesitter",
+      },
       setup = [[require('utils').load_config('matchup')]],
     }
 
-    -- show and trim trailing whitespaces
-    use { "jdhao/whitespace.nvim",
+    -- Show marks in signcolumn
+    use { "chentoast/marks.nvim",
       event = "VimEnter",
-    }
-
-    -- Best quickfix
-    use { "kevinhwang91/nvim-bqf",
-      ft = "qf",
-      config = [[require('config.bqf')]],
-    }
-
-    -- Escape from insert mode by 'jk'
-    use { "nvim-zh/better-escape.vim",
-      event = "InsertEnter",
-      setup = function()
-        vim.cmd([[let g:better_escape_interval = 200]])
-      end,
-    }
-
-    -- Automatic insertion and deletion of a pair of characters
-    use { "Raimondi/delimitMate",
-      event = "InsertEnter",
+      config = [[require('config.marks')]],
     }
 
     -- Show match number and index for searching
@@ -164,6 +142,24 @@ packer.startup {
       branch = "main",
       keys = { { "n", "*" }, { "n", "#" }, { "n", "n" }, { "n", "N" } },
       config = [[require('config.hlslens')]],
+    }
+
+    -- status line
+    use { "nvim-lualine/lualine.nvim",
+      event = "VimEnter",
+      config = [[require('config.statusline')]],
+    }
+
+    -- buffer line
+    use { "akinsho/bufferline.nvim",
+      event = "VimEnter",
+      config = [[require('config.bufferline')]],
+    }
+
+    -- Best quickfix
+    use { "kevinhwang91/nvim-bqf",
+      ft = "qf",
+      config = [[require('config.bqf')]],
     }
 
     -- file explorer
@@ -192,6 +188,31 @@ packer.startup {
       },
       config = [[require('config.telescope')]],
     }
+
+    -- notification plugin
+    use { "rcarriga/nvim-notify",
+      event = "VimEnter",
+      config = function()
+        vim.defer_fn(function()
+          require("config.nvim-notify")
+        end, 2000)
+      end,
+    }
+
+    -- A list of colorscheme plugin you may want to try. Find what suits you.
+    use { "navarasu/onedark.nvim",       opt = true }
+    use { "sainnhe/edge",                opt = true }
+    use { "sainnhe/sonokai",             opt = true }
+    use { "sainnhe/gruvbox-material",    opt = true }
+    use { "shaunsingh/nord.nvim",        opt = true }
+    use { "sainnhe/everforest",          opt = true }
+    use { "EdenEast/nightfox.nvim",      opt = true }
+    use { "rebelot/kanagawa.nvim",       opt = true }
+    use { "catppuccin/nvim",             opt = true, as = "catppuccin" }
+    use { "rose-pine/neovim",            opt = true, as = 'rose-pine' }
+    use { "olimorris/onedarkpro.nvim",   opt = true }
+    use { "tanvirtin/monokai.nvim",      opt = true }
+    use { "marko-cerovac/material.nvim", opt = true }
 
   end,
   config = {

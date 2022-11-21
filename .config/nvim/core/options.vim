@@ -1,7 +1,7 @@
 scriptencoding utf-8
 
 " change fillchars for folding, vertical split, end of buffer, and message separator
-set fillchars=fold:\ ,vert:\│,eob:\ ,msgsep:‾
+set fillchars=vert:\│,eob:\ ,msgsep:‾,fold:\ ,foldopen:,foldsep:\ ,foldclose:
 
 " Paste mode toggle, it seems that Nvim's bracketed paste mode
 " does not work very well for nvim-qt, so we use good-old paste mode
@@ -173,6 +173,10 @@ set diffopt+=internal,indent-heuristic,algorithm:histogram
 set wrap
 set noruler
 set colorcolumn=80
+set omnifunc=
+
+" Must be apply the patch https://github.com/neovim/neovim/pull/17446
+"set foldoptions=
 
 " Set colorscheme
 "lua require("colorschemes").rand_colorscheme()
