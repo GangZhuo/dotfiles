@@ -61,14 +61,27 @@ packer.startup {
     use { "hrsh7th/cmp-path",            after = "nvim-cmp" }
     use { "hrsh7th/cmp-buffer",          after = "nvim-cmp" }
     use { "hrsh7th/cmp-omni",            after = "nvim-cmp" }
-    use { "uga-rosa/cmp-dictionary",     after = "nvim-cmp", config = [[require('config.cmp-dictionary')]] }
+    use { "hrsh7th/cmp-vsnip",           after = "nvim-cmp" }
     use { "hrsh7th/cmp-cmdline",         after = "nvim-cmp" }
     use { "dmitmel/cmp-cmdline-history", after = "nvim-cmp" }
+    use { "uga-rosa/cmp-dictionary",     after = "nvim-cmp", config = [[require('config.cmp-dictionary')]] }
 
     -- nvim-lsp configuration (it relies on cmp-nvim-lsp, so it should be loaded after cmp-nvim-lsp).
     use { "neovim/nvim-lspconfig",
       after = "cmp-nvim-lsp",
       config = [[require('config.lsp')]],
+    }
+
+    -- Snippet
+    use { "hrsh7th/vim-vsnip",
+      event = "VimEnter",
+      config = [[require('config.vsnip')]],
+    }
+    use { "hrsh7th/vim-vsnip-integ",
+      requires = { "vim-vsnip" },
+    }
+    use { "rafamadriz/friendly-snippets",
+      event = "VimEnter",
     }
 
     -- A list of colorscheme plugin you may want to try. Find what suits you.

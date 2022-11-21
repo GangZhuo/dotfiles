@@ -5,8 +5,7 @@ local lspkind = require("lspkind")
 cmp.setup {
   snippet = {
     expand = function(args)
-      -- For `ultisnips` user.
-      --vim.fn["UltiSnips#Anon"](args.body)
+      vim.fn["vsnip#anonymous"](args.body)
     end,
   },
   mapping = cmp.mapping.preset.insert {
@@ -30,10 +29,10 @@ cmp.setup {
     ["<C-f>"] = cmp.mapping.scroll_docs(4),
   },
   sources = {
-    { name = "nvim_lsp" }, -- For nvim-lsp
-    --{ name = "ultisnips" }, -- For ultisnips user.
-    { name = "path" }, -- for path completion
-    { name = "buffer" }, -- for buffer word completion
+    { name = "nvim_lsp" },
+    { name = 'vsnip' },
+    { name = "path" },
+    { name = "buffer" },
     { name = "omni" },
     { name = "dictionary", keyword_length = 2, },
   },
