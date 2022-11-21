@@ -4,8 +4,15 @@ local keymap = vim.keymap
 local hlslens = require("hlslens")
 
 hlslens.setup {
-  calm_down = true,
-  nearest_only = true,
+  -- If calm_down is true, clear all lens and highlighting When the cursor is
+  -- out of the position range of the matched instance or any texts are changed
+  calm_down = false,
+  -- Only add lens for the nearest matched instance and ignore others
+  nearest_only = false,
+  -- When to open the floating window for the nearest lens.
+  --   'auto': floating window will be opened if room isn't enough for virtual text;
+  --   'always': always use floating window instead of virtual text;
+  --   'never': never use floating window for the nearest lens
   nearest_float_when = 'auto'
 }
 

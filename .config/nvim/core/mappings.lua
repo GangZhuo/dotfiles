@@ -202,7 +202,11 @@ keymap.set("n", "<leader>cb", function()
   end))
 end)
 
-keymap.set("n", "<BackSpace>", "<cmd>nohl<cr>")
+--keymap.set("n", "<BackSpace>", "<cmd>nohl<cr>")
+keymap.set("n", "<BackSpace>", function ()
+  require('hlslens').stop()
+  vim.cmd('nohl')
+end)
 
 keymap.set("n", "<leader>cn", "<cmd>lua require('colorschemes').next()<cr>",
   {
