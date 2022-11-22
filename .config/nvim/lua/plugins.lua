@@ -44,7 +44,7 @@ packer.startup {
     -- Escape from insert mode by 'jk'
     use { "nvim-zh/better-escape.vim",
       event = "InsertEnter",
-      setup = function()
+      config = function()
         vim.cmd([[let g:better_escape_interval = 200]])
       end,
     }
@@ -77,38 +77,44 @@ packer.startup {
       event = "VimEnter",
     }
 
+    use { "neovim/nvim-lspconfig",
+      event = "VimEnter",
+      requires = {
+        -- nvim-lsp do not require cmp-nvim-lsp,
+        -- but it's configuration relies on cmp-nvim-lsp
+        "hrsh7th/cmp-nvim-lsp",
+      },
+      config = [[require('config.lsp')]],
+    }
+
     -- auto-completion engine
     use { "hrsh7th/nvim-cmp",
       event = "VimEnter",
       requires = {
-        "onsails/lspkind-nvim"
+        -- lsp kind icons
+        "onsails/lspkind-nvim",
+        -- nvim-cmp completion sources
+        { "hrsh7th/cmp-nvim-lsp" },
+        { "hrsh7th/cmp-path" },
+        { "hrsh7th/cmp-buffer" },
+        { "hrsh7th/cmp-vsnip" },
+        { "hrsh7th/cmp-cmdline" },
+        { "dmitmel/cmp-cmdline-history" },
+        { "uga-rosa/cmp-dictionary",
+          config = [[require('config.cmp-dictionary')]] },
       },
       config = [[require('config.nvim-cmp')]],
-    }
-
-    -- nvim-cmp completion sources
-    use { "hrsh7th/cmp-nvim-lsp",        after = "nvim-cmp" }
-    use { "hrsh7th/cmp-path",            after = "nvim-cmp" }
-    use { "hrsh7th/cmp-buffer",          after = "nvim-cmp" }
-    use { "hrsh7th/cmp-omni",            after = "nvim-cmp" }
-    use { "hrsh7th/cmp-vsnip",           after = "nvim-cmp" }
-    use { "hrsh7th/cmp-cmdline",         after = "nvim-cmp" }
-    use { "dmitmel/cmp-cmdline-history", after = "nvim-cmp" }
-    use { "uga-rosa/cmp-dictionary",     after = "nvim-cmp", config = [[require('config.cmp-dictionary')]] }
-
-    -- nvim-lsp configuration (it relies on cmp-nvim-lsp, so it should be loaded after cmp-nvim-lsp).
-    use { "neovim/nvim-lspconfig",
-      after = {
-        "cmp-nvim-lsp",
-      },
-      config = [[require('config.lsp')]],
     }
 
     -- build a concrete syntax tree, and highlight by syntax tree
     use { "nvim-treesitter/nvim-treesitter",
       event = "VimEnter",
       run = ":TSUpdate",
-      config = [[require('config.treesitter')]],
+      config = function()
+        vim.defer_fn(function()
+          require('config.treesitter')
+        end, 200)
+      end,
     }
 
     -- Ultra fold in Neovim base on lsp, treesitter and indent
@@ -118,7 +124,9 @@ packer.startup {
         "cmp-nvim-lsp",
         "nvim-treesitter",
       },
-      requires = { "kevinhwang91/promise-async" },
+      requires = {
+        "kevinhwang91/promise-async",
+      },
       config = [[require('config.ufo')]],
     }
 
@@ -128,7 +136,7 @@ packer.startup {
       after = {
         "nvim-treesitter",
       },
-      setup = [[require('utils').load_config('matchup')]],
+      config = [[require('utils').load_config('matchup')]],
     }
 
     -- Show marks in signcolumn

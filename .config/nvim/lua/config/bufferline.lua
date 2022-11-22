@@ -46,7 +46,7 @@ require("bufferline").setup {
 }
 
 -- Go to a certain buffer
-vim.keymap.set("n", "gt", function(args)
+vim.keymap.set("n", "gb", function(args)
     if vim.v.count == 0 then
       vim.cmd("bnext")
     else

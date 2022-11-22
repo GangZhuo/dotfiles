@@ -178,7 +178,3 @@ set omnifunc=
 " Must be apply the patch https://github.com/neovim/neovim/pull/17446
 "set foldoptions=
 
-" Set colorscheme
-"lua require("colorschemes").rand_colorscheme()
-lua require("colorschemes").set_colorscheme("sonokai")
-

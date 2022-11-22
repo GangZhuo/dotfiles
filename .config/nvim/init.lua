@@ -34,3 +34,7 @@ for _, name in ipairs(core_conf_files) do
   local source_cmd = "source " .. path
   vim.cmd(source_cmd)
 end
+
+-- Set colorscheme
+--require("colorschemes").rand_colorscheme()
+require("colorschemes").set_colorscheme("sonokai")

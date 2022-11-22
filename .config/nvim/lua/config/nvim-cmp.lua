@@ -33,7 +33,6 @@ cmp.setup {
     { name = 'vsnip' },
     { name = "path" },
     { name = "buffer" },
-    { name = "omni" },
     { name = "dictionary", keyword_length = 2, },
   },
   formatting = {

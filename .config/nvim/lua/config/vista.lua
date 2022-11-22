@@ -53,12 +53,12 @@ vim.g.vista_floating_border= "rounded"
 -- Set the executive for some filetypes explicitly. Use the explicit executive
 -- instead of the default one for these filetypes when using `:Vista` without
 -- specifying the executive.
-vim.g.vista_executive_for = {
-  ["c"]   = "nvim_lsp",
-  ["cpp"] = "nvim_lsp",
-  ["lua"] = "nvim_lsp",
-  ["php"] = "nvim_lsp",
-}
+--vim.g.vista_executive_for = {
+--  ["c"]   = "nvim_lsp",
+--  ["cpp"] = "nvim_lsp",
+--  ["lua"] = "nvim_lsp",
+--  ["php"] = "nvim_lsp",
+--}
 
 -- Show symbol list
 --vim.keymap.set("n", "<leader>t", "<cmd>Vista!!<cr>", {
@@ -68,4 +68,4 @@ vim.g.vista_executive_for = {
 --})
 
 -- Show the nearest method/function in the statusline
-vim.cmd([[call vista#RunForNearestMethodOrFunction()]])
+--vim.cmd([[call vista#RunForNearestMethodOrFunction()]])
