@@ -98,7 +98,7 @@ local diff = function()
 end
 
 local function nearest_function()
-  return vim.b.vista_nearest_method_or_function or ""
+  return vim.b.lsp_current_function or ""
 end
 
 require("lualine").setup {
@@ -123,7 +123,7 @@ require("lualine").setup {
     },
     lualine_c = {
       "filename",
-      nearest_function,
+      { nearest_function, },
       --{
       --  ime_state,
       --  color = { fg = "black", bg = "#f46868" },

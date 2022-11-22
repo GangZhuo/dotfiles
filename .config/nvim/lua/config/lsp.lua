@@ -83,7 +83,7 @@ local custom_attach = function(client, bufnr)
   -- register action to update current enclosing function.
   if client.server_capabilities.documentSymbolProvider then
     table.insert(cursor_hold_actions, function()
-     --TODO:
+      require("lsp-status").update_current_function()
     end)
   end
 
