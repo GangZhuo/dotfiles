@@ -54,3 +54,7 @@ keymap.set("n", "#", "", {
     hlslens.start()
   end,
 })
+keymap.set("n", "<BackSpace>", function ()
+  require('hlslens').stop()
+  vim.cmd('nohl')
+end)
