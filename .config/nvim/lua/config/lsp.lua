@@ -20,6 +20,29 @@ map('n', '<space>l', diagnostic.setloclist, "put diagnostic to loclist")
 map('n', '[d',       diagnostic.goto_prev,  "previous diagnostic")
 map('n', ']d',       diagnostic.goto_next,  "next diagnostic")
 
+local open_diagnostics_float = function()
+  local float_opts = {
+    focusable = false,
+    close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+    border = "rounded",
+    source = "always", -- show source in diagnostic popup window
+    prefix = " ",
+  }
+
+  if not vim.b.diagnostics_pos then
+    vim.b.diagnostics_pos = { nil, nil }
+  end
+
+  local cursor_pos = api.nvim_win_get_cursor(0)
+  if (cursor_pos[1] ~= vim.b.diagnostics_pos[1] or cursor_pos[2] ~= vim.b.diagnostics_pos[2])
+      and #diagnostic.get() > 0
+  then
+    diagnostic.open_float(nil, float_opts)
+  end
+
+  vim.b.diagnostics_pos = cursor_pos
+end
+
 local custom_attach = function(client, bufnr)
 
   local bufmap = function(mode, l, r, desc)
@@ -52,29 +75,24 @@ local custom_attach = function(client, bufnr)
     bufmap("n", "<space>fc", vim.lsp.buf.format,       "format code")
   end
 
+  local cursor_hold_actions = {
+    open_diagnostics_float,
+  }
+
+  -- If the client is a documentSymbolProvider,
+  -- register action to update current enclosing function.
+  if client.server_capabilities.documentSymbolProvider then
+    table.insert(cursor_hold_actions, function()
+     --TODO:
+    end)
+  end
+
   api.nvim_create_autocmd("CursorHold", {
     buffer = bufnr,
-    callback = function()
-      local float_opts = {
-        focusable = false,
-        close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
-        border = "rounded",
-        source = "always", -- show source in diagnostic popup window
-        prefix = " ",
-      }
-
-      if not vim.b.diagnostics_pos then
-        vim.b.diagnostics_pos = { nil, nil }
+    callback = function(...)
+      for _,f in ipairs(cursor_hold_actions) do
+        f(...)
       end
-
-      local cursor_pos = api.nvim_win_get_cursor(0)
-      if (cursor_pos[1] ~= vim.b.diagnostics_pos[1] or cursor_pos[2] ~= vim.b.diagnostics_pos[2])
-          and #diagnostic.get() > 0
-      then
-        diagnostic.open_float(nil, float_opts)
-      end
-
-      vim.b.diagnostics_pos = cursor_pos
     end,
   })
 
