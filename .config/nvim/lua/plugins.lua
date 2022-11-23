@@ -54,9 +54,9 @@ packer.startup {
       event = "VimEnter",
     }
 
-    -- show and trim trailing whitespaces
-    use { "jdhao/whitespace.nvim",
+    use { "trailing-whitespace",
       event = "VimEnter",
+      config = [[require('trailing-whitespace').setup()]],
     }
 
     -- Automatic insertion and deletion of a pair of characters

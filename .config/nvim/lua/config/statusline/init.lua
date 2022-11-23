@@ -36,12 +36,8 @@ require("lualine").setup {
         "diagnostics",
         sources = { "nvim_diagnostic" },
       },
-      require('config.statusline.trailing-space').setup {
-        enabled = false
-      },
-      require('config.statusline.mixed-indent').setup {
-        enabled = false
-      },
+      require('config.statusline.trailing-whitespace'),
+      require('config.statusline.mixed-indent'),
     },
   },
   inactive_sections = {

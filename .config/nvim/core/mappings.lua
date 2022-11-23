@@ -137,7 +137,21 @@ keymap.set("n", "cc", '"_cc')
 keymap.set("x", "c", '"_c')
 
 -- Remove trailing whitespace characters
-keymap.set("n", "<leader><space>", "<cmd>StripTrailingWhitespace<cr>", { desc = "remove trailing space" })
+keymap.set("n", "<leader><space>", function ()
+  local line_start = nil
+  local line_end = nil
+  if vim.v.count ~= 0 then
+    line_start = api.nvim_win_get_cursor(0)[1] - 1
+    line_end = line_start + vim.v.count
+  end
+  require("trailing-whitespace").strip_tailing_whitespace(line_start, line_end)
+end, { desc = "remove trailing space" })
+
+keymap.set("x", "<leader><space>", function ()
+  local line_start = vim.fn.getpos("'[")[2] - 1
+  local line_end = vim.fn.getpos("']")[2]
+  require("trailing-whitespace").strip_tailing_whitespace(line_start, line_end)
+end, { desc = "remove trailing space" })
 
 -- check the syntax group of current cursor position
 keymap.set("n", "<leader>st", "<cmd>call utils#SynGroup()<cr>", { desc = "check syntax group" })
@@ -205,13 +219,13 @@ end)
 keymap.set("n", "<BackSpace>", "<cmd>nohl<cr>")
 
 keymap.set("n", "<leader>cn", "<cmd>lua require('colorschemes').next()<cr>",
-  {
+{
     silent = true,
     desc = "choose next colorscheme"
 })
 
 keymap.set("n", "<leader>cp", "<cmd>lua require('colorschemes').prev()<cr>",
-  {
+{
     silent = true,
     desc = "choose previous colorscheme"
 })
