@@ -2,6 +2,7 @@
 
 local api = vim.api
 local fn = vim.fn
+local diagnostic = vim.diagnostic
 
 -- Create highlight namespace
 local hl_ns = api.nvim_create_namespace("TrailingWhitespace")
@@ -15,7 +16,8 @@ M.config = {
   enabled = true,
   colors = { bg = "red", fg = "red", },
   excluded_ft = { "alpha", "git", "floggraph", "dashboard", },
-  max_interval = 1000,
+  max_interval = 5 * 1000,
+  source = "[TW]",
 }
 
 local bo = function(opt_name)
@@ -87,6 +89,7 @@ M.update = function(line_start, line_end)
     first_tab_line = 0,
     tab_lines = {},
   }
+  local diags = {}
   for i = line_start, line_end do
     local linetext = fn.getline(i)
 
@@ -97,6 +100,15 @@ M.update = function(line_start, line_end)
         line_num = i
       end
       M.set_highlight(i - 1, idx, -1)
+      table.insert(diags, {
+        lnum = i -1,
+        end_lnum = i - 1,
+        col = idx,
+        end_col = -1,
+        severity = diagnostic.severity.WARN,
+        message = "Trailing Whitespace",
+        source = M.config.source,
+      })
     end
 
     -- Checking mixed-indent
@@ -135,10 +147,20 @@ M.update = function(line_start, line_end)
     else
       lines = x.tab_lines
     end
-    for _,v in ipairs(lines) do
-      local linetext = fn.getline(v)
+
+    for _,i in ipairs(lines) do
+      local linetext = fn.getline(i)
       local s = string.match(linetext, "^%s+")
-      M.set_highlight(v - 1, 0, #s)
+      M.set_highlight(i - 1, 0, #s)
+      table.insert(diags, {
+        lnum = i -1,
+        end_lnum = i - 1,
+        col = 0,
+        end_col = #s,
+        severity = diagnostic.severity.WARN,
+        message = "Mixed Indent",
+        source = M.config.source,
+      })
     end
   else
     vim.b.space_indent_count = 0
@@ -146,6 +168,12 @@ M.update = function(line_start, line_end)
     vim.b.tab_indent_count = 0
     vim.b.tab_indent_first_line = 0
   end
+
+  diagnostic.reset(hl_ns, 0)
+  diagnostic.set(hl_ns, 0, diags, {
+    underline = true,
+    virtual_text = false,
+  })
 
   last_update = vim.loop.now()
 end
@@ -166,12 +194,14 @@ M.setup = function(config)
     pattern = "*",
     group = augroup,
     callback = function (e)
+      --[[
       if e.event == "TextChanged" then
         local line_start = fn.getpos("'[")[2] - 1
         local line_end = fn.getpos("']")[2]
         M.update(line_start, line_end)
         return
       end
+      --]]
       if timer then
         vim.loop.timer_stop(timer)
         timer = nil
@@ -182,7 +212,7 @@ M.setup = function(config)
       else
         timer = vim.defer_fn(function()
           M.update()
-        end, 100)
+        end, 1000)
       end
     end,
   })
@@ -193,6 +223,10 @@ M.setup = function(config)
       M.clear_highlight()
     end,
   })
+  -- First run
+  timer = vim.defer_fn(function()
+    M.update()
+  end, 100)
 end
 
 return M

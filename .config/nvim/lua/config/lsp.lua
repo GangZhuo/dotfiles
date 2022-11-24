@@ -6,6 +6,8 @@ local diagnostic = vim.diagnostic
 
 local utils = require("utils")
 
+local _notifies = {}
+
 local map = function(mode, l, r, desc)
   local opts = {
     noremap = true,
@@ -43,6 +45,12 @@ local open_diagnostics_float = function()
   vim.b.diagnostics_pos = cursor_pos
 end
 
+api.nvim_create_autocmd("CursorHold", {
+  callback = function()
+    open_diagnostics_float()
+  end,
+})
+
 local custom_attach = function(client, bufnr)
 
   local bufmap = function(mode, l, r, desc)
@@ -65,52 +73,27 @@ local custom_attach = function(client, bufnr)
   bufmap("n", "<space>ca", vim.lsp.buf.code_action,    "LSP code action")
   bufmap("n", "<space>wa", vim.lsp.buf.add_workspace_folder, "add workspace folder")
   bufmap("n", "<space>wr", vim.lsp.buf.remove_workspace_folder, "remove workspace folder")
-  bufmap("n", "<space>wl",
-    function()
-      inspect(vim.lsp.buf.list_workspace_folders())
-    end,                                               "list workspace folder")
 
   -- Set some key bindings conditional on server capabilities
   if client.server_capabilities.documentFormattingProvider then
-    bufmap("n", "<space>fc", vim.lsp.buf.format,       "format code")
+    bufmap("n", "<space>fc", vim.lsp.buf.format,         "format code")
   end
-
-  local cursor_hold_actions = {
-    open_diagnostics_float,
-  }
 
   -- If the client is a documentSymbolProvider,
   -- register action to update current enclosing function.
   if client.server_capabilities.documentSymbolProvider then
-    table.insert(cursor_hold_actions, function()
-      require("lsp-status").update_current_function()
-    end)
+    api.nvim_create_autocmd("CursorHold", {
+      buffer = bufnr,
+      callback = function()
+        require("lsp-status").update_current_function()
+      end,
+    })
   end
 
-  api.nvim_create_autocmd("CursorHold", {
-    buffer = bufnr,
-    callback = function(...)
-      for _,f in ipairs(cursor_hold_actions) do
-        f(...)
-      end
-    end,
-  })
-
-  if vim.g.logging_level == "debug" then
+  if not _notifies[client.name] then
+    _notifies[client.name] = true
     local msg = string.format("Language server %s started!", client.name)
-    vim.notify(msg, vim.log.levels.DEBUG, { title = "Nvim-config" })
-  end
-end
-
-local notifies = {}
-local attach = function(lang_server)
-  return function(...)
-    if not notifies[lang_server] then
-      notifies[lang_server] = true
-      vim.notify(string.format("lsp setup language server '%s'!", lang_server),
-        vim.log.levels.INFO, { title = "Nvim-config" })
-    end
-    custom_attach(...)
+    vim.notify(msg, vim.log.levels.INFO, { title = "Nvim-config" })
   end
 end
 
@@ -131,7 +114,7 @@ local lspconfig = require("lspconfig")
 
 if utils.executable("pylsp") then
   lspconfig.pylsp.setup {
-    on_attach = attach("pylsp"),
+    on_attach = custom_attach,
     settings = {
       pylsp = {
         plugins = {
@@ -153,14 +136,14 @@ end
 
 if utils.executable('pyright') then
   lspconfig.pyright.setup{
-    on_attach = attach("pyright"),
+    on_attach = custom_attach,
     capabilities = capabilities
   }
 end
 
 if utils.executable("clangd") then
   lspconfig.clangd.setup {
-    on_attach = attach("clangd"),
+    on_attach = custom_attach,
     capabilities = capabilities,
     filetypes = { "c", "cpp", "cc" },
     flags = {
@@ -172,7 +155,7 @@ end
 -- set up vim-language-server
 if utils.executable("vim-language-server") then
   lspconfig.vimls.setup {
-    on_attach = attach("vim-language-server"),
+    on_attach = custom_attach,
     flags = {
       debounce_text_changes = 500,
     },
@@ -183,7 +166,7 @@ end
 -- set up bash-language-server
 if utils.executable("bash-language-server") then
   lspconfig.bashls.setup {
-    on_attach = attach("bash-language-server"),
+    on_attach = custom_attach,
     capabilities = capabilities,
   }
 end
@@ -191,7 +174,7 @@ end
 if utils.executable("lua-language-server") then
   -- settings for lua-language-server can be found on https://github.com/sumneko/lua-language-server/wiki/Settings .
   lspconfig.sumneko_lua.setup {
-    on_attach = attach("lua-language-server"),
+    on_attach = custom_attach,
     settings = {
       Lua = {
         runtime = {
