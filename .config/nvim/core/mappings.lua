@@ -1,6 +1,7 @@
 local keymap = vim.keymap
 local api = vim.api
 local uv = vim.loop
+local diagnostic = vim.diagnostic
 
 -- Turn the word under cursor to upper case
 keymap.set("i", "<c-u>", "<Esc>viwUea")
@@ -229,3 +230,8 @@ keymap.set("n", "<leader>cp", "<cmd>lua require('colorschemes').prev()<cr>",
     silent = true,
     desc = "choose previous colorscheme"
 })
+
+keymap.set('n', '<space>e', diagnostic.open_float, { desc = "put diagnostic to qf" })
+keymap.set('n', '<space>l', diagnostic.setloclist, { desc = "put diagnostic to loclist" })
+keymap.set('n', '[d',       diagnostic.goto_prev,  { desc = "previous diagnostic" })
+keymap.set('n', ']d',       diagnostic.goto_next,  { desc = "next diagnostic" })
