@@ -138,7 +138,6 @@ M.update = function(line_start, line_end)
     for _,v in ipairs(lines) do
       local linetext = fn.getline(v)
       local s = string.match(linetext, "^%s+")
-      inspect({v, #s, linetext})
       M.set_highlight(v - 1, 0, #s)
     end
   else
