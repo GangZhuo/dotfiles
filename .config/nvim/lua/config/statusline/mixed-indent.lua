@@ -12,17 +12,11 @@ end
 
 function M:update_status()
   local retval
-  local space_indent_count = vim.b.space_indent_count or 0
-  local space_indent_first_line = vim.b.space_indent_first_line or 0
-  local tab_indent_count = vim.b.tab_indent_count or 0
-  local tab_indent_first_line = vim.b.tab_indent_first_line or 0
-  if space_indent_count > 0 and tab_indent_count > 0 then
-    retval = string.format('%sMI:SPACE:%d(#%d) MI:TAB:%d(#%d)',
+  local b = require("trailing-whitespace").get_bufinfo()
+  if b and b.mi and b.mi > 0 then
+    retval = string.format('%sMI:%d',
                highlight.component_format_highlight(self.color),
-               space_indent_first_line,
-               space_indent_count,
-               tab_indent_first_line,
-               tab_indent_count)
+               b.mi)
   end
   return retval or ''
 end

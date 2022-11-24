@@ -145,13 +145,13 @@ keymap.set("n", "<leader><space>", function ()
     line_start = api.nvim_win_get_cursor(0)[1] - 1
     line_end = line_start + vim.v.count
   end
-  require("trailing-whitespace").strip_tailing_whitespace(line_start, line_end)
+  require("trailing-whitespace").strip(line_start, line_end)
 end, { desc = "remove trailing space" })
 
 keymap.set("x", "<leader><space>", function ()
   local line_start = vim.fn.getpos("'[")[2] - 1
   local line_end = vim.fn.getpos("']")[2]
-  require("trailing-whitespace").strip_tailing_whitespace(line_start, line_end)
+  require("trailing-whitespace").strip(line_start, line_end)
 end, { desc = "remove trailing space" })
 
 -- check the syntax group of current cursor position

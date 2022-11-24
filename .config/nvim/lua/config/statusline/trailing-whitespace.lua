@@ -12,11 +12,11 @@ end
 
 function M:update_status()
   local retval
-  local line_num = vim.b.trailing_whitespace_line or 0
-  if line_num > 0 then
-    retval = string.format('%s[%d]trailing',
+  local b = require("trailing-whitespace").get_bufinfo()
+  if b and b.tw and b.tw > 0 then
+    retval = string.format('%sTW:%d',
                highlight.component_format_highlight(self.color),
-               line_num)
+               b.tw)
   end
   return retval or ''
 end
