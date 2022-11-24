@@ -35,6 +35,7 @@ require("lualine").setup {
       {
         "diagnostics",
         sources = { "nvim_diagnostic" },
+        color = { bg = "NONE", },
       },
       require('config.statusline.trailing-whitespace'),
       require('config.statusline.mixed-indent'),
