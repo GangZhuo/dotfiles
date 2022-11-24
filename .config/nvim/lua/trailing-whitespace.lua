@@ -168,7 +168,7 @@ local set_autocmds = function ()
       diagnostic.disable(0, diag_ns)
     end,
   })
-  api.nvim_create_autocmd({ "BufLeave" }, {
+  api.nvim_create_autocmd({ "BufDelete" }, {
     pattern = "*",
     group = augroup,
     callback = function ()
