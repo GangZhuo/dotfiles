@@ -68,6 +68,9 @@ M.strip_tailing_whitespace = function(line_start, line_end)
   vim.cmd(cmd)
 end
 
+-- Known issues:
+--  * When line_start and line_end are not nil,
+--    the statusline shown information only these lines
 M.update = function(line_start, line_end)
   if not M.buffer_enabled() then
     return
