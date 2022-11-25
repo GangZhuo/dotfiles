@@ -82,14 +82,6 @@ packer.startup {
         -- nvim-lsp do not require cmp-nvim-lsp,
         -- but it's configuration relies on cmp-nvim-lsp
         { "hrsh7th/cmp-nvim-lsp" },
-        -- Show function name in statusline
-        { "nvim-lua/lsp-status.nvim",
-          requires = {
-            -- lsp kind icons
-            "onsails/lspkind-nvim",
-          },
-          config = [[require('config.lsp-status')]],
-        },
       },
       config = [[require('config.lsp')]],
     }
