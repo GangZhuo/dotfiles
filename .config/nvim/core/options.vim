@@ -92,14 +92,6 @@ set list
 " Auto-write the file based on some condition
 set autowrite
 
-" Show hostname, full path of file and last-mod time on the window title. The
-" meaning of the format str for strftime can be found in
-" http://man7.org/linux/man-pages/man3/strftime.3.html. The function to get
-" lastmod time is drawn from https://stackoverflow.com/q/8426736/6064933
-set title
-set titlestring=
-set titlestring=%{utils#Get_titlestr()}
-
 " Persistent undo even after you close a file and re-open it
 set undofile
 

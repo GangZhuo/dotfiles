@@ -32,14 +32,6 @@ keymap.set("n", "<leader>P", "m`O<ESC>p``", { desc = "paste above current line" 
 -- Copy entire buffer.
 keymap.set("n", "<leader>y", "<cmd>%yank<cr>", { desc = "yank entire buffer" })
 
--- Move current line up and down
-keymap.set("n", "<A-k>", '<cmd>call utils#SwitchLine(line("."), "up")<cr>', { desc = "move line up" })
-keymap.set("n", "<A-j>", '<cmd>call utils#SwitchLine(line("."), "down")<cr>', { desc = "move line down" })
-
--- Move current visual-line selection up and down
-keymap.set("x", "<A-k>", '<cmd>call utils#MoveSelection("up")<cr>', { desc = "move selection up" })
-keymap.set("x", "<A-j>", '<cmd>call utils#MoveSelection("down")<cr>', { desc = "move selection down" })
-
 -- Shortcut for faster save and quit
 keymap.set("n", "<leader>w", "<cmd>update<cr>", { silent = true, desc = "save buffer" })
 
@@ -154,23 +146,20 @@ keymap.set("x", "<leader><space>", function ()
   require("trailing-whitespace").strip(line_start, line_end)
 end, { desc = "remove trailing space" })
 
--- check the syntax group of current cursor position
-keymap.set("n", "<leader>st", "<cmd>call utils#SynGroup()<cr>", { desc = "check syntax group" })
-
 -- Toggle cursor column
-keymap.set("n", "<leader>cl", "<cmd>call utils#ToggleCursorCol()<cr>", { desc = "toggle cursor column" })
+keymap.set("n", "<leader>cl", function ()
+  if vim.o.cursorcolumn then
+    vim.o.cursorcolumn = false
+    vim.notify("cursorcolumn: OFF", vim.log.levels.INFO)
+  else
+    vim.o.cursorcolumn = true
+    vim.notify("cursorcolumn: ON", vim.log.levels.INFO)
+  end
+end, { desc = "toggle cursor column" })
 
 -- Replace visual selection with text in register, but not contaminate the register,
 -- see also https://stackoverflow.com/q/10723700/6064933.
 keymap.set("x", "p", '"_c<Esc>p')
-
--- Go to a certain buffer
-keymap.set("n", "gb", '<cmd>call buf_utils#GoToBuffer(v:count, "forward")<cr>', {
-  desc = "go to buffer (forward)",
-})
-keymap.set("n", "gB", '<cmd>call buf_utils#GoToBuffer(v:count, "backward")<cr>', {
-  desc = "go to buffer (backward)",
-})
 
 -- Switch windows
 keymap.set("n", "<C-H>", "<c-w>h")
@@ -185,12 +174,6 @@ keymap.set("n", "<A-_>", "<cmd>resize -3<cr>")
 -- Increase/decrease horizontal size for window
 keymap.set("n", "<A-(>", "<cmd>vertical resize -3<cr>")
 keymap.set("n", "<A-)>", "<cmd>vertical resize +3<cr>")
-
--- Text objects for URL
-keymap.set({ "x", "o" }, "iu", "<cmd>call text_obj#URL()<cr>", { desc = "URL text object" })
-
--- Text objects for entire buffer
-keymap.set({ "x", "o" }, "iB", "<cmd>call text_obj#Buffer()<cr>", { desc = "buffer text object" })
 
 -- Break inserted text into smaller undo units when we insert some punctuation chars.
 local undo_ch = { ",", ".", "!", "?", ";", ":" }

@@ -73,11 +73,6 @@ function! s:quit_current_win() abort
   endif
 endfunction
 
-augroup git_repo_check
-  autocmd!
-  autocmd VimEnter,DirChanged * call utils#Inside_git_repo()
-augroup END
-
 " ref: https://vi.stackexchange.com/a/169/15292
 function! s:handle_large_file() abort
   let g:large_file = 10485760 " 10MB
