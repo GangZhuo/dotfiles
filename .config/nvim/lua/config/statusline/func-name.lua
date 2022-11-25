@@ -19,11 +19,11 @@ function M:update_status()
     return ''
   end
   local retval
-  local name = vim.b.lsp_current_function
-  if name then
+  local b = require("config.lsp.fname").get_bufinfo()
+  if b and b.current_lsp_symbol then
     retval = string.format('%s%s',
                highlight.component_format_highlight(self.color),
-               tostring(name))
+               tostring(b.current_lsp_symbol))
   end
   return retval or ''
 end

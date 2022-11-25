@@ -8,6 +8,8 @@ local utils = require("utils")
 
 local _notifies = {}
 
+require("config.lsp.fname").setup()
+
 local custom_attach = function(client, bufnr)
 
   local bufmap = function(mode, l, r, desc)
@@ -36,16 +38,7 @@ local custom_attach = function(client, bufnr)
     bufmap("n", "<space>fc", vim.lsp.buf.format,         "format code")
   end
 
-  -- If the client is a documentSymbolProvider,
-  -- register action to update current enclosing function.
-  if client.server_capabilities.documentSymbolProvider then
-    api.nvim_create_autocmd("CursorHold", {
-      buffer = bufnr,
-      callback = function()
-        require("lsp-status").update_current_function()
-      end,
-    })
-  end
+  require("config.lsp.fname").attach(client, bufnr)
 
   if not _notifies[client.name] then
     _notifies[client.name] = true

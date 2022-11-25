@@ -45,7 +45,7 @@ local buffer_enabled = function()
 end
 
 local get_bufinfo = function (bufnr)
-  bufnr = bufnr or api.nvim_buf_get_name(0)
+  bufnr = bufnr or api.nvim_get_current_buf()
   local b = bufinfo[bufnr]
   if not b then
     b = {
@@ -140,7 +140,7 @@ local callback = vim.schedule_wrap(function()
   scheduled = false
   if not buffer_enabled() then return end
   local b = get_bufinfo()
-  local changedtick = fn.getbufinfo(b.bufname)[1].changedtick
+  local changedtick = api.nvim_buf_get_changedtick(0)
   if b.changedtick == changedtick then return end
   if b.running then return end
   b.running = true
@@ -176,7 +176,7 @@ local set_autocmds = function ()
     group = augroup,
     callback = function ()
       scheduled = false
-      local bufnr = api.nvim_buf_get_name(0)
+      local bufnr = api.nvim_get_current_buf()
       bufinfo[bufnr] = nil
     end,
   })
