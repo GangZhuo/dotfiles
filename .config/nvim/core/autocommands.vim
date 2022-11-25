@@ -41,12 +41,6 @@ function s:resume_cursor_position() abort
   endif
 endfunction
 
-augroup numbertoggle
-  autocmd!
-  autocmd BufEnter,FocusGained,InsertLeave,WinEnter * if &nu | set rnu   | endif
-  autocmd BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
-augroup END
-
 augroup auto_close_win
   autocmd!
   autocmd BufEnter * call s:quit_current_win()

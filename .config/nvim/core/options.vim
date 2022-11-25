@@ -16,11 +16,7 @@ set timeoutlen=500
 
 set updatetime=500  " For CursorHold events
 
-" Clipboard settings, always use clipboard for all delete, yank, change, put
-" operation, see https://stackoverflow.com/q/30691466/6064933
-if !empty(provider#clipboard#Executable())
-  set clipboard+=unnamedplus
-endif
+set history=500  " The number of command and search history to keep
 
 " Disable creating swapfiles, see https://stackoverflow.com/q/821902/6064933
 set noswapfile
@@ -47,7 +43,7 @@ set backupcopy=yes  " copy the original file to backupdir and overwrite it
 set tabstop=4       " number of visual spaces per TAB
 set softtabstop=4   " number of spaces in tab when editing
 set shiftwidth=4    " number of spaces to use for autoindent
-set expandtab       " expand tab to spaces so that tabs are spaces
+set noexpandtab     " expand tab to spaces so that tabs are spaces
 
 " Set matching pairs of characters and highlight matching brackets
 set matchpairs+=<:>,「:」,『:』,【:】,“:”,‘:’,《:》
@@ -84,7 +80,6 @@ set fileformats=unix,dos  " Fileformats to use for new files
 set confirm
 
 set visualbell noerrorbells  " Do not use visual and errorbells
-set history=500  " The number of command and search history to keep
 
 " Use list mode and customized listchars
 set list
@@ -94,20 +89,6 @@ set autowrite
 
 " Persistent undo even after you close a file and re-open it
 set undofile
-
-" Do not show "match xx of xx" and other messages during auto-completion
-set shortmess+=c
-
-" Do not show search match count on bottom right (seriously, I would strain my
-" neck looking at it). Using plugins like vim-anzu or nvim-hlslens is a better
-" choice, IMHO.
-set shortmess+=S
-
-" Disable showing intro message (:intro)
-set shortmess+=I
-
-" Completion behaviour (for nvim-cmp)
-set completeopt=menu,menuone,noselect
 
 set pumheight=10  " Maximum number of items to show in popup menu
 set pumblend=10  " pseudo transparency for completion menu
@@ -132,12 +113,6 @@ set tildeop
 
 set synmaxcol=250  " Text after this column number is not highlighted
 set nostartofline
-
-" External program to use for grep command
-if executable('rg')
-  set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
-  set grepformat=%f:%l:%c:%m
-endif
 
 " Enable true color support. Do not set this option if your terminal does not
 " support true colors! For a comprehensive list of terminals supporting true
@@ -166,7 +141,19 @@ set wrap
 set noruler
 set colorcolumn=80
 set omnifunc=
+set cmdheight=2
 
 " Must be apply the patch https://github.com/neovim/neovim/pull/17446
 "set foldoptions=
 
+" Clipboard settings, always use clipboard for all delete, yank, change, put
+" operation, see https://stackoverflow.com/q/30691466/6064933
+if !empty(provider#clipboard#Executable())
+  set clipboard+=unnamedplus
+endif
+
+" External program to use for grep command
+if executable('rg')
+  set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
+  set grepformat=%f:%l:%c:%m
+endif
