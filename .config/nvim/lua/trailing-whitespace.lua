@@ -9,7 +9,6 @@ local config = {
   enabled = true,
   colors = { bg = "red", fg = "red", },
   excluded_ft = { "alpha", "git", "floggraph", "dashboard", },
-  max_interval = 5 * 1000,
   severity = diagnostic.severity.HINT,
   source = "[TW]",
 }
