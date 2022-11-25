@@ -5,8 +5,8 @@ function M:init(options)
   M.super.init(self, options)
   self.color = highlight.create_component_highlight_group(
     'WarningMsg',
-    'func_name',
-    self.options
+    'mixed_indent',
+    options
   )
 end
 

@@ -6,7 +6,7 @@ function M:init(options)
   self.color = highlight.create_component_highlight_group(
     'WarningMsg',
     'func_name',
-    self.options
+    options
   )
 end
 

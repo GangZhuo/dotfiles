@@ -8,6 +8,34 @@ local utils = require("utils")
 
 local _notifies = {}
 
+-- Change diagnostic signs.
+fn.sign_define("DiagnosticSignError", { text = "✗", texthl = "DiagnosticSignError" })
+fn.sign_define("DiagnosticSignWarn", { text = "!", texthl = "DiagnosticSignWarn" })
+fn.sign_define("DiagnosticSignInformation", { text = "", texthl = "DiagnosticSignInfo" })
+fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
+
+-- global config for diagnostic
+diagnostic.config {
+  virtual_text = false,
+  underline = false,
+  signs = true,
+  severity_sort = true,
+  float = {
+    focusable = true,
+    style = "minimal",
+    border = "rounded",
+    source = "always",
+    header = "",
+    prefix = "",
+  },
+}
+
+-- Change border of documentation hover window,
+-- See https://github.com/neovim/neovim/pull/13998.
+lsp.handlers["textDocument/hover"] = lsp.with(vim.lsp.handlers.hover, {
+  border = "rounded",
+})
+
 require("config.lsp.fname").setup()
 
 local custom_attach = function(client, bufnr)
@@ -125,6 +153,7 @@ if utils.executable("lua-language-server") then
   -- settings for lua-language-server can be found on https://github.com/sumneko/lua-language-server/wiki/Settings .
   lspconfig.sumneko_lua.setup {
     on_attach = custom_attach,
+    capabilities = capabilities,
     settings = {
       Lua = {
         runtime = {
@@ -136,44 +165,18 @@ if utils.executable("lua-language-server") then
           globals = { "vim" },
         },
         workspace = {
-          -- Make the server aware of Neovim runtime files,
-          -- see also https://github.com/sumneko/lua-language-server/wiki/Libraries#link-to-workspace .
-          -- Lua-dev.nvim also has similar settings for sumneko lua, https://github.com/folke/lua-dev.nvim/blob/main/lua/lua-dev/sumneko.lua .
           library = {
-            fn.stdpath("data") .. "/site/pack/packer/opt/emmylua-nvim",
-            fn.stdpath("config"),
+            -- Make the server aware of Neovim runtime files
+            api.nvim_get_runtime_file("", true),
           },
-          maxPreload = 2000,
-          preloadFileSize = 50000,
+          maxPreload = 100000,
+          preloadFileSize = 10000,
+        },
+        -- Do not send telemetry data containing a randomized but unique identifier
+        telemetry = {
+          enable = false,
         },
       },
     },
-    capabilities = capabilities,
   }
 end
-
--- Change diagnostic signs.
-fn.sign_define("DiagnosticSignError", { text = "✗", texthl = "DiagnosticSignError" })
-fn.sign_define("DiagnosticSignWarn", { text = "!", texthl = "DiagnosticSignWarn" })
-fn.sign_define("DiagnosticSignInformation", { text = "", texthl = "DiagnosticSignInfo" })
-fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
-
--- global config for diagnostic
-diagnostic.config {
-  underline = false,
-  virtual_text = false,
-  signs = true,
-  severity_sort = true,
-}
-
--- lsp.handlers["textDocument/publishDiagnostics"] = lsp.with(lsp.diagnostic.on_publish_diagnostics, {
---   underline = false,
---   virtual_text = false,
---   signs = true,
---   update_in_insert = false,
--- })
-
--- Change border of documentation hover window, See https://github.com/neovim/neovim/pull/13998.
-lsp.handlers["textDocument/hover"] = lsp.with(vim.lsp.handlers.hover, {
-  border = "rounded",
-})

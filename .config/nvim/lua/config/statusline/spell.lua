@@ -6,12 +6,8 @@ function M:init(options)
   self.color = highlight.create_component_highlight_group(
     { fg = "black", bg = "#a7c080" },
     'spell',
-    self.options
+    options
   )
-end
-
-function M.setup(opts)
-  return self
 end
 
 function M:update_status()
