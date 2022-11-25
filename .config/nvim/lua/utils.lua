@@ -82,7 +82,9 @@ end
 
 function M.add_pack(name)
   local status, error = pcall(vim.cmd, "packadd " .. name)
-
+  if status ~= 0 then
+    vim.notify(tostring(error), vim.log.levels.ERROR, { title = "add pack" })
+  end
   return status
 end
 
@@ -90,6 +92,9 @@ function M.load_config(name)
   local path = string.format("%s/lua/config/%s.vim", vim.fn.stdpath("config"), name)
   local source_cmd = "source " .. path
   local status, error = pcall(vim.cmd, source_cmd)
+  if status ~= 0 then
+    vim.notify(tostring(error), vim.log.levels.ERROR, { title = "load config" })
+  end
   return status
 end
 

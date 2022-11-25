@@ -15,7 +15,7 @@ local utils = require("utils")
 local expected_ver = "0.8.0"
 
 if not utils.is_expect_ver(expected_ver) then
-  local msg = string.format("Unsupported nvim version: expect %s, but got %s instead!", expected_ver, nvim_ver)
+  local msg = string.format("Unsupported nvim version: expect %s, but got %s instead!", expected_ver, utils.get_nvim_version())
   api.nvim_err_writeln(msg)
   return
 end
