@@ -3,11 +3,6 @@ local map = vim.keymap.set
 local telescope = require('telescope')
 local builtin = require('telescope.builtin')
 
-vim.cmd([[
-  highlight link TelescopePromptCounter TelescopeNormal
-  highlight link TelescopeSelection TelescopePromptPrefix
-]])
-
 local themes = {
   popup_list = {
     theme = 'popup_list',
