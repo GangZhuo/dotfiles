@@ -18,6 +18,20 @@ local config = {
     Interface = true,
     Namespace = true,
     Module = true,
+    Property = true,
+    Constructor = true,
+  },
+  kind_icons = {
+    Class = "ﴯ",
+    Function = "",
+    Method = "",
+    Struct = "פּ",
+    Enum = "",
+    Interface = "",
+    Namespace = "",
+    Module = "",
+    Property = "ﰠ",
+    Constructor = "",
   },
 }
 
@@ -41,21 +55,6 @@ local contains = function(array, value)
   return false
 end
 
----Get object path.
----@param root table
----@param paths string[]
----@return any
-local _get = function(root, paths)
-  local c = root
-  for _, path in ipairs(paths) do
-    c = c[path]
-    if not c then
-      return nil
-    end
-  end
-  return c
-end
-
 local buffer_enabled = function()
   return bo("modifiable")
      --and bo("modified")
@@ -70,6 +69,7 @@ local get_bufinfo = function (bufnr)
   local b = bufinfo[bufnr]
   if not b then
     b = {
+      enabled = true,
       bufnr = bufnr,
       bufname = fn.bufname(),
       changedtick = 0,
@@ -97,38 +97,76 @@ local is_client_available = function(b)
   end
 
   -- client has no completion capability.
-  if not _get(b.client.server_capabilities, { "documentSymbolProvider" }) then
+  if not b.client.server_capabilities.documentSymbolProvider then
     return false
   end
 
   return true;
 end
 
+local get_cur_pos = function ()
+  local cur_pos = api.nvim_win_get_cursor(0)
+  -- cur_pos[1] is an 1-based line, so convert to zero-based.
+  -- cur_pos[2] is already a zero-based columns
+  cur_pos[1] = cur_pos[1] - 1
+  return cur_pos
+end
+
+-- 'range' is zero-based, and the 'pos' is also zero-based.
 local in_range = function(pos, range)
   local line = pos[1]
   local char = pos[2]
-  if line < range.start.line or line > range['end'].line then return false end
+  if line < range.start.line or line > range['end'].line then
+    return false
+  end
   if
-    line == range.start.line and char < range.start.character or
-    line == range['end'].line and char > range['end'].character
+    (line == range.start.line and char < range.start.character) or
+    (line == range['end'].line and char > range['end'].character)
   then
     return false
   end
-
   return true
 end
 
-local find_symbol = function(root, pos)
-  if type(root) ~= "table" or #root == 0 then
-    return nil
+-- items[i].range is zero-based,
+-- so the 'pos' should be zero-based lines and zero-based columns
+local function find_symbol(items, pos, results)
+  items = items or {}
+  results = results or {}
+  for _,item in ipairs(items) do
+    local range = nil
+    if item.location then -- Item is a SymbolInformation
+      range = item.location.range
+    elseif item.range then -- Item is a DocumentSymbol
+      range = item.range
+    end
+    if in_range(pos, range) then
+      local kind = proto.SymbolKind[item.kind] or 'Unknown'
+      if config.scope_kinds[kind] then
+        table.insert(results, { kind = kind, text = item.name, })
+      end
+      if item.children then
+        find_symbol(item.children, pos, results)
+        break
+      end
+    elseif range and range.start.line > pos[1] then
+      break
+    end
   end
-  --for _,v in ipairs(root) do
-  --end
-  return "fname"
+  return results
 end
 
 local get_symbol = function(b, cur_pos)
-  return find_symbol(b.symbols, cur_pos)
+  local symbols = find_symbol(b.symbols, cur_pos)
+  local s = ''
+  for _,sym in ipairs(symbols) do
+    if #s > 0 then s = s.."." end
+    s = s..sym.text
+  end
+  if s ~= "" then
+    s = string.format("%s %s", config.kind_icons[symbols[#symbols].kind] or "", s)
+  end
+  return s
 end
 
 local mkcallback = function(b, cb)
@@ -152,7 +190,7 @@ local callback = vim.schedule_wrap(function()
   if not is_client_available(b) then return end
   if not buffer_enabled() then return end
   local changedtick = api.nvim_buf_get_changedtick(0)
-  local cur_pos = api.nvim_win_get_cursor(0)
+  local cur_pos = get_cur_pos()
   if b.changedtick == changedtick then
     b.running = true
     b.current_lsp_symbol = get_symbol(b, cur_pos)
@@ -170,9 +208,6 @@ end)
 local set_autocmds = function ()
   local augroup = api.nvim_create_augroup("lsp_fname_augroup", { clear = true })
   api.nvim_create_autocmd({
-      "FileType",
-      "InsertLeave",
-      "TextChanged",
       "CursorHold",
   }, {
     pattern = "*",
@@ -180,14 +215,6 @@ local set_autocmds = function ()
     callback = function ()
       if not config.enabled then return end
       scheduled = true
-    end,
-  })
-  api.nvim_create_autocmd({ "InsertEnter" }, {
-    pattern = "*",
-    group = augroup,
-    callback = function ()
-      if not config.enabled then return end
-      scheduled = false
     end,
   })
   api.nvim_create_autocmd({ "BufDelete" }, {
@@ -204,7 +231,7 @@ end
 local setup = function(user_config)
   config = vim.tbl_extend('keep', user_config or {}, config)
   set_autocmds()
-  uv.timer_start(timer, 100, 100, callback)
+  uv.timer_start(timer, 300, 300, callback)
 end
 
 local attach = function(client, bufnr)
