@@ -53,6 +53,7 @@ local get_bufinfo = function (bufnr)
       bufnr = bufnr,
       bufname = fn.bufname(),
       changedtick = 0,
+      running = false,
     }
     bufinfo[bufnr] = b
   end
@@ -142,8 +143,11 @@ local callback = vim.schedule_wrap(function()
   local b = get_bufinfo()
   local changedtick = fn.getbufinfo(b.bufname)[1].changedtick
   if b.changedtick == changedtick then return end
+  if b.running then return end
+  b.running = true
   b.changedtick = changedtick
   update(b)
+  b.running = false
 end)
 
 local set_autocmds = function ()
