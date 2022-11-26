@@ -7,10 +7,30 @@ local diagnostic = vim.diagnostic
 
 local config = {
   enabled = true,
+  tw = {
+    enabled = true,
+    message = "Trailing Whitespace",
+  },
+  mi = {
+    enabled = true,
+    message = "Mixed Indent",
+  },
   colors = { bg = "red", fg = "red", },
   excluded_ft = { "alpha", "git", "floggraph", "dashboard", },
   severity = diagnostic.severity.HINT,
   source = "[TW]",
+  -- Is it a comment at given [row, col] position
+  is_comment = function (row, col)
+    if vim.treesitter then
+      local captures = vim.treesitter.get_captures_at_pos(0, row, col)
+      for _,item in ipairs(captures) do
+        if item.capture == "comment" then
+          return true
+        end
+      end
+    end
+    return false
+  end
 }
 
 local hl_ns = api.nvim_create_namespace("TrailingWhitespaceHighlightNS")
@@ -79,7 +99,7 @@ local update = function(b)
   local space = {}
   local tab = {}
   local diags = {}
-  local set = function (line, col_start, col_end)
+  local set = function (line, col_start, col_end, msg)
       api.nvim_buf_add_highlight(0, hl_ns, "TrailingWhitespace",
         line, col_start, col_end)
       table.insert(diags, {
@@ -88,7 +108,7 @@ local update = function(b)
         col = col_start,
         end_col = col_end,
         severity = config.severity,
-        message = "Trailing Whitespace",
+        message = msg,
         source = config.source,
       })
   end
@@ -96,18 +116,27 @@ local update = function(b)
     local linetext = fn.getline(i)
 
     -- Checking trailing whitespace
-    local idx = fn.match(linetext, [[\v\s+$]])
-    if idx ~= -1 then
-      tw = tw + 1
-      set(i - 1, idx, -1)
+    if config.tw.enabled then
+      local idx = fn.match(linetext, [[\v\s+$]])
+      if idx ~= -1 then
+        tw = tw + 1
+        set(i - 1, idx, -1, config.tw.message)
+      end
     end
 
     -- Checking mixed-indent
-    local ch = string.sub(linetext, 1, 1)
-    if ch == " " then
-      table.insert(space, i)
-    elseif ch == "\t" then
-      table.insert(tab, i)
+    if config.mi.enabled then
+      local ch = string.sub(linetext, 1, 1)
+      if ch == " " or ch == "\t" then
+        local s = string.match(linetext, "^%s+")
+        if not config.is_comment(i - 1, #s) then
+          if ch == " " then
+            table.insert(space, i)
+          elseif ch == "\t" then
+            table.insert(tab, i)
+          end
+        end
+      end
     end
   end
 
@@ -124,15 +153,19 @@ local update = function(b)
     for _,i in ipairs(lines) do
       local linetext = fn.getline(i)
       local s = string.match(linetext, "^%s+")
-      set(i - 1, 0, #s)
+      set(i - 1, 0, #s, config.mi.message)
     end
     b.mi = #lines
+  else
+    b.mi = 0
   end
 
-  diagnostic.set(diag_ns, 0, diags, {
-    underline = false,
-    virtual_text = false,
-  })
+  if #diags > 0 then
+    diagnostic.set(diag_ns, 0, diags, {
+      underline = false,
+      virtual_text = false,
+    })
+  end
 end
 
 local callback = vim.schedule_wrap(function()
@@ -184,10 +217,11 @@ end
 
 local setup = function(user_config)
   config = vim.tbl_extend('keep', user_config or {}, config)
+  set_autocmds()
   api.nvim_set_hl(hl_ns, "TrailingWhitespace", config.colors)
   api.nvim_set_hl_ns(hl_ns)
-  set_autocmds()
   uv.timer_start(timer, 100, 100, callback)
+  scheduled = true
 end
 
 return {

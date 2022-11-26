@@ -54,10 +54,6 @@ packer.startup {
       event = "VimEnter",
     }
 
-    vim.defer_fn(function()
-      require('trailing-whitespace').setup()
-    end, 1000)
-
     -- Automatic insertion and deletion of a pair of characters
     use { "Raimondi/delimitMate",
       event = "InsertEnter",
@@ -118,7 +114,8 @@ packer.startup {
       config = function()
         vim.defer_fn(function()
           require('config.treesitter')
-        end, 200)
+          require('trailing-whitespace').setup()
+        end, 100)
       end,
     }
 
@@ -208,7 +205,7 @@ packer.startup {
       config = function()
         vim.defer_fn(function()
           require("config.nvim-notify")
-        end, 2000)
+        end, 1000)
       end,
     }
 
