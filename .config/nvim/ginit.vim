@@ -13,7 +13,8 @@ if exists('g:GuiLoaded')
   GuiTabline 0
   GuiPopupmenu 0
   GuiLinespace 2
-  GuiFont! Hack\ NF:h10:l
+  "GuiFont! Hack\ NF:h10:l
+  GuiFont! Consolas\ NF:h11:l
 endif
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
