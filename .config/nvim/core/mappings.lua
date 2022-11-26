@@ -200,6 +200,19 @@ keymap.set("n", "<leader>cb", function()
   end))
 end)
 
+-- Print treesitter captures
+keymap.set("n", "<leader>st", function()
+  if vim.treesitter then
+    local captures = vim.treesitter.get_captures_at_cursor(0)
+    inspect(captures)
+  else
+    api.nvim_err_writeln("treesitter not found!")
+  end
+end, {
+    silent = true,
+    desc = "Show treesitter captures"
+})
+
 keymap.set("n", "<BackSpace>", "<cmd>nohl<cr>")
 
 keymap.set("n", "<leader>cn", "<cmd>lua require('colorschemes').next()<cr>",
