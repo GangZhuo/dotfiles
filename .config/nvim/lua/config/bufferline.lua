@@ -46,14 +46,23 @@ require("bufferline").setup {
 }
 
 -- Go to a certain buffer
-vim.keymap.set("n", "gb", function(args)
+vim.keymap.set("n", "gb", function()
     if vim.v.count == 0 then
       vim.cmd("bnext")
     else
       require("bufferline").go_to_buffer(vim.v.count)
     end
 end, {
-  desc = "go to buffer by ordinal number",
+  desc = "go to buffer (forward) and by ordinal number",
+})
+vim.keymap.set("n", "gB", function()
+    if vim.v.count == 0 then
+      vim.cmd("bprevious")
+    else
+      vim.cmd("buffer"..tostring(vim.v.count))
+    end
+end, {
+  desc = "go to buffer (backward) and by absolute number",
 })
 vim.keymap.set("n", "<leader>1", "<cmd>lua require('bufferline').go_to_buffer(1)<cr>", { desc = "go to first buffer", })
 vim.keymap.set("n", "<leader>2", "<cmd>lua require('bufferline').go_to_buffer(2)<cr>", { desc = "go to 2nd buffer", })
@@ -62,6 +71,6 @@ vim.keymap.set("n", "<leader>4", "<cmd>lua require('bufferline').go_to_buffer(4)
 vim.keymap.set("n", "<leader>5", "<cmd>lua require('bufferline').go_to_buffer(5)<cr>", { desc = "go to 5th buffer", })
 vim.keymap.set("n", "<leader>6", "<cmd>lua require('bufferline').go_to_buffer(6)<cr>", { desc = "go to 6th buffer", })
 vim.keymap.set("n", "<leader>7", "<cmd>lua require('bufferline').go_to_buffer(7)<cr>", { desc = "go to 7th buffer", })
-vim.keymap.set("n", "<leader>7", "<cmd>lua require('bufferline').go_to_buffer(8)<cr>", { desc = "go to 8th buffer", })
+vim.keymap.set("n", "<leader>8", "<cmd>lua require('bufferline').go_to_buffer(8)<cr>", { desc = "go to 8th buffer", })
 vim.keymap.set("n", "<leader>9", "<cmd>lua require('bufferline').go_to_buffer(9)<cr>", { desc = "go to 9th buffer", })
 vim.keymap.set("n", "<leader>$", "<cmd>lua require('bufferline').go_to_buffer(-1)<cr>", { desc = "go to last buffer", })
