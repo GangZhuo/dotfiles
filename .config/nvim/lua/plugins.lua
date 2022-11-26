@@ -86,6 +86,12 @@ packer.startup {
       config = [[require('config.lsp')]],
     }
 
+    -- Standalone UI for nvim-lsp progress
+    use { "j-hui/fidget.nvim",
+      after = "nvim-lspconfig",
+      config = [[require("config.fidget")]],
+    }
+
     -- auto-completion engine
     use { "hrsh7th/nvim-cmp",
       event = "VimEnter",

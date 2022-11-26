@@ -88,6 +88,10 @@ capabilities.textDocument.foldingRange = {
   lineFoldingOnly = true
 }
 
+-- 'j-hui/fidget.nvim' need workDoneProgress capability
+capabilities.window = capabilities.window or {}
+capabilities.window.workDoneProgress = true
+
 local lspconfig = require("lspconfig")
 
 if utils.executable("pylsp") then
