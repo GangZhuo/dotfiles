@@ -96,6 +96,10 @@ source $ZSH/oh-my-zsh.sh
 
 # User configuration
 
+PROMPT="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ )"
+PROMPT+="$fg[green]%}$USER@%{$fg[green]%}%m"
+PROMPT+=' %{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)'
+
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
