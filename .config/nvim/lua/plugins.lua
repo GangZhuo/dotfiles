@@ -101,10 +101,12 @@ packer.startup {
         { "hrsh7th/cmp-vsnip" },
         { "hrsh7th/cmp-cmdline" },
         { "dmitmel/cmp-cmdline-history" },
-        { "uga-rosa/cmp-dictionary",
-          config = [[require('config.cmp-dictionary')]] },
+        { "uga-rosa/cmp-dictionary" },
       },
-      config = [[require('config.nvim-cmp')]],
+      config = function ()
+        require('config.nvim-cmp')
+        require('config.cmp-dictionary')
+      end,
     }
 
     -- build a concrete syntax tree, and highlight by syntax tree
