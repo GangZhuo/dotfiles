@@ -2,9 +2,9 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 if [ -d "$HOME/.local/bin" ]; then
-    if [[ "$PATH" != *"$HOME/.local/bin"* ]]; then
-        export PATH="$HOME/.local/bin:$PATH"
-    fi
+	if [[ "$PATH" != *"$HOME/.local/bin"* ]]; then
+		export PATH="$HOME/.local/bin:$PATH"
+	fi
 fi
 
 if [ -f "$HOME/.cargo/env" ]; then
@@ -127,12 +127,12 @@ PROMPT+=' %{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)'
 # This seeds up pasting w/ autosuggest
 # https://github.com/zsh-users/zsh-autosuggestions/issues/238
 pasteinit() {
-  OLD_SELF_INSERT=${${(s.:.)widgets[self-insert]}[2,3]}
-  zle -N self-insert url-quote-magic # I wonder if you'd need `.url-quote-magic`?
+	OLD_SELF_INSERT=${${(s.:.)widgets[self-insert]}[2,3]}
+	zle -N self-insert url-quote-magic # I wonder if you'd need `.url-quote-magic`?
 }
 
 pastefinish() {
-  zle -N self-insert $OLD_SELF_INSERT
+	zle -N self-insert $OLD_SELF_INSERT
 }
 zstyle :bracketed-paste-magic paste-init pasteinit
 zstyle :bracketed-paste-magic paste-finish pastefinish
