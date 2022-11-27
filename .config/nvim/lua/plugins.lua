@@ -226,7 +226,7 @@ packer.startup {
 
   end,
   config = {
-    max_jobs = 16,
+    max_jobs = 4,
     compile_path = packer_util.join_paths(fn.stdpath("data"), "site", "lua", "packer_compiled.lua"),
   },
 }
