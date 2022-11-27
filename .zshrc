@@ -152,7 +152,7 @@ fi
 
 export SOCKS5_HOST=127.0.0.1
 export SOCKS5_PORT=1080
-export HPROXY_HOST=127.0.0.1
+export HPROXY_HOST=$SOCKS5_HOST
 export HPROXY_PORT=1081
 
 set_proxy() {
