@@ -169,4 +169,6 @@ unset_proxy() {
 	unset https_proxy
 }
 
-set_proxy
+# Comment below line to set proxy at startup
+#set_proxy
+
