@@ -18,8 +18,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-#ZSH_THEME="robbyrussell"
-ZSH_THEME="arrow"
+ZSH_THEME="robbyrussell"
 
 # Base16 Shell
 #BASE16_SHELL="$HOME/.config/base16-shell/"
@@ -173,3 +172,6 @@ unset_proxy() {
 # Comment below line to set proxy at startup
 #set_proxy
 
+# See https://geoff.greer.fm/lscolors/
+export LSCOLORS="exfxcxdxbxbxbxbxbxbxbx"
+export LS_COLORS="di=34;40:ln=35;40:so=32;40:pi=33;40:ex=31;40:bd=31;40:cd=31;40:su=31;40:sg=31;40:tw=31;40:ow=31;40:"
