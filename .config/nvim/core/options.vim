@@ -143,8 +143,10 @@ set colorcolumn=80
 set omnifunc=
 set cmdheight=2
 
-" Must be apply the patch https://github.com/neovim/neovim/pull/17446
-"set foldoptions=
+if exists('&foldoptions')
+  " Must be apply the patch https://github.com/neovim/neovim/pull/17446
+  set foldoptions=
+endif
 
 " Clipboard settings, always use clipboard for all delete, yank, change, put
 " operation, see https://stackoverflow.com/q/30691466/6064933
