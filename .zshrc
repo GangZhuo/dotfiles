@@ -20,6 +20,13 @@ export ZSH="$HOME/.oh-my-zsh"
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="robbyrussell"
 
+# Set LS_COLORS
+# See:
+#   * https://linux.die.net/man/5/dir_colors
+#   * https://linux.die.net/man/1/dircolors
+#   * https://geoff.greer.fm/lscolors/
+eval `dircolors -b ~/.dir_colors`
+
 # Base16 Shell
 #BASE16_SHELL="$HOME/.config/base16-shell/"
 #[ -n "$PS1" ] && \
@@ -171,10 +178,3 @@ unset_proxy() {
 
 # Comment below line to set proxy at startup
 #set_proxy
-
-# Set LS_COLORS
-# See:
-#   * https://linux.die.net/man/5/dir_colors
-#   * https://linux.die.net/man/1/dircolors
-#   * https://geoff.greer.fm/lscolors/
-eval `dircolors -b ~/.dir_colors`
