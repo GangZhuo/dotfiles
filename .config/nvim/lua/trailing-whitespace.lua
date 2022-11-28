@@ -6,13 +6,13 @@ local fn = vim.fn
 local diagnostic = vim.diagnostic
 
 local config = {
-  enabled = true,
+  enable = true,
   tw = {
-    enabled = true,
+    enable = true,
     message = "Trailing Whitespace",
   },
   mi = {
-    enabled = true,
+    enable = true,
     message = "Mixed Indent",
   },
   colors = { bg = "red", fg = "red", },
@@ -69,10 +69,12 @@ local get_bufinfo = function (bufnr)
   local b = bufinfo[bufnr]
   if not b then
     b = {
+      enable = buffer_enabled(),
       bufnr = bufnr,
       bufname = fn.bufname(),
       changedtick = 0,
       running = false,
+      last_update = nil,
     }
     bufinfo[bufnr] = b
   end
@@ -116,7 +118,7 @@ local update = function(b)
     local linetext = fn.getline(i)
 
     -- Checking trailing whitespace
-    if config.tw.enabled then
+    if config.tw.enable then
       local idx = fn.match(linetext, [[\v\s+$]])
       if idx ~= -1 then
         tw = tw + 1
@@ -125,7 +127,7 @@ local update = function(b)
     end
 
     -- Checking mixed-indent
-    if config.mi.enabled then
+    if config.mi.enable then
       local ch = string.sub(linetext, 1, 1)
       if ch == " " or ch == "\t" then
         local s = string.match(linetext, "^%s+")
@@ -166,13 +168,14 @@ local update = function(b)
       virtual_text = false,
     })
   end
+  b.last_update = uv.now()
 end
 
 local callback = vim.schedule_wrap(function()
   if not scheduled then return end
   scheduled = false
-  if not buffer_enabled() then return end
   local b = get_bufinfo()
+  if not b.enable then return end
   local changedtick = api.nvim_buf_get_changedtick(0)
   if b.changedtick == changedtick then return end
   if b.running then return end
@@ -188,7 +191,9 @@ local set_autocmds = function ()
     pattern = "*",
     group = augroup,
     callback = function ()
-      if not config.enabled then return end
+      if not config.enable then return end
+      local b = get_bufinfo()
+      if not b.enable then return end
       scheduled = true
       api.nvim_set_hl(hl_ns, "TrailingWhitespace", config.colors)
       diagnostic.enable(0, diag_ns)
@@ -198,7 +203,9 @@ local set_autocmds = function ()
     pattern = "*",
     group = augroup,
     callback = function ()
-      if not config.enabled then return end
+      if not config.enable then return end
+      local b = get_bufinfo()
+      if not b.enable then return end
       scheduled = false
       api.nvim_set_hl(hl_ns, "TrailingWhitespace", {})
       diagnostic.disable(0, diag_ns)
