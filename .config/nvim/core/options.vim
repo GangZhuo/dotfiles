@@ -145,7 +145,7 @@ set cmdheight=2
 
 if exists('&foldoptions')
   " Must be apply the patch https://github.com/neovim/neovim/pull/17446
-  set foldoptions=
+  set foldoptions=nodigits
 endif
 
 " Clipboard settings, always use clipboard for all delete, yank, change, put
