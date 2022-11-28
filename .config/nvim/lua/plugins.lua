@@ -144,10 +144,10 @@ packer.startup {
     }
 
     -- Show marks in signcolumn
-    use { "chentoast/marks.nvim",
-      event = "VimEnter",
-      config = [[require('config.marks')]],
-    }
+    --use { "chentoast/marks.nvim",
+    --  event = "VimEnter",
+    --  config = [[require('config.marks')]],
+    --}
 
     -- Show match number and index for searching
     use { "kevinhwang91/nvim-hlslens",
