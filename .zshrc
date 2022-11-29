@@ -91,7 +91,17 @@ eval `dircolors -b ~/.dir_colors`
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git z zsh-autosuggestions extract web-search zsh-syntax-highlighting colored-man-pages colorize cp)
+plugins=(
+	git
+	z
+	zsh-autosuggestions
+	extract
+	web-search
+	zsh-syntax-highlighting
+	colored-man-pages
+	colorize
+	cp
+)
 
 # You should be install "zsh-autosuggestions" and "zsh-syntax-highlighting" by below commands:
 #
