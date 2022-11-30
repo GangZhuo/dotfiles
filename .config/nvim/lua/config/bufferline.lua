@@ -1,6 +1,6 @@
 require("bufferline").setup {
   options = {
-    numbers = "ordinal",
+    numbers = "buffer_id",
     close_command = "bdelete! %d",
     right_mouse_command = nil,
     left_mouse_command = "buffer %d",
@@ -50,7 +50,8 @@ vim.keymap.set("n", "gb", function()
     if vim.v.count == 0 then
       vim.cmd("bnext")
     else
-      require("bufferline").go_to_buffer(vim.v.count)
+      --require("bufferline").go_to_buffer(vim.v.count)
+      vim.cmd("buffer"..tostring(vim.v.count))
     end
 end, {
   desc = "go to buffer (forward) and by ordinal number",
