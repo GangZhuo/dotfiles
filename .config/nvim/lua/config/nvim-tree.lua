@@ -42,20 +42,6 @@ local collapse = function(node)
   end
 end
 
-local attach = function(bufnr)
-  local inject_node = require("nvim-tree.utils").inject_node
-  local set_keymap = function(key, fun, desc)
-    vim.keymap.set("n", key, inject_node(fun), {
-      silent = true,
-      buffer = bufnr,
-      desc = desc
-    })
-  end
-  set_keymap("l", expand, "open a file or folder")
-  set_keymap("h", collapse, "collapse the folder")
-  set_keymap("?", api.tree.toggle_help, "toggle help")
-end
-
 nvim_tree.setup {
   sync_root_with_cwd = true,
   diagnostics = {
@@ -63,7 +49,7 @@ nvim_tree.setup {
     debounce_delay = 1000,
     show_on_dirs = true,
   },
-  remove_keymaps = {},
+  remove_keymaps = { "<C-e>", },
   on_attach = "disable",
   view = {
     adaptive_size = false,
