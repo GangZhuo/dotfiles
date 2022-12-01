@@ -212,7 +212,7 @@ local live_grep_args = telescope.extensions.live_grep_args.live_grep_args
 
 set_keymap('<leader>h', builtin.builtin,     'popup_list',     "Find Builtin Pickers")
 set_keymap('<leader>f', builtin.find_files,  'popup_extended', "Find Files")
-set_keymap('<leader>b', builtin.buffers,     'popup_list',     "Find Buffers")
+set_keymap('<leader>b', builtin.buffers,     'popup_list',     "Find Buffers", { sort_mru = true, })
 set_keymap('<leader>s', builtin.live_grep,   'popup_extended', "Search in Workspace")
 set_keymap('<leader>c', builtin.live_grep,   'popup_extended', "Search in Curent Buffer", { grep_current_buffer = true })
 set_keymap('<leader>g', live_grep_args,      'popup_extended', "Search by Ripgrep")
