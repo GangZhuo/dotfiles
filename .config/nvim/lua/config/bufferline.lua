@@ -1,6 +1,8 @@
+local fn = vim.fn
+
 require("bufferline").setup {
   options = {
-    numbers = "buffer_id",
+    numbers = "ordinal",
     close_command = "bdelete! %d",
     right_mouse_command = nil,
     left_mouse_command = "buffer %d",
@@ -19,19 +21,11 @@ require("bufferline").setup {
     tab_size = 10,
     diagnostics = false,
     custom_filter = function(bufnr)
-      -- if the result is false, this buffer will be shown, otherwise, this
-      -- buffer will be hidden.
-
-      -- filter out filetypes you don't want to see
-      local exclude_ft = { "qf", "fugitive", "git" }
+      -- You can check whatever you would like and return `true`
+	  -- if you would like it to appear and `false` if not.
+      local exclude_ft = { "qf" }
       local cur_ft = vim.bo[bufnr].filetype
-      local should_filter = vim.tbl_contains(exclude_ft, cur_ft)
-
-      if should_filter then
-        return false
-      end
-
-      return true
+      return not vim.tbl_contains(exclude_ft, cur_ft)
     end,
     show_buffer_icons = false,
     show_buffer_close_icons = true,
@@ -41,27 +35,25 @@ require("bufferline").setup {
     separator_style = "bar",
     enforce_regular_tabs = false,
     always_show_bufferline = true,
-    sort_by = "id",
-    numbers = function(opts)
-      return string.format('%s.%s', opts.id, opts.raise(opts.ordinal))
-    end,
+    --sort_by = function(a, b)
+    --  return fn.getbufinfo(a.id)[1].lastused > fn.getbufinfo(b.id)[1].lastused
+    --end,
   },
 }
 
 -- Go to a certain buffer
 vim.keymap.set("n", "gb", function()
     if vim.v.count == 0 then
-      vim.cmd("bnext")
+      vim.cmd("BufferLineCycleNext")
     else
-      --require("bufferline").go_to_buffer(vim.v.count)
-      vim.cmd("buffer"..tostring(vim.v.count))
+      require("bufferline").go_to_buffer(vim.v.count, true)
     end
 end, {
   desc = "go to buffer (forward) and by ordinal number",
 })
 vim.keymap.set("n", "gB", function()
     if vim.v.count == 0 then
-      vim.cmd("bprevious")
+      vim.cmd("BufferLineCyclePrev")
     else
       vim.cmd("buffer"..tostring(vim.v.count))
     end
