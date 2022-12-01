@@ -129,8 +129,8 @@ keymap.set("n", "C", '"_C')
 keymap.set("n", "cc", '"_cc')
 keymap.set("x", "c", '"_c')
 
--- Remove trailing whitespace characters
-keymap.set("n", "<leader><space>", function ()
+-- Checking Trailing-Whitespace and Mixed-Indent
+keymap.set("n", "<leader><space><space>", function ()
   local line_start = nil
   local line_end = nil
   if vim.v.count ~= 0 then
@@ -141,7 +141,7 @@ keymap.set("n", "<leader><space>", function ()
 end, { desc = "check trailing space and mixed-indent" })
 
 -- Remove trailing whitespace characters
-keymap.set("n", "<leader><space><space>", function ()
+keymap.set("n", "<leader><space>", function ()
   local line_start = nil
   local line_end = nil
   if vim.v.count ~= 0 then

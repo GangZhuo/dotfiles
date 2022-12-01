@@ -7,6 +7,7 @@ local diagnostic = vim.diagnostic
 
 local config = {
   enable = true,
+  skip_large_file = 5000,
   tw = {
     enable = true,
     message = "Trailing Whitespace",
@@ -194,6 +195,9 @@ local set_autocmds = function ()
       if not config.enable then return end
       local b = get_bufinfo()
       if not b.enable then return end
+      if config.skip_large_file and fn.line('$') > config.skip_large_file then
+        return
+      end
       scheduled = true
       api.nvim_set_hl(hl_ns, "TrailingWhitespace", config.colors)
       diagnostic.enable(0, diag_ns)
