@@ -224,9 +224,13 @@ end
 
 local setup = function(user_config)
   config = vim.tbl_extend('keep', user_config or {}, config)
-  set_autocmds()
   api.nvim_set_hl(hl_ns, "TrailingWhitespace", config.colors)
   api.nvim_set_hl_ns(hl_ns)
+  if not config.enable then
+    uv.timer_stop(timer)
+    return
+  end
+  set_autocmds()
   uv.timer_start(timer, 100, 100, callback)
   scheduled = true
 end
