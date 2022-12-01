@@ -42,6 +42,9 @@ require("bufferline").setup {
     enforce_regular_tabs = false,
     always_show_bufferline = true,
     sort_by = "id",
+    numbers = function(opts)
+      return string.format('%s.%s', opts.id, opts.raise(opts.ordinal))
+    end,
   },
 }
 
