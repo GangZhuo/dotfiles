@@ -161,11 +161,11 @@ zstyle :bracketed-paste-magic paste-finish pastefinish
 #	setterm --blank 10 --powerdown 12
 #fi
 
-if [ -f /usr/bin/fcitx5 ]; then
-	export XMODIFIERS=@im=fcitx
-	export QT_IM_MODULE=fcitx
-	export GTK_IM_MODULE=fcitx
-fi
+#if [ -f /usr/bin/fcitx5 ]; then
+#	export XMODIFIERS=@im=fcitx
+#	export QT_IM_MODULE=fcitx
+#	export GTK_IM_MODULE=fcitx
+#fi
 
 export SOCKS5_HOST=127.0.0.1
 export SOCKS5_PORT=1080
