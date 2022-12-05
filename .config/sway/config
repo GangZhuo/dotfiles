@@ -30,7 +30,7 @@ set $menu wofi --show run
 set $bgimg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png
 set $lockimg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png
 
-set $browser MOZ_ENABLE_WAYLAND=1 /usr/bin/firefox
+set $browser /usr/bin/firefox
 #set $browser /usr/bin/chromium
 set $editor /usr/bin/nvim-qt
 
