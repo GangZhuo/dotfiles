@@ -26,11 +26,18 @@ keymap.set("c", "<C-A>", "<HOME>")
 keymap.set({ "n", "x" }, ";", ":")
 
 -- Paste non-linewise text above or below current line, see https://stackoverflow.com/a/1346777/6064933
-keymap.set("n", "<leader>p", "m`o<ESC>p``", { desc = "paste below current line" })
-keymap.set("n", "<leader>P", "m`O<ESC>p``", { desc = "paste above current line" })
+--keymap.set("n", "<leader>p", "m`o<ESC>p``", { desc = "paste below current line" })
+--keymap.set("n", "<leader>P", "m`O<ESC>p``", { desc = "paste above current line" })
 
 -- Copy entire buffer.
 keymap.set("n", "<leader>y", "<cmd>%yank<cr>", { desc = "yank entire buffer" })
+
+-- Copy to system clipboard
+keymap.set("x", "<leader>y", "\"+y", { desc = "yank to system clipboard" })
+
+-- Paste from system clipboard
+keymap.set({ "n", "x" }, "<leader>p", "\"+p", { desc = "paste system clipboard after current cursor" })
+keymap.set({ "n", "x" }, "<leader>P", "\"+P", { desc = "paste system clipboard before current cursor" })
 
 -- Shortcut for faster save and quit
 keymap.set("n", "<leader>w", "<cmd>update<cr>", { silent = true, desc = "save buffer" })
