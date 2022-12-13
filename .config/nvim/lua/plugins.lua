@@ -41,6 +41,9 @@ packer.startup {
     use { "lewis6991/impatient.nvim", config = [[require('impatient')]] }
     use { "wbthomason/packer.nvim", opt = true }
 
+	-- Resume last cursor position
+    use { "ethanholz/nvim-lastplace", config = [[require('config.lastplace')]] }
+
     -- Escape from insert mode by 'jk'
     use { "nvim-zh/better-escape.vim",
       event = "InsertEnter",
