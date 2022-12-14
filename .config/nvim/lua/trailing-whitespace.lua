@@ -25,7 +25,7 @@ local config = {
     if vim.treesitter then
       local captures = vim.treesitter.get_captures_at_pos(0, row, col)
       for _,item in ipairs(captures) do
-        if item.capture == "comment" then
+        if item.capture == "comment" or item.capture == "string" then
           return true
         end
       end
