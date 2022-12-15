@@ -120,7 +120,10 @@ packer.startup {
         vim.defer_fn(function()
           require('config.treesitter')
           require('trailing-whitespace').setup({
-            enable = true
+            enable = true,
+            mi = {
+              enable = false,
+            },
           })
         end, 100)
       end,

@@ -227,7 +227,7 @@ local set_autocmds = function ()
 end
 
 local setup = function(user_config)
-  config = vim.tbl_extend('keep', user_config or {}, config)
+  config = vim.tbl_deep_extend('keep', user_config or {}, config)
   api.nvim_set_hl(hl_ns, "TrailingWhitespace", config.colors)
   api.nvim_set_hl_ns(hl_ns)
   if not config.enable then
