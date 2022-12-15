@@ -167,6 +167,8 @@ zstyle :bracketed-paste-magic paste-finish pastefinish
 #	export GTK_IM_MODULE=fcitx
 #fi
 
+export DEFAULT_IP4_GATEWAY=$(ip -4 route | grep default | awk '{print $3}')
+
 export SOCKS5_HOST=127.0.0.1
 export SOCKS5_PORT=1080
 export HPROXY_HOST=$SOCKS5_HOST
