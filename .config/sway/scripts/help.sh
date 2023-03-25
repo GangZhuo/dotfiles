@@ -1,5 +1,3 @@
 #!/usr/bin/bash
 # Show help
-
-# Todo: Print help
-htop
+glow --pager --width 128 ~/.config/sway/keymaps.md
