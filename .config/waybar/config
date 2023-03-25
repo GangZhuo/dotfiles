@@ -1,0 +1,87 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 15,
+    "modules-left": ["sway/mode", "sway/workspaces", "sway/window", "custom/music"],
+    "modules-center": [],
+    "modules-right": ["pulseaudio", "network", "network#eth", "cpu", "memory", "battery", "tray", "idle_inhibitor", "clock"],
+    "sway/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
+        "format": "{name}"
+    },
+
+    "idle_inhibitor": {
+        "format": "<span size='xx-large' rise='-3pt'>{icon}</span>",
+        "format-icons": {
+            "activated": "󰷛",
+            "deactivated": "󰍹"
+        }
+    },
+
+    "sway/mode": {
+        "format": "{}"
+    },
+
+    "tray": {
+        "icon-size": 16,
+        "spacing": 10
+    },
+
+    "clock": {
+        // Human Friendly
+        "format-alt": "{:%A, %B %d at %I:%M %p}",
+        // 24hr Robot Friendly
+        "format": "{:%Y-%m-%d %H:%M}"
+    },
+    "cpu": {
+        "format": "<span size='xx-large' rise='-3pt'></span> {usage}%",
+        "on-click": "foot -T 'Floating Terminal' -e htop"
+    },
+
+    "memory": {
+        "interval": 30,
+        "format": "<span size='xx-large' rise='-3pt'></span> {used:0.1f}/{total:0.1f}G"
+    },
+
+    "battery": {
+        "interval": "60",
+        "format": "<span size='xx-large' rise='-3pt'>{icon}</span> {capacity}% ({time})",
+        "format-full": "<span size='xx-large' rise='-3pt'>{icon}</span> {capacity}%",
+        "format-icons": ["", "", "", "", ""]
+    },
+
+    "network": {
+        "interface": "wlp2s0",
+        "format-wifi": "<span size='xx-large' rise='-3pt'>󰢾</span> {essid}:{signalStrength}% {ipaddr}/{cidr}",
+        "format-ethernet": "<span size='xx-large' rise='-3pt'>󰈀</span> {ifname}",
+        "format-disconnected": "<span size='xx-large' rise='-3pt'>󰈀</span> Disconnected"
+    },
+    "network#eth": {
+        "interface": "enp9s0",
+        "format-wifi": "<span size='xx-large' rise='-3pt'>󰢾</span> {essid}:{signalStrength}%",
+        "format-ethernet": "<span size='xx-large' rise='-3pt'>󰈀</span> {ipaddr}/{cidr}",
+        "format-disconnected": "<span size='xx-large' rise='-3pt'>󰈀</span> Disconnected"
+    },
+    "pulseaudio": {
+        "format": "<span size='xx-large' rise='-3pt'>{icon}</span> {volume}%",
+        "format-bluetooth": "<span size='xx-large' rise='-3pt'>󰂰</span> {volume}%",
+        "format-muted": "<span size='xx-large' rise='-3pt'></span>",
+        "format-icons": {
+            "default": ["" , "", ""]
+        },
+        "on-click": "pavucontrol"
+    },
+
+    "custom/music": {
+        "format": "{}",
+        "max-length": 20,
+        "interval": 5,
+        "exec": "$HOME/.config/waybar/mediaplayer.sh 2> /dev/null",
+        "tooltip": false,
+        "on-click": "playerctl play-pause",
+        "on-scroll-up": "playerctl previous",
+        "on-scroll-down": "playerctl next"
+    }
+   }
+}

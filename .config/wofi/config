@@ -1,0 +1,6 @@
+# See https://man.archlinux.org/man/wofi.5.en
+
+# Specifies the term to use when running
+# a program in a terminal.
+term=alacritty
+
