@@ -62,7 +62,9 @@ ZSH_THEME="robbyrussell"
 #   * https://linux.die.net/man/5/dir_colors
 #   * https://linux.die.net/man/1/dircolors
 #   * https://geoff.greer.fm/lscolors/
-eval `dircolors -b ~/.dir_colors`
+if [ -f "$HOME/.dircolors" ]; then
+	eval `dircolors -b ~/.dir_colors`
+fi
 
 # Base16 Shell
 #BASE16_SHELL="$HOME/.config/base16-shell/"
