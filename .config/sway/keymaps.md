@@ -193,15 +193,24 @@ Prefix is `C-a`
 
 | Mode | Keys      | Description                                                                              |
 |:-----|:----------|:-----------------------------------------------------------------------------------------|
-| n    | gD        | go to declaration                                                                        |
-| n    | gd        | go to definition                                                                         |
-| n    | gi        | go to implementation                                                                     |
-| n    | gr        | show references                                                                          |
-| n    | K         | show help                                                                                |
-| n    | <C-k>     | show signature help                                                                      |
-| n    | <space>rn | varialbe rename                                                                          |
+| n    | gD        | Go to declaration                                                                        |
+| n    | gd        | Go to definition                                                                         |
+| n    | gi        | Go to implementation                                                                     |
+| n    | gr        | Show references                                                                          |
+| n    | K         | Show help                                                                                |
+| n    | <C-k>     | Show signature help                                                                      |
+| n    | <space>rn | Varialbe rename                                                                          |
 | n    | <space>ca | LSP code action                                                                          |
-| n    | <space>wa | add workspace folder                                                                     |
-| n    | <space>wr | folder, "remove workspace folder                                                         |
-| n    | <space>fc | format code                                                                              |
+| n    | <space>wa | Add workspace folder                                                                     |
+| n    | <space>wr | Remove workspace folder                                                                  |
+| n    | <space>fc | Format code                                                                              |
+
+#### Buffer Line
+
+| Mode | Keys        | Description                                                                              |
+|:-----|:------------|:-----------------------------------------------------------------------------------------|
+| n    | gb          | go to buffer (forward) and by ordinal number                                             |
+| n    | gB          | go to buffer (backward) and by ordinal number                                            |
+| n    | <leader>1~9 | go to n buffer                                                                           |
+| n    | <leader>$   | go to last buffer                                                                        |
 
