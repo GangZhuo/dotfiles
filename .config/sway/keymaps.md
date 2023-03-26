@@ -1,9 +1,5 @@
 # keymaps.md
 
-When you press "$mod+s" to show the document, it is printed by
-`glow --pager --width 128 ~/path/to/keymaps.md`,
-you can press **'q'** to exit.
-
 ## Sway
 
 $mod is `Mod4`
@@ -129,3 +125,67 @@ Prefix is `C-a`
 * H        Split window vertical
 
 ## Neovim
+
+| Mode | Keys                   | Description                                                                 |
+|:-----|:-----------------------|:----------------------------------------------------------------------------|
+| i    | <c-u>                  | Turn the word under cursor to upper case                                    |
+| i    | <c-t>                  | Turn the current word into title case                                       |
+| i    | <A-;>                  | Insert semicolon in the end                                                 |
+| i    | <C-A>                  | Go to the beginning of current line in insert mode quickly                  |
+| i    | <C-E>                  | Go to the end of current line in insert mode quickly                        |
+| i    | <C-D>                  | Delete the character to the right of the cursor                             |
+| c    | <C-A>                  | Go to beginning of command in command-line mode                             |
+| n, x | ;                      | Save key strokes (now we do not need to press shift to enter command mode)  |
+| n    | <leader>y              | Copy entire buffer to system clipboard                                      |
+| x    | <leader>y              | Copy selection text to system clipboard                                     |
+| n, x | <leader>p              | Paste system clipboard after current cursor                                 |
+| n, x | <leader>P              | Paste system clipboard before current cursor                                |
+| n    | <leader>w              | Save current buffer                                                         |
+| n    | \d                     | Delete a buffer, without closing the window                                 |
+| n    | <space>o               | Insert a blank line below current line (do not move the cursor)             |
+| n    | <space>O               | Insert a blank line above current line (do not move the cursor)             |
+| n, x | H                      | Go to start of line easier                                                  |
+| n, x | L                      | Go to end of line easier                                                    |
+| x    | <                      | Continuous visual shifting (does not exit Visual mode)                      |
+| x    | >                      | Continuous visual shifting (does not exit Visual mode)                      |
+| n    | <leader>ev             | Edit nvim config file quickly                                               |
+| n    | <leader>sv             | Reload nvim config file quickly                                             |
+| n    | <leader>v              | Reselect the text that has just been pasted                                 |
+| n    | <leader>cd             | Change current working directory locally and print cwd after that           |
+| t    | <Esc>                  | Use Esc to quit builtin terminal                                            |
+| n, i | <F11>                  | Toggle spell checking                                                       |
+| n    | <leader><space><space> | Checking Trailing-Whitespace and Mixed-Indent                               |
+| n, x | <leader><space>        | Remove trailing whitespace characters                                       |
+| n    | <leader>cl             | Toggle cursor column                                                        |
+| n    | <C-H>                  | Switch windows                                                              |
+| n    | <C-L>                  | Switch windows                                                              |
+| n    | <C-K>                  | Switch windows                                                              |
+| n    | <C-J>                  | Switch windows                                                              |
+| n    | <A-->                  | Increase vertical size for window                                           |
+| n    | <A-_>                  | Decrease vertical size for window                                           |
+| n    | <A-(>                  | Increase horizontal size for window                                         |
+| n    | <A-)>                  | Decrease horizontal size for window                                         |
+| n    | <leader>cb             | Blink current row and column                                                |
+| n    | <leader>st             | Print treesitter captures                                                   |
+| n    | <BackSpace>            | Hidden highlight                                                            |
+| n    | <leader>cn             | Switch to next colorscheme                                                  |
+| n    | <leader>cp             | Switch to previous colorscheme                                              |
+
+#### Navigation in the location and quickfix list
+
+| Mode | Keys      | Description                                                                              |
+|:-----|:----------|:-----------------------------------------------------------------------------------------|
+| n    | <space>e  | Put diagnostic to qf                                                                     |
+| n    | <space>l  | Put diagnostic to loclist                                                                |
+| n    | \x        | Close qf and location list                                                               |
+| n    | [d        | Previous diagnostic                                                                      |
+| n    | ]d        | Next diagnostic                                                                          |
+| n    | [l        | Previous location item                                                                   |
+| n    | ]l        | Next location item                                                                       |
+| n    | [L        | First location item                                                                      |
+| n    | ]L        | Last location item                                                                       |
+| n    | [q        | Previous qf item                                                                         |
+| n    | ]q        | Next qf item                                                                             |
+| n    | [Q        | First qf item                                                                            |
+| n    | ]Q        | Last qf item                                                                             |
+
