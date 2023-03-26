@@ -209,8 +209,19 @@ Prefix is `C-a`
 
 | Mode | Keys        | Description                                                                              |
 |:-----|:------------|:-----------------------------------------------------------------------------------------|
-| n    | gb          | go to buffer (forward) and by ordinal number                                             |
-| n    | gB          | go to buffer (backward) and by ordinal number                                            |
-| n    | <leader>1~9 | go to n buffer                                                                           |
-| n    | <leader>$   | go to last buffer                                                                        |
+| n    | gb          | Go to buffer (forward) and by ordinal number                                             |
+| n    | gB          | Go to buffer (backward) and by ordinal number                                            |
+| n    | <leader>1~9 | Go to n buffer                                                                           |
+| n    | <leader>$   | Go to last buffer                                                                        |
+
+#### nvim-cmp
+
+| Mode | Keys        | Description                                                                              |
+|:-----|:------------|:-----------------------------------------------------------------------------------------|
+| -    | <Tab>       | Select next item                                                                         |
+| -    | <S-Tab>     | Select previous item                                                                     |
+| -    | <CR>        | Confirm selected item                                                                    |
+| -    | <C-e>       | Abort                                                                                    |
+| -    | <C-b>       | Scroll down                                                                              |
+| -    | <C-f>       | Scroll up                                                                                |
 
