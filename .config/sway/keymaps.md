@@ -6,6 +6,8 @@ you can press **'q'** to exit.
 
 ## Sway
 
+$mod is `Mod4`
+
 ### Basics:
 
 * $mod+Return        Start a terminal
@@ -113,6 +115,17 @@ you can press **'q'** to exit.
 * $mod+slash Resolution Change
 
 ## Tmux
+
+Prefix is `C-a`
+
+* h        Switch to left pane
+* l        Switch to right pane
+* j        Switch to down pane
+* k        Switch to up pane
+* S-Left   Switch to previous window
+* S-Right  Switch to next window
+* v        Split window horizontal
+* H        Split window vertical
 
 ## Neovim
 
