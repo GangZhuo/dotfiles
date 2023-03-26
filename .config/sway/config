@@ -150,6 +150,9 @@ input type:touchpad {
     # Show help window
     bindsym $mod+s exec $term --class swayhelp -e $scripts_dir/help.sh
 
+    # Show wiki window
+    bindsym $mod+w exec $term --class swayhelp -e $scripts_dir/wiki.sh
+
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
     # Despite the name, also works for non-floating windows.

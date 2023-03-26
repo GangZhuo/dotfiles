@@ -17,6 +17,7 @@ $mod is `Mod4`
 * XF86HomePage       Start your web browser
 * $mod+e             Start your editor
 * $mod+s             Show help window
+* $mod+w             Show my wiki
 * $mod+Shift+c       Reload the configuration file
 * $mod+Control+l     Lock your screens
 * $mod+Shift+e       Exit sway
@@ -128,4 +129,3 @@ Prefix is `C-a`
 * H        Split window vertical
 
 ## Neovim
-
