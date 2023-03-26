@@ -189,3 +189,19 @@ Prefix is `C-a`
 | n    | [Q        | First qf item                                                                            |
 | n    | ]Q        | Last qf item                                                                             |
 
+#### LSP
+
+| Mode | Keys      | Description                                                                              |
+|:-----|:----------|:-----------------------------------------------------------------------------------------|
+| n    | gD        | go to declaration                                                                        |
+| n    | gd        | go to definition                                                                         |
+| n    | gi        | go to implementation                                                                     |
+| n    | gr        | show references                                                                          |
+| n    | K         | show help                                                                                |
+| n    | <C-k>     | show signature help                                                                      |
+| n    | <space>rn | varialbe rename                                                                          |
+| n    | <space>ca | LSP code action                                                                          |
+| n    | <space>wa | add workspace folder                                                                     |
+| n    | <space>wr | folder, "remove workspace folder                                                         |
+| n    | <space>fc | format code                                                                              |
+
