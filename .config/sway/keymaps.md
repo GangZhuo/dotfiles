@@ -251,6 +251,7 @@ Prefix is `C-a`
 | n, x | <leader>r   | Find Registers                                                                           |
 | n, x | <leader>q   | Find Quickfix                                                                            |
 | n, x | <leader>l   | Find Location List                                                                       |
+| n, x | <leader>n   | Find Notify History                                                                      |
 | -    | l           | Open selected file                                                                       |
 | -    | o           | Open selected file                                                                       |
 

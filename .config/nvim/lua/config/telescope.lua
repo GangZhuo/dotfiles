@@ -209,6 +209,7 @@ vim.api.nvim_create_user_command(
 )
 
 local live_grep_args = telescope.extensions.live_grep_args.live_grep_args
+local notify = telescope.extensions.notify.notify
 
 set_keymap('<leader>h', builtin.builtin,     'popup_list',     "Find Builtin Pickers")
 set_keymap('<leader>f', builtin.find_files,  'popup_extended', "Find Files")
@@ -223,5 +224,6 @@ set_keymap('<leader>M', builtin.keymaps,     nil,              "Keymaps")
 set_keymap('<leader>r', builtin.registers,   'popup_list',     "Find Registers")
 set_keymap('<leader>q', builtin.quickfix,    'ivy_plus',       "Find Quickfix")
 set_keymap('<leader>l', builtin.loclist,     'ivy_plus',       "Find Location List")
+set_keymap('<leader>n', notify,              nil,              "Notify History")
 
 
