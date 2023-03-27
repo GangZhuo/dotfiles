@@ -225,3 +225,44 @@ Prefix is `C-a`
 | -    | <C-b>       | Scroll down                                                                              |
 | -    | <C-f>       | Scroll up                                                                                |
 
+#### nvim-tree
+
+| Mode | Keys        | Description                                                                              |
+|:-----|:------------|:-----------------------------------------------------------------------------------------|
+| n    | <leader>t   | Show/hide workspace file tree                                                            |
+| n    | l           | Open a file or folder                                                                    |
+| n    | h           | Collapse the folder                                                                      |
+| n    | ?           | Toggle help                                                                              |
+
+#### telescope
+
+| Mode | Keys        | Description                                                                              |
+|:-----|:------------|:-----------------------------------------------------------------------------------------|
+| n, x | <leader>h   | Find Builtin Pickers                                                                     |
+| n, x | <leader>f   | Find Files                                                                               |
+| n, x | <leader>b   | Find Buffers                                                                             |
+| n, x | <leader>s   | Search in Workspace                                                                      |
+| n, x | <leader>c   | Search in Curent Buffer                                                                  |
+| n, x | <leader>g   | Search by Ripgrep                                                                        |
+| n, x | <leader>k   | Find Tags                                                                                |
+| n, x | <leader>d   | Find LSP Symbols in Current Buffer                                                       |
+| n, x | <leader>m   | Find Marks                                                                               |
+| n, x | <leader>M   | Keymaps                                                                                  |
+| n, x | <leader>r   | Find Registers                                                                           |
+| n, x | <leader>q   | Find Quickfix                                                                            |
+| n, x | <leader>l   | Find Location List                                                                       |
+| -    | l           | Open selected file                                                                       |
+| -    | o           | Open selected file                                                                       |
+
+#### ufo
+
+| Mode | Keys        | Description                                                                              |
+|:-----|:------------|:-----------------------------------------------------------------------------------------|
+| n    | zR          | Open all folds                                                                           |
+| n    | zM          | Close all folds                                                                          |
+
+#### vsnip
+
+| Mode | Keys        | Description                                                                              |
+|:-----|:------------|:-----------------------------------------------------------------------------------------|
+
