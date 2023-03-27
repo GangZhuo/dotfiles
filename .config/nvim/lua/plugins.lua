@@ -85,15 +85,13 @@ packer.startup {
       event = "VimEnter",
       run = ":TSUpdate",
       config = function()
-        vim.defer_fn(function()
-          require('config.treesitter')
-          require('trailing-whitespace').setup({
-            enable = true,
-            mi = {
-              enable = false,
-            },
-          })
-        end, 100)
+        require('config.treesitter')
+        require('trailing-whitespace').setup({
+          enable = true,
+          mi = {
+            enable = false,
+          },
+        })
       end,
     }
 
