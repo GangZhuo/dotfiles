@@ -2,8 +2,9 @@
 local map = vim.keymap.set
 local telescope = require('telescope')
 local builtin = require('telescope.builtin')
+local themes = require('telescope.themes')
 
-local themes = {
+local _themes = {
   popup_list = {
     theme = 'popup_list',
     previewer = false,
@@ -70,6 +71,21 @@ local themes = {
     },
   },
 }
+
+for k,v in pairs(_themes) do
+  themes['get_'..k] = function(opts)
+    opts = opts or {}
+    local theme_opts = v
+    if opts.layout_config and opts.layout_config.prompt_position == "bottom" then
+      theme_opts.borderchars = {
+        prompt = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+        results = { "─", "│", "─", "│", "╭", "╮", "┤", "├" },
+        preview = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
+      }
+    end
+    return vim.tbl_deep_extend("force", theme_opts, opts)
+  end
+end
 
 telescope.setup({
   defaults = {
@@ -159,7 +175,7 @@ local set_keymap = function (key, picker, layout, desc, opts)
 
   local n_opts = {}
   if layout then
-    n_opts = vim.deepcopy(themes[layout])
+    n_opts = vim.deepcopy(_themes[layout])
   end
   n_opts.prompt_title = desc
   if type(opts) == "table" then
