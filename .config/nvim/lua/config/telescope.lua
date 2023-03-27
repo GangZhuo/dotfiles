@@ -173,7 +173,7 @@ local set_keymap = function (key, picker, layout, desc, opts)
         n_opts.additional_args = { '--hidden' }
       end
       if opts and opts.grep_current_buffer then
-          n_opts.search_dirs = { vim.api.nvim_buf_get_name(0) }
+        n_opts.search_dirs = { vim.api.nvim_buf_get_name(0) }
       end
       picker(n_opts)
   end
@@ -183,10 +183,10 @@ local set_keymap = function (key, picker, layout, desc, opts)
   local x_rhs = function()
       x_opts.default_text = get_visual_selection()
       if vim.g.telescope_search_hidden then
-        n_opts.additional_args = { '--hidden' }
+        x_opts.additional_args = { '--hidden' }
       end
       if opts and opts.grep_current_buffer then
-          x_opts.search_dirs = { vim.api.nvim_buf_get_name(0) }
+        x_opts.search_dirs = { vim.api.nvim_buf_get_name(0) }
       end
       picker(x_opts)
   end
