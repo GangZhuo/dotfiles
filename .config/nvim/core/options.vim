@@ -43,7 +43,7 @@ set backupcopy=yes  " copy the original file to backupdir and overwrite it
 set tabstop=4       " number of visual spaces per TAB
 set softtabstop=4   " number of spaces in tab when editing
 set shiftwidth=4    " number of spaces to use for autoindent
-set noexpandtab     " expand tab to spaces so that tabs are spaces
+set expandtab       " expand tab to spaces so that tabs are spaces
 
 " Set matching pairs of characters and highlight matching brackets
 set matchpairs+=<:>,「:」,『:』,【:】,“:”,‘:’,《:》
