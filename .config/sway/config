@@ -127,6 +127,12 @@ input type:touchpad {
     tap_button_map lrm
 }
 
+# Hide mouse when typing
+seat * hide_cursor when-typing enable
+
+# Hide mouse after 8000ms
+seat * hide_cursor 8000
+
 ### Key bindings
 #
 # Basics:
