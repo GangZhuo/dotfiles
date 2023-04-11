@@ -146,6 +146,9 @@ Prefix is `C-a`
 | n    | <space>O               | Insert a blank line above current line (do not move the cursor)             |
 | n, x | H                      | Go to start of line easier                                                  |
 | n, x | L                      | Go to end of line easier                                                    |
+| n, x | zh                     | Go to top of the screen                                                     |
+| n, x | zm                     | Go to middle of the screen                                                  |
+| n, x | zl                     | Go to bottom of the screen                                                  |
 | x    | <                      | Continuous visual shifting (does not exit Visual mode)                      |
 | x    | >                      | Continuous visual shifting (does not exit Visual mode)                      |
 | n    | <leader>ev             | Edit nvim config file quickly                                               |

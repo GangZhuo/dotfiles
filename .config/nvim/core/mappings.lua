@@ -87,6 +87,11 @@ keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true })
 keymap.set({ "n", "x" }, "H", "g^")
 keymap.set({ "n", "x" }, "L", "g_")
 
+-- Go to start or end of screen
+keymap.set({ "n", "x" }, "zh", "H")
+keymap.set({ "n", "x" }, "zl", "L")
+keymap.set({ "n", "x" }, "zm", "M")
+
 -- Continuous visual shifting (does not exit Visual mode), `gv` means
 -- to reselect previous visual area, see https://superuser.com/q/310417/736190
 keymap.set("x", "<", "<gv")
