@@ -254,3 +254,5 @@ keymap.set('n', '<space>e', diagnostic.open_float, { desc = "put diagnostic to q
 keymap.set('n', '<space>l', diagnostic.setloclist, { desc = "put diagnostic to loclist" })
 keymap.set('n', '[d',       diagnostic.goto_prev,  { desc = "previous diagnostic" })
 keymap.set('n', ']d',       diagnostic.goto_next,  { desc = "next diagnostic" })
+keymap.set('n', 'gk',       diagnostic.goto_prev,  { desc = "previous diagnostic" })
+keymap.set('n', 'gj',       diagnostic.goto_next,  { desc = "next diagnostic" })

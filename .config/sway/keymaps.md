@@ -183,6 +183,8 @@ Prefix is `C-a`
 | n    | \x        | Close qf and location list                                                               |
 | n    | [d        | Previous diagnostic                                                                      |
 | n    | ]d        | Next diagnostic                                                                          |
+| n    | gk        | Previous diagnostic                                                                      |
+| n    | gj        | Next diagnostic                                                                          |
 | n    | [l        | Previous location item                                                                   |
 | n    | ]l        | Next location item                                                                       |
 | n    | [L        | First location item                                                                      |
