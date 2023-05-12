@@ -37,8 +37,6 @@ local packer_util = require("packer.util")
 
 packer.startup {
   function(use)
-    -- it is recommended to put impatient.nvim before any other plugins
-    use { "lewis6991/impatient.nvim", config = [[require('impatient')]] }
 
     -- Packer can manage itself
     use { "wbthomason/packer.nvim", opt = true }

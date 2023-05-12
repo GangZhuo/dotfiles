@@ -10,6 +10,9 @@ if not utils.is_expect_ver(expected_ver) then
   return
 end
 
+-- Enable lua-loader that byte-compiles and caches lua files
+vim.loader.enable()
+
 local core_conf_files = {
   "globals.lua", -- some global settings
   "options.vim", -- setting options in nvim
