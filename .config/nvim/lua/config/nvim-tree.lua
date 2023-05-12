@@ -10,7 +10,8 @@ local function edit(mode, node)
   require("nvim-tree.actions.node.open-file").fn(mode, path)
 end
 
-local expand = function(node)
+local expand = function()
+  local node = api.tree.get_node_under_cursor()
   if node.nodes then
     if not node.open then
       require("nvim-tree.lib").expand_or_collapse(node)
@@ -20,7 +21,8 @@ local expand = function(node)
   end
 end
 
-local collapse = function(node)
+local collapse = function()
+  local node = api.tree.get_node_under_cursor()
   if node.nodes and node.open then
     require("nvim-tree.lib").expand_or_collapse(node)
     return
@@ -42,6 +44,19 @@ local collapse = function(node)
   end
 end
 
+local function on_attach(bufnr)
+  local function opts(desc)
+    return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+  end
+
+  api.config.mappings.default_on_attach(bufnr)
+
+  keymap.set('n', 'l', expand,   opts('Expand folder or open a file'))
+  keymap.set('n', 'h', collapse, opts('Collapse the folder'))
+  keymap.set('n', '?', api.tree.toggle_help, opts('Help'))
+
+end
+
 nvim_tree.setup {
   sync_root_with_cwd = true,
   diagnostics = {
@@ -50,7 +65,7 @@ nvim_tree.setup {
     show_on_dirs = true,
   },
   remove_keymaps = { "<C-e>", },
-  on_attach = "disable",
+  on_attach = on_attach,
   view = {
     adaptive_size = false,
     centralize_selection = true,
@@ -59,13 +74,6 @@ nvim_tree.setup {
     number = true,
     relativenumber = true,
     signcolumn = "yes",
-    mappings = {
-      list = {
-        { key = "l", action_cb = expand,   action = "open a file or folder" },
-        { key = "h", action_cb = collapse, action = "collapse the folder" },
-        { key = "?", action = "toggle_help" },
-      },
-    },
   },
   renderer = {
     group_empty = true,
