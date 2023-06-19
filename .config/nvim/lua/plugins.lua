@@ -64,23 +64,19 @@ packer.startup {
 
     -- Escape from insert mode by 'jk'
     use { "nvim-zh/better-escape.vim",
-      event = "InsertEnter",
       config = function()
         --vim.cmd([[let g:better_escape_interval = 200]])
       end,
     }
 
     -- Repeat vim motions
-    use { "tpope/vim-repeat",
-      event = "VimEnter",
-    }
+    use { "tpope/vim-repeat" }
 
     -- Colorizer
     use "norcalli/nvim-colorizer.lua"
 
     -- build a concrete syntax tree, and highlight by syntax tree
     use { "nvim-treesitter/nvim-treesitter",
-      event = "VimEnter",
       run = ":TSUpdate",
       config = function()
         require('config.treesitter')
@@ -95,7 +91,6 @@ packer.startup {
 
     -- Ultra fold in Neovim base on lsp, treesitter and indent
     use { "kevinhwang91/nvim-ufo",
-      event = "VimEnter",
       after = {
         "cmp-nvim-lsp",
         "nvim-treesitter",
@@ -108,7 +103,6 @@ packer.startup {
 
     -- Modern matchit implementation base on treesitter
     use { "andymass/vim-matchup",
-      event = "VimEnter",
       after = {
         "nvim-treesitter",
       },
@@ -117,7 +111,6 @@ packer.startup {
 
     -- Show marks in signcolumn
     use { "kshenoy/vim-signature",
-      event = "VimEnter",
       branch = "master",
       config = [[require('utils').load_config('signature')]],
     }
@@ -131,13 +124,11 @@ packer.startup {
 
     -- status line
     use { "nvim-lualine/lualine.nvim",
-      event = "VimEnter",
       config = [[require('config.statusline')]],
     }
 
     -- buffer line
     use { "akinsho/bufferline.nvim",
-      event = "VimEnter",
       config = [[require('config.bufferline')]],
     }
 
@@ -149,7 +140,6 @@ packer.startup {
 
     -- file explorer
     use { "kyazdani42/nvim-tree.lua",
-      event = "VimEnter",
       requires = {
         "kyazdani42/nvim-web-devicons",
       },
@@ -158,13 +148,11 @@ packer.startup {
 
     -- show file tags in vim window
     use { "liuchengxu/vista.vim",
-      event = "VimEnter",
       config = [[require('config.vista')]],
     }
 
     -- fuzzy finder
     use { "nvim-telescope/telescope.nvim",
-      event = "VimEnter",
       requires = {
         { "nvim-lua/plenary.nvim" },
         { "kyazdani42/nvim-web-devicons" },
@@ -176,7 +164,6 @@ packer.startup {
 
     -- notification plugin
     use { "rcarriga/nvim-notify",
-      event = "VimEnter",
       config = function()
         vim.defer_fn(function()
           require("config.nvim-notify")
@@ -199,7 +186,6 @@ packer.startup {
 
     -- Snippet
     use { "hrsh7th/vim-vsnip",
-      event = "VimEnter",
       config = [[require('config.vsnip')]],
     }
     use { "hrsh7th/vim-vsnip-integ",
