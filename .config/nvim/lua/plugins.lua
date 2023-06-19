@@ -215,6 +215,7 @@ packer.startup {
     }
     -- Standalone UI for nvim-lsp progress
     use { "j-hui/fidget.nvim",
+      branch = "legacy",
       after = "nvim-lspconfig",
       config = [[require("config.fidget")]],
     }
