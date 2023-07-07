@@ -8,13 +8,6 @@ function _G.inspect(item)
   vim.pretty_print(item)
 end
 
--- Directory to install all plugins.
-if fn.glob("/usr/local/share/nvim") ~= "" then
-  vim.g.my_data_dir = "/usr/local/share/nvim"
-else
-  vim.g.my_data_dir = fn.stdpath("data")
-end
-
 ------------------------------------------------------------------------
 --                          custom variables                          --
 ------------------------------------------------------------------------

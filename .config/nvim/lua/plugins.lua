@@ -1,16 +1,13 @@
 local api = vim.api
 local fn = vim.fn
 
--- The root dir to install all plugins. Plugins are under opt/ or start/ sub-directory.
-vim.g.plugin_home = vim.g.my_data_dir .. "/site/pack/packer"
-
 --- Install packer if it has not been installed.
 --- Return:
 --- true: if this is a fresh install of packer
 --- false: if packer has been installed
 local function packer_ensure_install()
   -- Where to install packer.nvim -- the package manager (we make it opt)
-  local packer_dir = vim.g.plugin_home .. "/opt/packer.nvim"
+  local packer_dir = vim.fn.stdpath("data") .. "/site/pack/packer/opt/packer.nvim"
 
   if fn.glob(packer_dir) ~= "" then
     return false
@@ -223,8 +220,8 @@ packer.startup {
   end,
   config = {
     max_jobs = 4,
-    package_root = packer_util.join_paths(vim.g.my_data_dir, "site", "pack"),
-    compile_path = packer_util.join_paths(vim.g.my_data_dir, "site", "lua", "packer_compiled.lua"),
+    package_root = packer_util.join_paths(vim.fn.stdpath("data"), "site", "pack"),
+    compile_path = packer_util.join_paths(vim.fn.stdpath("data"), "site", "lua", "packer_compiled.lua"),
   },
 }
 
