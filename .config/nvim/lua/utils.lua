@@ -165,4 +165,24 @@ M.sudo_write = function(filepath, tmpfile)
   return succ, output
 end
 
+-- Set http(s)_proxy
+M.set_http_proxy = function (url)
+  if not M.zstr(url) then
+    vim.env.http_proxy = url
+	vim.env.https_proxy = url
+	return true, url
+  elseif (not M.zstr(vim.env.HPROXY_HOST)) and (not M.zstr(vim.env.HPROXY_PORT)) then
+    url = string.format("http://%s:%s/", vim.env.HPROXY_HOST, vim.env.HPROXY_PORT)
+	if M.zstr(vim.env.http_proxy) then
+      vim.env.http_proxy = url
+    end
+    if M.zstr(vim.env.https_proxy) then
+      vim.env.https_proxy = url
+    end
+	return true, url
+  else
+    return false, url
+  end
+end
+
 return M
