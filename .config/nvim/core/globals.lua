@@ -31,6 +31,21 @@ if utils.executable('python3') then
   else
     vim.g.python3_host_prog = fn.exepath("python3")
   end
+elseif utils.executable('python') then
+  local x = utils.exec_cmd('python --version')
+  local a = utils.split(x, ' ')
+  local b = utils.split(a[2], '.')
+  local v = tonumber(b[1])
+  if v == 3 then
+    if vim.g.is_win then
+      vim.g.python3_host_prog = fn.substitute(fn.exepath("python"), ".exe$", '', 'g')
+    else
+      vim.g.python3_host_prog = fn.exepath("python")
+    end
+  else
+    api.nvim_err_writeln("Python3 executable not found! You must install Python3 and set its PATH correctly!")
+    return
+  end
 else
   api.nvim_err_writeln("Python3 executable not found! You must install Python3 and set its PATH correctly!")
   return

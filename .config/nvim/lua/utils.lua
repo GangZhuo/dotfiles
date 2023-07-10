@@ -38,6 +38,16 @@ function M.executable(name)
   return false
 end
 
+function M.exec_cmd(cmd)
+  local handle = io.popen(cmd)
+  if handle ~= nil then
+    local result = handle:read("*a")
+    handle:close()
+	return result
+  end
+  return nil
+end
+
 --- check whether a feature exists in Nvim
 --- @feat: string
 ---   the feature name, like `nvim-0.7` or `unix`.
