@@ -8,6 +8,10 @@ function _G.inspect(item)
   vim.print(item)
 end
 
+local function zstr(s)
+  return s == nil or s == ''
+end
+
 ------------------------------------------------------------------------
 --                          custom variables                          --
 ------------------------------------------------------------------------
@@ -16,6 +20,17 @@ vim.g.is_linux = (utils.has("unix") and (not utils.has("macunix"))) and true or 
 vim.g.is_mac  = utils.has("macunix") and true or false
 
 vim.g.logging_level = "info"
+
+-- Set http(s)_proxy when running on windows os
+if vim.g.is_win then
+  local proxy = "http://127.0.0.1:1081/"
+  if zstr(vim.env.http_proxy) then
+    vim.env.http_proxy = proxy
+  end
+  if zstr(vim.env.https_proxy) then
+    vim.env.https_proxy = proxy
+  end
+end
 
 ------------------------------------------------------------------------
 --                         builtin variables                          --
