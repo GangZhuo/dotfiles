@@ -1,6 +1,10 @@
+local ignore_install = {}
+if vim.g.is_win then
+  ignore_install = { "php", }
+end
 require("nvim-treesitter.configs").setup {
   ensure_installed = "all",
-  ignore_install = { "php", }, -- List of parsers to ignore installing
+  ignore_install = ignore_install, -- List of parsers to ignore installing
   -- Automatically install missing parsers when entering buffer
   auto_install = true,
   -- Install parsers synchronously (only applied to `ensure_installed`)
