@@ -227,19 +227,17 @@ vim.api.nvim_create_user_command(
 local live_grep_args = telescope.extensions.live_grep_args.live_grep_args
 local notify = telescope.extensions.notify.notify
 
-set_keymap('<leader>h', builtin.builtin,     'popup_list',     "Find Builtin Pickers")
-set_keymap('<leader>f', builtin.find_files,  'popup_extended', "Find Files")
-set_keymap('<leader>b', builtin.buffers,     'popup_list',     "Find Buffers", { sort_mru = true, })
+set_keymap('<leader>h', builtin.builtin,     'popup_list',     "Search Builtin Pickers")
+set_keymap('<leader>f', builtin.find_files,  'popup_extended', "Search Files")
+set_keymap('<leader>b', builtin.buffers,     'popup_list',     "Search Buffers", { sort_mru = true, })
 set_keymap('<leader>s', builtin.live_grep,   'popup_extended', "Search in Workspace")
 set_keymap('<leader>c', builtin.live_grep,   'popup_extended', "Search in Curent Buffer", { grep_current_buffer = true })
 set_keymap('<leader>g', live_grep_args,      'popup_extended', "Search by Ripgrep")
-set_keymap('<leader>k', builtin.tags,        'popup_extended', "Find Tags")
-set_keymap('<leader>d', builtin.lsp_document_symbols, 'popup_extended', "Find LSP Symbols in Current Buffer")
-set_keymap('<leader>m', builtin.marks,       'popup_extended', "Find Marks")
-set_keymap('<leader>M', builtin.keymaps,     nil,              "Keymaps")
-set_keymap('<leader>r', builtin.registers,   'popup_list',     "Find Registers")
-set_keymap('<leader>q', builtin.quickfix,    'ivy_plus',       "Find Quickfix")
-set_keymap('<leader>l', builtin.loclist,     'ivy_plus',       "Find Location List")
-set_keymap('<leader>n', notify,              nil,              "Notify History")
-
-
+set_keymap('<leader>k', builtin.tags,        'popup_extended', "Search Tags")
+set_keymap('<leader>d', builtin.lsp_document_symbols, 'popup_extended', "Search LSP Symbols in Current Buffer")
+set_keymap('<leader>m', builtin.marks,       'popup_extended', "Search Marks")
+set_keymap('<leader>M', builtin.keymaps,     nil,              "Search Keymaps")
+set_keymap('<leader>r', builtin.registers,   'popup_list',     "Search Registers")
+set_keymap('<leader>q', builtin.quickfix,    'ivy_plus',       "Search Quickfix")
+set_keymap('<leader>l', builtin.loclist,     'ivy_plus',       "Search Location List")
+set_keymap('<leader>n', notify,              nil,              "Search Notify History")
