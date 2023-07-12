@@ -74,7 +74,10 @@ packer.startup {
 
     -- build a concrete syntax tree, and highlight by syntax tree
     use { "nvim-treesitter/nvim-treesitter",
-      run = ":TSUpdate",
+      run = function()
+        local ts_update = require('nvim-treesitter.install').update({ with_sync = true })
+        ts_update()
+      end,
       config = function()
         require('config.treesitter')
         require('trailing-whitespace').setup({
