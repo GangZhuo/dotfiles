@@ -42,19 +42,6 @@ keymap.set({ "n", "x" }, "<leader>P", "\"+P", { desc = "paste system clipboard b
 -- Shortcut for faster save and quit
 keymap.set("n", "<leader>w", "<cmd>update<cr>", { silent = true, desc = "save buffer" })
 
--- Navigation in the location and quickfix list
-keymap.set("n", "[l", "<cmd>lprevious<cr>zv", { silent = true, desc = "previous location item" })
-keymap.set("n", "]l", "<cmd>lnext<cr>zv", { silent = true, desc = "next location item" })
-
-keymap.set("n", "[L", "<cmd>lfirst<cr>zv", { silent = true, desc = "first location item" })
-keymap.set("n", "]L", "<cmd>llast<cr>zv", { silent = true, desc = "last location item" })
-
-keymap.set("n", "[q", "<cmd>cprevious<cr>zv", { silent = true, desc = "previous qf item" })
-keymap.set("n", "]q", "<cmd>cnext<cr>zv", { silent = true, desc = "next qf item" })
-
-keymap.set("n", "[Q", "<cmd>cfirst<cr>zv", { silent = true, desc = "first qf item" })
-keymap.set("n", "]Q", "<cmd>clast<cr>zv", { silent = true, desc = "last qf item" })
-
 -- Close location list or quickfix list if they are present, see https://superuser.com/q/355325/736190
 keymap.set("n", [[\x]], "<cmd>windo lclose <bar> cclose <cr>", {
   silent = true,
@@ -250,9 +237,22 @@ keymap.set("n", "<leader>cp", "<cmd>lua require('colorschemes').prev()<cr>",
     desc = "choose previous colorscheme"
 })
 
-keymap.set('n', '<space>e', diagnostic.open_float, { desc = "put diagnostic to qf" })
-keymap.set('n', '<space>l', diagnostic.setloclist, { desc = "put diagnostic to loclist" })
-keymap.set('n', '[d',       diagnostic.goto_prev,  { desc = "previous diagnostic" })
-keymap.set('n', ']d',       diagnostic.goto_next,  { desc = "next diagnostic" })
-keymap.set('n', 'gk',       diagnostic.goto_prev,  { desc = "previous diagnostic" })
-keymap.set('n', 'gj',       diagnostic.goto_next,  { desc = "next diagnostic" })
+keymap.set('n', '<space>e', diagnostic.open_float, { desc = "Show diagnostics in a floating window." })
+keymap.set('n', '<space>l', diagnostic.setloclist, { desc = "Add buffer diagnostics to the location list." })
+keymap.set('n', '[d',       diagnostic.goto_prev,  { desc = "Move to the previous diagnostic in the current buffer." })
+keymap.set('n', ']d',       diagnostic.goto_next,  { desc = "Move to the next diagnostic." })
+keymap.set('n', 'gk',       diagnostic.goto_prev,  { desc = "Move to the previous diagnostic in the current buffer." })
+keymap.set('n', 'gj',       diagnostic.goto_next,  { desc = "Move to the next diagnostic." })
+
+-- Navigation in the location and quickfix list
+keymap.set("n", "[l", "<cmd>lprevious<cr>zv", { silent = true, desc = "previous location item" })
+keymap.set("n", "]l", "<cmd>lnext<cr>zv", { silent = true, desc = "next location item" })
+
+keymap.set("n", "[L", "<cmd>lfirst<cr>zv", { silent = true, desc = "first location item" })
+keymap.set("n", "]L", "<cmd>llast<cr>zv", { silent = true, desc = "last location item" })
+
+keymap.set("n", "[q", "<cmd>cprevious<cr>zv", { silent = true, desc = "previous qf item" })
+keymap.set("n", "]q", "<cmd>cnext<cr>zv", { silent = true, desc = "next qf item" })
+
+keymap.set("n", "[Q", "<cmd>cfirst<cr>zv", { silent = true, desc = "first qf item" })
+keymap.set("n", "]Q", "<cmd>clast<cr>zv", { silent = true, desc = "last qf item" })

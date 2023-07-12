@@ -178,13 +178,13 @@ Prefix is `C-a`
 
 | Mode | Keys      | Description                                                                              |
 |:-----|:----------|:-----------------------------------------------------------------------------------------|
-| n    | <space>e  | Put diagnostic to qf                                                                     |
-| n    | <space>l  | Put diagnostic to loclist                                                                |
+| n    | <space>e  | Show diagnostics in a floating window.                                                   |
+| n    | <space>l  | Add buffer diagnostics to the location list.                                             |
 | n    | \x        | Close qf and location list                                                               |
-| n    | [d        | Previous diagnostic                                                                      |
-| n    | ]d        | Next diagnostic                                                                          |
-| n    | gk        | Previous diagnostic                                                                      |
-| n    | gj        | Next diagnostic                                                                          |
+| n    | [d        | Move to the previous diagnostic in the current buffer.                                   |
+| n    | ]d        | Move to the next diagnostic.                                                             |
+| n    | gk        | Move to the previous diagnostic in the current buffer.                                   |
+| n    | gj        | Move to the next diagnostic.                                                             |
 | n    | [l        | Previous location item                                                                   |
 | n    | ]l        | Next location item                                                                       |
 | n    | [L        | First location item                                                                      |
