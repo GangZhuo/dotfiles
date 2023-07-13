@@ -3,13 +3,18 @@ local map = vim.keymap.set
 local telescope = require('telescope')
 local builtin = require('telescope.builtin')
 local themes = require('telescope.themes')
+local actions = require('telescope.actions')
 
 telescope.setup({
   defaults = {
     mappings = {
+      i = {
+        ["<C-Down>"] = actions.cycle_history_next,
+        ["<C-Up>"] = actions.cycle_history_prev,
+      },
       n = {
-        ["l"] = require("telescope.actions").select_default,
-        ["o"] = require("telescope.actions").select_default, -- Open the file
+        ["l"] = actions.select_default,
+        ["o"] = actions.select_default, -- Open the file
       },
     }
   },

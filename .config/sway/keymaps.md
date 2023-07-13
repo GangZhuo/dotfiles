@@ -263,6 +263,8 @@ Prefix is `C-a`
 
 | Mappings       | Action                                               |
 |----------------|------------------------------------------------------|
+| `<C-Down>`     | Next search history                                  |
+| `<C-Up>`       | Previous search history                              |
 | `<C-n>/<Down>` | Next item                                            |
 | `<C-p>/<Up>`   | Previous item                                        |
 | `j/k`          | Next/previous (in normal mode)                       |
