@@ -248,7 +248,6 @@ Prefix is `C-a`
 | n, x | <leader>b   | Find Buffers                                                                             |
 | n, x | <leader>s   | Search in Workspace                                                                      |
 | n, x | <leader>c   | Search in Curent Buffer                                                                  |
-| n, x | <leader>k   | Find Tags                                                                                |
 | n, x | <leader>d   | Find LSP Symbols in Current Buffer                                                       |
 | n, x | <leader>m   | Find Marks                                                                               |
 | n, x | <leader>M   | Keymaps                                                                                  |
