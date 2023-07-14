@@ -1,3 +1,4 @@
+--[[
 " Default mappings:
 "  mx           Toggle mark 'x' and display it in the leftmost column
 "  dmx          Remove mark 'x' where x is a-zA-Z
@@ -32,4 +33,5 @@
 "  '.          "最后一次变更的地方
 "  ''          "跳回来的地方(最近两个位置跳转)
 "  m<space>    "去除所有标签
+--]]
 

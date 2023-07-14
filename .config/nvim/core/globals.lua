@@ -1,11 +1,6 @@
 local fn = vim.fn
 local api = vim.api
 
--- Inspect something
-function _G.inspect(item)
-  vim.print(item)
-end
-
 local utils = require('utils')
 
 -- Automatically set http(s)_proxy
