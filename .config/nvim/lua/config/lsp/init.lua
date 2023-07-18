@@ -94,35 +94,6 @@ capabilities.window.workDoneProgress = true
 
 local lspconfig = require("lspconfig")
 
-if utils.executable("pylsp") then
-  lspconfig.pylsp.setup {
-    on_attach = custom_attach,
-    settings = {
-      pylsp = {
-        plugins = {
-          pylint = { enabled = true, executable = "pylint" },
-          pyflakes = { enabled = false },
-          pycodestyle = { enabled = false },
-          jedi_completion = { fuzzy = true },
-          pyls_isort = { enabled = true },
-          pylsp_mypy = { enabled = true },
-        },
-      },
-    },
-    flags = {
-      debounce_text_changes = 200,
-    },
-    capabilities = capabilities,
-  }
-end
-
-if utils.executable('pyright') then
-  lspconfig.pyright.setup{
-    on_attach = custom_attach,
-    capabilities = capabilities
-  }
-end
-
 if utils.executable("clangd") then
   lspconfig.clangd.setup {
     on_attach = custom_attach,
