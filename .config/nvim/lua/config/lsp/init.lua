@@ -94,14 +94,11 @@ capabilities.window.workDoneProgress = true
 
 local lspconfig = require("lspconfig")
 
+-- set up clangd
 if utils.executable("clangd") then
   lspconfig.clangd.setup {
     on_attach = custom_attach,
     capabilities = capabilities,
-    filetypes = { "c", "cpp", "cc" },
-    flags = {
-      debounce_text_changes = 500,
-    },
   }
 end
 
@@ -109,9 +106,6 @@ end
 if utils.executable("vim-language-server") then
   lspconfig.vimls.setup {
     on_attach = custom_attach,
-    flags = {
-      debounce_text_changes = 500,
-    },
     capabilities = capabilities,
   }
 end
@@ -124,8 +118,8 @@ if utils.executable("bash-language-server") then
   }
 end
 
+-- set up lua-language-server
 if utils.executable("lua-language-server") then
-  -- settings for lua-language-server can be found on https://github.com/LuaLS/lua-language-server .
   lspconfig.lua_ls.setup {
     on_attach = custom_attach,
     capabilities = capabilities,
@@ -144,12 +138,6 @@ if utils.executable("lua-language-server") then
             -- Make the server aware of Neovim runtime files
             api.nvim_get_runtime_file("", true),
           },
-          maxPreload = 100000,
-          preloadFileSize = 10000,
-        },
-        -- Do not send telemetry data containing a randomized but unique identifier
-        telemetry = {
-          enable = false,
         },
       },
     },
