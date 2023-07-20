@@ -66,7 +66,7 @@ local custom_attach = function(client, bufnr)
     bufmap("n", "<space>fc", vim.lsp.buf.format,         "format code")
   end
 
-  require("config.lsp.fname").attach(client, bufnr)
+  require("myconfig.plugins.lsp.fname").attach(client, bufnr)
 
   if not _notifies[client.name] then
     _notifies[client.name] = true
