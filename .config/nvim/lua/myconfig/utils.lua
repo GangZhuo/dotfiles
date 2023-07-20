@@ -7,7 +7,7 @@ function M.zstr(s)
 end
 
 function M._echo_multiline(msg)
-  for _, s in ipairs(vim.fn.split(msg, "\n")) do
+  for _, s in ipairs(fn.split(msg, "\n")) do
     vim.cmd("echom '" .. s:gsub("'", "''") .. "'")
   end
 end
@@ -99,6 +99,27 @@ function M.is_expect_ver(expected_ver)
   return true
 end
 
+--- Get python3 path
+function M.get_python3()
+  local prog
+  if M.executable('python3') then
+    prog = fn.exepath("python3")
+  elseif M.executable('python') then
+    -- Check version
+    local x = M.exec_cmd('python --version')
+    local a = M.split(x, ' ')
+    local b = M.split(a[2], '.')
+    local v = tonumber(b[1]) -- Convert major version to number
+    if v == 3 then
+      prog = fn.exepath("python")
+    end
+  end
+  if prog and vim.g.is_win then
+    prog = fn.substitute(prog, ".exe$", '', 'g')
+  end
+  return prog
+end
+
 --- Generate random integers in the range [Low, High], inclusive,
 --- adapted from https://stackoverflow.com/a/12739441/6064933
 --- @low: the lower value for this range
@@ -124,20 +145,20 @@ function M.add_pack(name)
 end
 
 function M.load_config(name)
-  local path = string.format("%s/lua/config/%s.vim", vim.fn.stdpath("config"), name)
+  local path = string.format("%s/lua/config/%s.vim", fn.stdpath("config"), name)
   local source_cmd = "source " .. path
   local status = pcall(vim.cmd, source_cmd)
   return status
 end
 
 M.sudo_exec = function(cmd)
-  vim.fn.inputsave()
-  local password = vim.fn.inputsecret("Password: ")
-  vim.fn.inputrestore()
+  fn.inputsave()
+  local password = fn.inputsecret("Password: ")
+  fn.inputrestore()
   if M.zstr(password) then
     return false, "Invalid password, sudo aborted"
   end
-  local output = vim.fn.system(string.format("sudo -p '' -S %s", cmd), password)
+  local output = fn.system(string.format("sudo -p '' -S %s", cmd), password)
   if vim.v.shell_error ~= 0 then
     return false, output
   end
@@ -145,41 +166,42 @@ M.sudo_exec = function(cmd)
 end
 
 M.sudo_write = function(filepath, tmpfile)
-  if M.zstr(filepath) then filepath = vim.fn.expand("%") end
+  if M.zstr(filepath) then filepath = fn.expand("%") end
   if M.zstr(filepath) then
     return false, "No file name"
   end
-  if M.zstr(tmpfile) then tmpfile = vim.fn.tempname() end
+  if M.zstr(tmpfile) then tmpfile = fn.tempname() end
   -- `bs=1048576` is equivalent to `bs=1M` for GNU dd or `bs=1m` for BSD dd
   -- Both `bs=1M` and `bs=1m` are non-POSIX
   local cmd = string.format("dd if=%s of=%s bs=1048576",
-    vim.fn.shellescape(tmpfile),
-    vim.fn.shellescape(filepath))
+    fn.shellescape(tmpfile),
+    fn.shellescape(filepath))
   -- no need to check error as this fails the entire function
   vim.api.nvim_exec(string.format("write! %s", tmpfile), true)
   local succ, output = M.sudo_exec(cmd)
   if succ then
     vim.cmd("e!")
   end
-  vim.fn.delete(tmpfile)
+  fn.delete(tmpfile)
   return succ, output
 end
 
 -- Set http(s)_proxy
 M.set_http_proxy = function (url)
+  local env = vim.env
   if not M.zstr(url) then
-    vim.env.http_proxy = url
-	vim.env.https_proxy = url
-	return true, url
-  elseif (not M.zstr(vim.env.HPROXY_HOST)) and (not M.zstr(vim.env.HPROXY_PORT)) then
-    url = string.format("http://%s:%s/", vim.env.HPROXY_HOST, vim.env.HPROXY_PORT)
-	if M.zstr(vim.env.http_proxy) then
-      vim.env.http_proxy = url
+    env.http_proxy = url
+    env.https_proxy = url
+    return true, url
+  elseif (not M.zstr(env.HPROXY_HOST)) and (not M.zstr(env.HPROXY_PORT)) then
+    url = string.format("http://%s:%s/", env.HPROXY_HOST, env.HPROXY_PORT)
+    if M.zstr(env.http_proxy) then
+      env.http_proxy = url
     end
-    if M.zstr(vim.env.https_proxy) then
-      vim.env.https_proxy = url
+    if M.zstr(env.https_proxy) then
+      env.https_proxy = url
     end
-	return true, url
+    return true, url
   else
     return false, url
   end
