@@ -39,19 +39,8 @@ packer.startup {
     use { "wbthomason/packer.nvim", opt = true }
 
     -- A list of colorscheme plugin you may want to try. Find what suits you.
-    use { "navarasu/onedark.nvim",       opt = true }
-    use { "sainnhe/edge",                opt = true }
     use { "sainnhe/sonokai",             opt = true }
-    use { "sainnhe/gruvbox-material",    opt = true }
-    use { "shaunsingh/nord.nvim",        opt = true }
-    use { "sainnhe/everforest",          opt = true }
-    use { "EdenEast/nightfox.nvim",      opt = true }
-    use { "rebelot/kanagawa.nvim",       opt = true }
-    use { "catppuccin/nvim",             opt = true, as = "catppuccin" }
-    use { "rose-pine/neovim",            opt = true, as = "rose-pine" }
-    use { "olimorris/onedarkpro.nvim",   opt = true }
-    use { "tanvirtin/monokai.nvim",      opt = true }
-    use { "marko-cerovac/material.nvim", opt = true }
+    use { "folke/tokyonight.nvim",       opt = true }
 
     -- LSP
     use { "neovim/nvim-lspconfig",
