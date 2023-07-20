@@ -10,8 +10,8 @@ M.colorschemes = {}
 -- current selected colorscheme
 M.colorscheme = nil
 
--- Colorscheme to its directory name mapping, because colorscheme repo name is not necessarily
--- the same as the colorscheme name itself.
+-- Colorscheme to its directory name mapping, because colorscheme
+-- repo name is not necessarily the same as the colorscheme name itself.
 M.colorscheme2dir = {
   sonokai = "sonokai",
   tokyonight = "tokyonight.nvim",
@@ -36,17 +36,18 @@ M.set_colorscheme = function(colorscheme)
   if not vim.tbl_contains(vim.tbl_keys(M), colorscheme) then
     local msg = "Invalid colorscheme: " .. colorscheme
     vim.notify(msg, vim.log.levels.ERROR, { title = "nvim-config" })
-
     return
   end
 
-  -- Load the colorscheme, because all the colorschemes are declared as opt plugins, so the colorscheme isn't loaded yet.
+  -- Load the colorscheme, because all the colorschemes are
+  -- declared as opt plugins, so the colorscheme isn't loaded yet.
   local status = utils.add_pack(M.colorscheme2dir[colorscheme])
 
   if not status then
-    local msg = string.format("Colorscheme %s is not installed. Run PackerSync to install.", colorscheme)
+    local msg = string.format(
+        "Colorscheme %s is not installed. Run PackerSync to install.",
+        colorscheme)
     vim.notify(msg, vim.log.levels.ERROR, { title = "nvim-config" })
-
     return
   end
 
