@@ -80,6 +80,75 @@ function M.split(inputstr, sep)
   return t
 end
 
+local join_dic = function(dic, sep)
+  local str = ""
+  for k,v in pairs(dic) do
+      if str:len() == 0 then
+        str = string.format("%s:%s", k, v)
+      else
+        str = str..string.format("%s%s:%s", sep, k, v)
+      end
+  end
+  return str
+end
+
+local join_arr = function(dic, sep)
+  local str = ""
+  for _,v in ipairs(dic) do
+      if str:len() == 0 then
+        str = v
+      else
+        str = str..string.format("%s%s", sep, v)
+      end
+  end
+  return str
+end
+
+local join = function(f, ...)
+  local str = ""
+  local args = {...}
+  local sep = ","
+  if type(args[#args]) == "string" then
+    sep = args[#args]
+    table.remove(args)
+  end
+  for _,item in ipairs(args) do
+    local tmp = f(item, sep)
+    if str:len() == 0 then
+      str = tmp
+    else
+      str = str..string.format("%s%s", sep, tmp)
+    end
+  end
+  return str
+end
+
+--- Join Directory
+--- e.g.
+---  local str = M.join_arr({a=1, b=2},{c=3,d=4},",")
+---  str: a:1,b:2,c:3,d:4
+function M.join_dic(...)
+  return join(join_dic, ...)
+end
+
+--- Join array
+--- e.g.
+---  local str = M.join_arr({"a", "b"},{"c","d"},",")
+---  str: a,b,c,d
+function M.join_arr(...)
+  return join(join_arr, ...)
+end
+
+--- Remove element from array
+function M.remove(arr, val)
+  for i,v in ipairs(arr) do
+    if v == val then
+      table.remove(arr, i)
+    end
+  end
+  return arr
+end
+
 function M.get_nvim_version()
   local actual_ver = vim.version()
 

@@ -26,23 +26,23 @@ require("packer").startup {
 
     -- LSP
     use { "neovim/nvim-lspconfig",
-      config = [[ require("config.lsp") ]],
+      config = [[ require("myconfig.plugins.lsp") ]],
     }
 
     -- Standalone UI for nvim-lsp progress
     use { "j-hui/fidget.nvim", branch = "legacy",
-      config = [[ require("config.fidget") ]],
+      config = [[ require("myconfig.plugins.fidget") ]],
     }
 
     -- build a concrete syntax tree, and highlight by syntax tree
     use { "nvim-treesitter/nvim-treesitter",
       run = [[ require("nvim-treesitter.install").update()() ]],
-      config = [[ require("config.treesitter") ]],
+      config = [[ require("myconfig.plugins.treesitter") ]],
     }
 
     -- Resume last cursor position
     use { "ethanholz/nvim-lastplace",
-      config = [[ require("config.lastplace") ]],
+      config = [[ require("myconfig.plugins.lastplace") ]],
     }
 
     -- Escape from insert mode by 'jk'
@@ -52,10 +52,10 @@ require("packer").startup {
 
     -- Colorizer
     use { "norcalli/nvim-colorizer.lua",
-      config = [[ require("config.nvim-colorizer") ]],
+      config = [[ require("myconfig.plugins.nvim-colorizer") ]],
     }
 
-    require("trailing-whitespace").setup({
+    require("myconfig.trailing-whitespace").setup({
       enable = true,
       mi = {
         enable = false,
@@ -65,33 +65,33 @@ require("packer").startup {
     -- Ultra fold in Neovim base on lsp, treesitter and indent
     use { "kevinhwang91/nvim-ufo",
       requires = "kevinhwang91/promise-async",
-      config = [[ require("config.ufo") ]],
+      config = [[ require("myconfig.plugins.ufo") ]],
     }
 
     -- Modern matchit implementation base on treesitter
     use { "andymass/vim-matchup",
-      config = [[ require("config.matchup") ]],
+      config = [[ require("myconfig.plugins.matchup") ]],
     }
 
     -- Show marks in signcolumn
     use { "kshenoy/vim-signature",
-      config = [[ require("config.signature") ]],
+      config = [[ require("myconfig.plugins.signature") ]],
     }
 
     -- Show match number and index for searching
     use { "kevinhwang91/nvim-hlslens",
-      config = [[ require("config.hlslens") ]],
+      config = [[ require("myconfig.plugins.hlslens") ]],
     }
 
     -- Best quickfix
     use { "kevinhwang91/nvim-bqf",
-      config = [[ require("config.bqf") ]],
+      config = [[ require("myconfig.plugins.bqf") ]],
     }
 
     -- file explorer
     use { "kyazdani42/nvim-tree.lua",
       requires = "kyazdani42/nvim-web-devicons",
-      config = [[ require("config.nvim-tree") ]],
+      config = [[ require("myconfig.plugins.nvim-tree") ]],
     }
 
     -- fuzzy finder
@@ -102,12 +102,12 @@ require("packer").startup {
         { "nvim-telescope/telescope-fzf-native.nvim", run = 'make' },
         { "nvim-telescope/telescope-live-grep-args.nvim" },
       },
-      config = [[ require("config.telescope") ]],
+      config = [[ require("myconfig.plugins.telescope") ]],
     }
 
     -- Snippet
     use { "hrsh7th/vim-vsnip",
-      config = [[ require("config.vsnip") ]],
+      config = [[ require("myconfig.plugins.vsnip") ]],
     }
     use { "hrsh7th/vim-vsnip-integ", }
     use { "rafamadriz/friendly-snippets", }
@@ -116,7 +116,7 @@ require("packer").startup {
     use { "hrsh7th/nvim-cmp",
       -- lsp kind icons
       requires = "onsails/lspkind-nvim",
-      config = [[ require("config.nvim-cmp") ]],
+      config = [[ require("myconfig.plugins.nvim-cmp") ]],
     }
 
     -- nvim-cmp completion sources
@@ -127,24 +127,24 @@ require("packer").startup {
     use { "hrsh7th/cmp-cmdline", }
     use { "dmitmel/cmp-cmdline-history", }
     use { "uga-rosa/cmp-dictionary",
-      config = [[ require("config.cmp-dictionary") ]],
+      config = [[ require("myconfig.plugins.cmp-dictionary") ]],
     }
 
     -- status line
     use { "nvim-lualine/lualine.nvim",
-      config = [[ require("config.statusline") ]],
+      config = [[ require("myconfig.plugins.statusline") ]],
     }
 
     -- buffer line
     use { "akinsho/bufferline.nvim",
-      config = [[ require("config.bufferline") ]],
+      config = [[ require("myconfig.plugins.bufferline") ]],
     }
 
     -- notification plugin
     use { "rcarriga/nvim-notify",
       config = function()
         vim.defer_fn(function()
-          require("config.nvim-notify")
+          require("myconfig.plugins.nvim-notify")
         end, 1000)
       end,
     }

@@ -1,7 +1,7 @@
 local utils = require("myconfig.utils")
 
 -- check version
-local expected_ver = "0.9.20"
+local expected_ver = "0.9.0"
 if not utils.is_expect_ver(expected_ver) then
   local msg = string.format(
       "Unsupported nvim version: expect %s, but got %s instead!",
@@ -21,6 +21,12 @@ utils.set_http_proxy()
 
 require("myconfig.globals")
 require("myconfig.options")
+require("myconfig.autocmds")
+require("myconfig.usercmds")
+require("myconfig.mappings")
+require("myconfig.plugins")
+
+require("myconfig.colorschemes").set_colorscheme("sonokai")
 
 --[[
 local core_conf_files = {

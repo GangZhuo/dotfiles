@@ -1,6 +1,6 @@
 --- This module will load a random colorscheme on nvim startup process.
 
-local utils = require("utils")
+local utils = require("myconfig.utils")
 
 local M = {}
 

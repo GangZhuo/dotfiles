@@ -1,10 +1,9 @@
 local fn = vim.fn
-local api = vim.api
 local utils = require("myconfig.utils")
 
 -- Change fillchars
 -- See https://neovim.io/doc/user/options.html#'fillchars'
-vim.o.fillchars = {
+vim.o.fillchars = utils.join_dic({
   vert      = "│",
   eob       = " ",
   msgsep    = "‾",
@@ -12,7 +11,7 @@ vim.o.fillchars = {
   foldopen  = "",
   foldsep   = " ",
   foldclose = "",
-}
+})
 
 -- Split window below/right when creating horizontal/vertical windows
 vim.o.splitbelow = true
@@ -33,7 +32,7 @@ vim.o.history = 500
 -- Disable creating swapfiles, see https://stackoverflow.com/q/821902/6064933
 vim.o.swapfile = false
 
-local wildignore = {
+local wildignore = utils.join_arr({
   "*.o",
   "*.obj",
   "*.dylib",
@@ -68,7 +67,7 @@ local wildignore = {
   "*.fdb_latexmk",
   "*.synctex.gz",
   "*.xdv",
-}
+})
 
 -- Ignore certain files and folders when globing
 vim.o.wildignore = wildignore
@@ -98,7 +97,15 @@ vim.o.shiftwidth  = 4     -- number of spaces to use for autoindent
 vim.o.expandtab   = false -- expand tab to spaces so that tabs are spaces
 
 -- Set matching pairs of characters and highlight matching brackets
-vim.o.matchpairs:append("<:>,「:」,『:』,【:】,“:”,‘:’,《:》")
+vim.o.matchpairs = vim.o.matchpairs .. "," .. utils.join_arr({
+  "<:>",
+  "「:」",
+  "『:』",
+  "【:】",
+  "“:”",
+  "‘:’",
+  "《:》",
+})
 
 -- Show line number and relative line number
 vim.o.number = true
@@ -111,7 +118,16 @@ vim.o.smartcase = true
 
 -- File and script encoding settings for vim
 vim.o.fileencoding = "utf-8"
-vim.o.fileencodings = "ucs-bom,utf-8,cp936,gb18030,big5,euc-jp,euc-kr,latin1"
+vim.o.fileencodings = utils.join_arr({
+  "ucs-bom",
+  "utf-8",
+  "cp936",
+  "gb18030",
+  "big5",
+  "euc-jp",
+  "euc-kr",
+  "latin1",
+})
 
 -- Break line at predefined characters
 vim.o.linebreak = true
@@ -160,13 +176,13 @@ vim.o.virtualedit = "block"
 
 -- Correctly break multi-byte characters such as CJK,
 -- see https://stackoverflow.com/q/32669814/6064933
-vim.o.formatoptions:append("mM")
+vim.o.formatoptions = vim.o.formatoptions .. "mM"
 
 -- Tilde (~) is an operator, thus must be followed by motions like `e` or `w`.
 vim.o.tildeop = true
 
 -- Text after this column number is not highlighted
-vim.o.synmaxcol = 250
+vim.o.synmaxcol = 500
 vim.o.startofline = false
 
 -- Enable true color support. Do not set this option if your terminal does not
@@ -181,11 +197,8 @@ end
 
 vim.o.signcolumn = "yes:2"
 
--- Remove certain character from file name pattern matching
-vim.o.isfname:remove({ "=", ",", })
-
 -- diff options
-vim.o.diffopt = {
+vim.o.diffopt = utils.join_arr({
   "vertical",   -- show diff in vertical position
   "filler",     -- show filler for deleted lines
   "closeoff",   -- turn off diff when one file window is closed
@@ -193,28 +206,21 @@ vim.o.diffopt = {
   "internal",
   "indent-heuristic",
   "algorithm:histogram",
-}
+})
 
 vim.o.wrap = true
 vim.o.ruler = false
-vim.o.colorcolumn = 80
+vim.o.colorcolumn = "80"
 vim.o.cmdheight = 2
 
-if exists('&foldoptions') then
-  -- Must be apply the patch https://github.com/neovim/neovim/pull/17446
-  vim.o.foldoptions = "nodigits"
+-- External program to use for grep command
+if utils.executable("rg") then
+  vim.o.grepprg = utils.join_arr({
+    "rg",
+    "--vimgrep",
+    "--no-heading",
+    "--smart-case",
+  }, " ")
+  vim.o.grepformat = "%f:%l:%c:%m"
 end
-
-" Clipboard settings, always use clipboard for all delete, yank, change, put
-" operation, see https://stackoverflow.com/q/30691466/6064933
-"if !empty(provider#clipboard#Executable())
-"  set clipboard+=unnamedplus
-"endif
-
-" External program to use for grep command
-if executable('rg')
-  set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
-  set grepformat=%f:%l:%c:%m
-endif
-
 

@@ -214,7 +214,7 @@ end)
 keymap.set("n", "<leader>st", function()
   if vim.treesitter then
     local captures = vim.treesitter.get_captures_at_cursor(0)
-    inspect(captures)
+    vim.print(captures)
   else
     api.nvim_err_writeln("treesitter not found!")
   end

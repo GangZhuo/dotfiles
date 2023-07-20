@@ -1,5 +1,5 @@
 local cmp_dict = require("cmp_dictionary")
-local utils = require("utils")
+local utils = require("myconfig.utils")
 local dict_root = string.format("%s/dict/", vim.fn.stdpath("config"))
 local opts = {
   dic = {

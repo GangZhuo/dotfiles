@@ -4,7 +4,7 @@ local keymap = vim.keymap
 local lsp = vim.lsp
 local diagnostic = vim.diagnostic
 
-local utils = require("utils")
+local utils = require("myconfig.utils")
 
 local _notifies = {}
 
@@ -36,7 +36,7 @@ lsp.handlers["textDocument/hover"] = lsp.with(vim.lsp.handlers.hover, {
   border = "rounded",
 })
 
-require("config.lsp.fname").setup()
+require("myconfig.plugins.lsp.fname").setup()
 
 local custom_attach = function(client, bufnr)
 

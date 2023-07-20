@@ -14,8 +14,8 @@ require("lualine").setup {
     lualine_b = { "branch", },
     lualine_c = {
       "filename",
-      require('config.statusline.spell'),
-      require('config.statusline.func-name'),
+      require('myconfig.plugins.statusline.spell'),
+      require('myconfig.plugins.statusline.func-name'),
     },
     lualine_x = {
       "encoding",
@@ -37,8 +37,8 @@ require("lualine").setup {
         sources = { "nvim_diagnostic" },
         color = { bg = "NONE", },
       },
-      require('config.statusline.trailing-whitespace'),
-      require('config.statusline.mixed-indent'),
+      require('myconfig.plugins.statusline.trailing-whitespace'),
+      require('myconfig.plugins.statusline.mixed-indent'),
     },
   },
   inactive_sections = {
