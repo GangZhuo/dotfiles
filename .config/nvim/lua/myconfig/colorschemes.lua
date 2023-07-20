@@ -15,6 +15,10 @@ M.colorscheme = nil
 M.colorscheme2dir = {
   sonokai = "sonokai",
   tokyonight = "tokyonight.nvim",
+  ["tokyonight-night"] = "tokyonight.nvim",
+  ["tokyonight-storm"] = "tokyonight.nvim",
+  ["tokyonight-day"]   = "tokyonight.nvim",
+  ["tokyonight-moon"]  = "tokyonight.nvim",
 }
 
 for k,_ in pairs(M.colorscheme2dir) do
@@ -28,15 +32,11 @@ M.sonokai = function()
   vim.cmd([[colorscheme sonokai]])
 end
 
-M.tokyonight = function ()
-  vim.cmd('colorscheme tokyonight')
-end
-
 M.set_colorscheme = function(colorscheme)
-  if not vim.tbl_contains(vim.tbl_keys(M), colorscheme) then
+  if not vim.tbl_contains(vim.tbl_keys(M.colorscheme2dir), colorscheme) then
     local msg = "Invalid colorscheme: " .. colorscheme
     vim.notify(msg, vim.log.levels.ERROR, { title = "nvim-config" })
-    return
+    return false
   end
 
   -- Load the colorscheme, because all the colorschemes are
@@ -48,14 +48,20 @@ M.set_colorscheme = function(colorscheme)
         "Colorscheme %s is not installed. Run PackerSync to install.",
         colorscheme)
     vim.notify(msg, vim.log.levels.ERROR, { title = "nvim-config" })
-    return
+    return false
   end
 
   -- Load the colorscheme and its settings
-  M[colorscheme]()
+  local f = M[colorscheme]
+  if type(f) == "function" then
+    f()
+  else
+    vim.cmd("colorscheme "..colorscheme)
+  end
 
   M.colorscheme = colorscheme
 
+  return true
 end
 
 M.prev = function()
@@ -70,9 +76,10 @@ M.prev = function()
     prev = #M.colorschemes
   end
   local colorscheme = M.colorschemes[prev]
-  M.set_colorscheme(colorscheme)
-  vim.notify(string.format("Colorscheme changed to \"%s\".", colorscheme),
-    vim.log.levels.NOTICE, { title = "nvim-config" })
+  if M.set_colorscheme(colorscheme) then
+    vim.notify(string.format("Colorscheme changed to \"%s\".", colorscheme),
+        vim.log.levels.NOTICE, { title = "nvim-config" })
+  end
 end
 
 M.next = function()
@@ -87,9 +94,10 @@ M.next = function()
     next = 1
   end
   local colorscheme = M.colorschemes[next]
-  M.set_colorscheme(colorscheme)
-  vim.notify(string.format("Colorscheme changed to \"%s\".", colorscheme),
-    vim.log.levels.NOTICE, { title = "nvim-config" })
+  if M.set_colorscheme(colorscheme) then
+    vim.notify(string.format("Colorscheme changed to \"%s\".", colorscheme),
+        vim.log.levels.NOTICE, { title = "nvim-config" })
+  end
 end
 
 --- Use a random colorscheme from the pre-defined list of colorschemes.
