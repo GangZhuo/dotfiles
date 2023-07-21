@@ -52,7 +52,7 @@ require("packer").startup {
 
     -- Colorizer
     use { "norcalli/nvim-colorizer.lua",
-      config = [[ require("myconfig.plugins.nvim-colorizer") ]],
+      config = [[ require("myconfig.plugins.colorizer") ]],
     }
 
     require("myconfig.trailing-whitespace").setup({

@@ -1,1 +1,3 @@
-require 'colorizer'.setup()
+-- Do not enabled at startup,
+-- you can toggle by run `:ColorizerToggle`
+--require("colorizer").setup()
