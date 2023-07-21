@@ -14,11 +14,9 @@ M.colorscheme = nil
 -- repo name is not necessarily the same as the colorscheme name itself.
 M.colorscheme2dir = {
   sonokai = "sonokai",
-  tokyonight = "tokyonight.nvim",
-  ["tokyonight-night"] = "tokyonight.nvim",
-  ["tokyonight-storm"] = "tokyonight.nvim",
-  ["tokyonight-day"]   = "tokyonight.nvim",
-  ["tokyonight-moon"]  = "tokyonight.nvim",
+  kanagawa = "kanagawa.nvim",
+  ["kanagawa-dragon"] = "kanagawa.nvim",
+  ["kanagawa-lotus"] = "kanagawa.nvim",
 }
 
 for k,_ in pairs(M.colorscheme2dir) do

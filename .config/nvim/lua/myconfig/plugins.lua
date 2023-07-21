@@ -22,7 +22,7 @@ require("packer").startup {
 
     -- A list of colorscheme plugin you may want to try. Find what suits you.
     use { "sainnhe/sonokai",             opt = true }
-    use { "folke/tokyonight.nvim",       opt = true }
+    use { "rebelot/kanagawa.nvim",       opt = true }
 
     -- LSP
     use { "neovim/nvim-lspconfig",
