@@ -23,8 +23,8 @@ api.nvim_create_autocmd({ "TermOpen" }, {
   group = api.nvim_create_augroup("term_settings", { clear = true }),
   callback = function()
     -- Do not use number and relative number for terminal inside nvim
-    vim.bo.relativenumber = false
-    vim.bo.number = false
+    vim.wo.relativenumber = false
+    vim.wo.number = false
     -- Go to insert mode by default to start typing command
     vim.cmd([[startinsert]])
   end,
