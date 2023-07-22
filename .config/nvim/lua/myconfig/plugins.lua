@@ -91,7 +91,7 @@ require("packer").startup {
     -- file explorer
     use { "kyazdani42/nvim-tree.lua",
       requires = "kyazdani42/nvim-web-devicons",
-      config = [[ require("myconfig.plugins.nvim-tree") ]],
+      config = [[ require("myconfig.plugins.tree") ]],
     }
 
     -- fuzzy finder
@@ -116,7 +116,7 @@ require("packer").startup {
     use { "hrsh7th/nvim-cmp",
       -- lsp kind icons
       requires = "onsails/lspkind-nvim",
-      config = [[ require("myconfig.plugins.nvim-cmp") ]],
+      config = [[ require("myconfig.plugins.cmp") ]],
     }
 
     -- nvim-cmp completion sources
@@ -144,7 +144,7 @@ require("packer").startup {
     use { "rcarriga/nvim-notify",
       config = function()
         vim.defer_fn(function()
-          require("myconfig.plugins.nvim-notify")
+          require("myconfig.plugins.notify")
         end, 1000)
       end,
     }
