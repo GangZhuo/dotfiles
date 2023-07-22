@@ -28,6 +28,10 @@ require("packer").startup {
     use { "neovim/nvim-lspconfig",
       config = [[ require("myconfig.plugins.lsp") ]],
     }
+    -- lsp kind icons
+    use { "onsails/lspkind-nvim",
+      config = [[ require("myconfig.plugins.lspkind") ]],
+    }
 
     -- Standalone UI for nvim-lsp progress
     use { "j-hui/fidget.nvim", branch = "legacy",
@@ -114,8 +118,6 @@ require("packer").startup {
 
     -- auto-completion engine
     use { "hrsh7th/nvim-cmp",
-      -- lsp kind icons
-      requires = "onsails/lspkind-nvim",
       config = [[ require("myconfig.plugins.cmp") ]],
     }
 
@@ -131,6 +133,18 @@ require("packer").startup {
     }
     use { "delphinus/cmp-ctags", }
     use { "hrsh7th/cmp-nvim-lua", }
+
+    -- Github Copilot Completion
+    use { "zbirenbaum/copilot.lua",
+      cmd = "Copilot",
+      event = "InsertEnter",
+      -- will config in copilot-cmp
+      -- config = [[ require("myconfig.plugins.copilot") ]],
+    }
+    use { "zbirenbaum/copilot-cmp",
+      after = { "copilot.lua" },
+      config = [[ require("myconfig.plugins.copilot") ]],
+    }
 
     -- status line
     use { "nvim-lualine/lualine.nvim",

@@ -45,6 +45,7 @@ cmp.setup {
     ["<C-f>"] = cmp.mapping.scroll_docs(4),
   },
   sources = cmp.config.sources({
+    { name = "copilot" },
     { name = "nvim_lsp" },
     { name = 'luasnip' },
   }, {
@@ -79,6 +80,7 @@ cmp.setup {
         dictionary = "[Dict]",
         emoji = "[Emoji]",
         omni = "[Omni]",
+        copilot = "[Copilot]",
       },
     },
   },
