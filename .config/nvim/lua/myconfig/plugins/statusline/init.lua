@@ -1,3 +1,25 @@
+local ctags_last_modified = function ()
+  local path = string.format("%s/tags", vim.loop.cwd())
+  local f = io.popen(string.format("stat -c %%Y \"%s\"", path))
+  if f ~= nil then
+    local last_modified = f:read()
+    local today = os.date("%Y-%m-%d")
+    local last_modified_date = os.date("%Y-%m-%d", last_modified)
+    local last_modified_time = os.date("%H:%M:%S", last_modified)
+    if today == last_modified_date then
+      last_modified = last_modified_time
+    else
+      last_modified = string.format("%s %s",
+          last_modified_date, last_modified_time)
+    end
+    f:close()
+    local action = vim.fn["gutentags#statusline"]("", "", "...")
+    return string.format("ctags%s:[%s]", action, last_modified)
+  else
+    return vim.fn["gutentags#statusline"]("", "", "ctags...")
+  end
+end
+
 require("lualine").setup {
   options = {
     icons_enabled = true,
@@ -18,6 +40,7 @@ require("lualine").setup {
       require('myconfig.plugins.statusline.func-name'),
     },
     lualine_x = {
+      ctags_last_modified,
       "encoding",
       {
         "fileformat",
