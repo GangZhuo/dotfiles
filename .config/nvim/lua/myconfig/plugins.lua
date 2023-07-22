@@ -111,6 +111,10 @@ require("packer").startup {
       config = [[ require("myconfig.plugins.telescope") ]],
     }
 
+    -- automatically update your ctags file
+    use { "ludovicchabant/vim-gutentags",
+      config = [[ require("myconfig.plugins.gutentags") ]],
+    }
     -- show file tags in vim window
     use { "liuchengxu/vista.vim",
       config = [[ require("myconfig.plugins.vista") ]],
