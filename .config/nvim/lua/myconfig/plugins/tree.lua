@@ -46,7 +46,13 @@ end
 
 local function on_attach(bufnr)
   local function opts(desc)
-    return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+    return {
+      desc = 'nvim-tree: ' .. desc,
+      buffer = bufnr,
+      noremap = true,
+      silent = true,
+      nowait = true,
+    }
   end
 
   api.config.mappings.default_on_attach(bufnr)
