@@ -1,5 +1,7 @@
 local ignore_install = {}
 if vim.g.is_win then
+  -- The php parser on my Windows machine was flagged as a virus,
+  -- so I temporarily disabled it.
   ignore_install = { "php", }
 end
 require("nvim-treesitter.configs").setup {
