@@ -81,12 +81,39 @@ end
 local live_grep = telescope.extensions.live_grep_args.live_grep_args
 local notify = telescope.extensions.notify.notify
 
+local symbol_picker = function(opts)
+  local lsp = vim.lsp
+  local buf_clients = lsp.get_active_clients({ bufnr = opts.bufnr })
+  local buf_client_num = #vim.tbl_keys(buf_clients)
+  if buf_client_num > 0 then
+    opts.prompt_title = "Search LSP Symbols in Workspace"
+    builtin.lsp_workspace_symbols(opts)
+  else
+    opts.prompt_title = "Search Ctags Symbols in Workspace"
+    builtin.tags(opts)
+  end
+end
+
+local doc_symbol_picker = function(opts)
+  local lsp = vim.lsp
+  local buf_clients = lsp.get_active_clients({ bufnr = opts.bufnr })
+  local buf_client_num = #vim.tbl_keys(buf_clients)
+  if buf_client_num > 0 then
+    opts.prompt_title = "Search LSP Symbols in Current Buffer"
+    builtin.lsp_document_symbols(opts)
+  else
+    opts.prompt_title = "Search Ctags Symbols in Current Buffer"
+    builtin.current_buffer_tags(opts)
+  end
+end
+
 set_keymap('<leader>h', builtin.builtin,     nil, "Search Builtin Pickers")
 set_keymap('<leader>f', builtin.find_files,  nil, "Search Files")
 set_keymap('<leader>b', builtin.buffers,     nil, "Search Buffers", { sort_mru = true, })
 set_keymap('<leader>s', live_grep,           nil, "Search in Workspace")
 set_keymap('<leader>c', live_grep,           nil, "Search in Current Buffer", { grep_current_buffer = true })
-set_keymap('<leader>d', builtin.lsp_document_symbols, nil, "Search LSP Symbols in Current Buffer")
+set_keymap('<leader>a', symbol_picker,       nil, "Search LSP/Ctags Symbols in Workspace")
+set_keymap('<leader>d', doc_symbol_picker,   nil, "Search LSP/Ctags Symbols in Current Buffer")
 set_keymap('<leader>m', builtin.marks,       nil, "Search Marks")
 set_keymap('<leader>M', builtin.keymaps,     nil, "Search Keymaps")
 set_keymap('<leader>r', builtin.registers,   nil, "Search Registers")

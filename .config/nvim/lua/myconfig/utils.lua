@@ -276,4 +276,11 @@ M.set_http_proxy = function (url)
   end
 end
 
+M.is_lsp_attached = function ()
+  local bufnr = vim.api.nvim_get_current_buf()
+  local buf_clients = vim.lsp.get_active_clients({ bufnr = bufnr })
+  local buf_client_num = #vim.tbl_keys(buf_clients)
+  return buf_client_num > 0
+end
+
 return M
