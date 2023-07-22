@@ -5,7 +5,7 @@ local lspkind = require("lspkind")
 cmp.setup {
   snippet = {
     expand = function(args)
-      vim.fn["vsnip#anonymous"](args.body)
+      require("luasnip").lsp_expand(args.body)
     end,
   },
   mapping = cmp.mapping.preset.insert {
@@ -30,7 +30,7 @@ cmp.setup {
   },
   sources = {
     { name = "nvim_lsp" },
-    { name = 'vsnip' },
+    { name = 'luasnip' },
     { name = "path" },
     { name = "buffer" },
     { name = "dictionary", keyword_length = 2, },

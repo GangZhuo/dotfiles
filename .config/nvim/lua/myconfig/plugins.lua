@@ -106,10 +106,10 @@ require("packer").startup {
     }
 
     -- Snippet
-    use { "hrsh7th/vim-vsnip",
-      config = [[ require("myconfig.plugins.vsnip") ]],
+    use { "L3MON4D3/LuaSnip",
+      run = "make install_jsregexp",
+      config = [[ require("myconfig.plugins.luasnip") ]],
     }
-    use { "hrsh7th/vim-vsnip-integ", }
     use { "rafamadriz/friendly-snippets", }
 
     -- auto-completion engine
@@ -123,9 +123,9 @@ require("packer").startup {
     use { "hrsh7th/cmp-nvim-lsp", }
     use { "hrsh7th/cmp-path", }
     use { "hrsh7th/cmp-buffer", }
-    use { "hrsh7th/cmp-vsnip", }
     use { "hrsh7th/cmp-cmdline", }
     use { "dmitmel/cmp-cmdline-history", }
+    use { "saadparwaiz1/cmp_luasnip", }
     use { "uga-rosa/cmp-dictionary",
       config = [[ require("myconfig.plugins.cmp-dictionary") ]],
     }
