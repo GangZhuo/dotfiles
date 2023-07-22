@@ -109,6 +109,11 @@ require("packer").startup {
       config = [[ require("myconfig.plugins.telescope") ]],
     }
 
+    -- show file tags in vim window
+    use { "liuchengxu/vista.vim",
+      config = [[ require("myconfig.plugins.vista") ]],
+    }
+
     -- Snippet
     use { "L3MON4D3/LuaSnip",
       run = "make install_jsregexp",
