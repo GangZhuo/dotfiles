@@ -1,5 +1,3 @@
-local fn = vim.fn
-
 require("bufferline").setup {
   options = {
     numbers = "ordinal",
@@ -36,7 +34,9 @@ require("bufferline").setup {
     enforce_regular_tabs = false,
     always_show_bufferline = true,
     --sort_by = function(a, b)
-    --  return fn.getbufinfo(a.id)[1].lastused > fn.getbufinfo(b.id)[1].lastused
+    --  local x = vim.fn.getbufinfo(a.id)
+    --  local y = vim.fn.getbufinfo(b.id)
+    --  return x[1].lastused > y[1].lastused
     --end,
   },
 }
