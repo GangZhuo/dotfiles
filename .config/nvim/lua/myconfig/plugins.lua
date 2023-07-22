@@ -129,6 +129,8 @@ require("packer").startup {
     use { "uga-rosa/cmp-dictionary",
       config = [[ require("myconfig.plugins.cmp-dictionary") ]],
     }
+    use { "delphinus/cmp-ctags", }
+    use { "hrsh7th/cmp-nvim-lua", }
 
     -- status line
     use { "nvim-lualine/lualine.nvim",

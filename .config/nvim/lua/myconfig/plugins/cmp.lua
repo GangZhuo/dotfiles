@@ -2,6 +2,16 @@
 local cmp = require("cmp")
 local lspkind = require("lspkind")
 
+local has_words_before = function()
+  unpack = unpack or table.unpack
+  local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+  return col ~= 0 and
+    vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]
+      :sub(col, col):match("%s") == nil
+end
+
+local luasnip = require("luasnip")
+
 cmp.setup {
   snippet = {
     expand = function(args)
@@ -12,6 +22,10 @@ cmp.setup {
     ["<Tab>"] = function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      elseif has_words_before() then
+        cmp.complete()
       else
         fallback()
       end
@@ -19,6 +33,8 @@ cmp.setup {
     ["<S-Tab>"] = function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
+      elseif luasnip.jumpable(-1) then
+        luasnip.jump(-1)
       else
         fallback()
       end
@@ -28,22 +44,39 @@ cmp.setup {
     ["<C-b>"] = cmp.mapping.scroll_docs(-4),
     ["<C-f>"] = cmp.mapping.scroll_docs(4),
   },
-  sources = {
+  sources = cmp.config.sources({
     { name = "nvim_lsp" },
     { name = 'luasnip' },
-    { name = "path" },
+  }, {
     { name = "buffer" },
-    { name = "dictionary", keyword_length = 2, },
-  },
+    { name = "ctags",
+      option = {
+        trigger_characters = {},
+      },
+    },
+  }, {
+    { name = "nvim_lua" },
+  }, {
+    { name = "path",
+      option = {
+        trailing_slash = true,
+      },
+    },
+    { name = "dictionary",
+      keyword_length = 2,
+    },
+  }),
   formatting = {
     format = lspkind.cmp_format {
       mode = "symbol_text",
       menu = {
         nvim_lsp = "[LSP]",
-        ultisnips = "[US]",
         nvim_lua = "[Lua]",
+        ctags = "[CTags]",
+        luasnip = "[Snip]",
         path = "[Path]",
         buffer = "[Buffer]",
+        dictionary = "[Dict]",
         emoji = "[Emoji]",
         omni = "[Omni]",
       },

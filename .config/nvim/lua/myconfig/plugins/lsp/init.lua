@@ -77,10 +77,6 @@ end
 
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
--- for vsnip,
--- comment below line if you have no nvim-vsnip plugin.
-capabilities.textDocument.completion.completionItem.snippetSupport = true
-
 -- nvim-ufo using 'foldingRange' capability,
 -- comment below 4 lines if you have no nvim-ufo plugin.
 capabilities.textDocument.foldingRange = {
