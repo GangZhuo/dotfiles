@@ -170,13 +170,39 @@ require("packer").startup {
       end,
     }
 
-    if packer_bootstrap then
-      require("packer").sync()
-    end
-
   end,
   config = {
     max_jobs = 4,
   },
 }
+
+-- For fresh install, we need to install plugins. Otherwise,
+-- we just need to require `packer_compiled.lua`.
+if packer_bootstrap then
+  -- We run packer.sync() here, because only after packer.startup,
+  -- can we know which plugins to install.
+  -- So plugin installation should be done after the startup process.
+  require("packer").sync()
+else
+  local fn = vim.fn
+  local compiled_path = fn.stdpath("config").."/plugin/packer_compiled.lua"
+  if fn.empty(fn.glob(compiled_path)) > 0 then
+    local msg = "File packer_compiled.lua not found: run PackerSync to fix!"
+    vim.notify(msg, vim.log.levels.ERROR, { title = "nvim-config" })
+  end
+end
+
+-- Auto-generate packer_compiled.lua file
+vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+  pattern = "*/nvim/lua/myconfig/plugins.lua",
+  group = vim.api.nvim_create_augroup("packer_auto_compile",
+      { clear = true }),
+  callback = function(ctx)
+    local cmd = "source " .. ctx.file
+    vim.cmd(cmd)
+    vim.cmd("PackerCompile")
+    vim.notify("PackerCompile done!",
+        vim.log.levels.INFO, { title = "Nvim-config" })
+  end,
+})
 
