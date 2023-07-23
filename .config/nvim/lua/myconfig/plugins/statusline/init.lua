@@ -1,6 +1,9 @@
 local ctags_last_modified = function ()
   local path = string.format("%s/tags", vim.loop.cwd())
-  local f = io.popen(string.format("stat -c %%Y \"%s\"", path))
+  local f
+  if vim.fn.filereadable(path) == 1 then
+    f = io.popen(string.format("stat -c %%Y \"%s\"", path))
+  end
   if f ~= nil then
     local last_modified = f:read()
     local today = os.date("%Y-%m-%d")
