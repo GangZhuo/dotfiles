@@ -258,22 +258,37 @@ end
 -- Set http(s)_proxy
 M.set_http_proxy = function (url)
   local env = vim.env
+
+  -- Update anyway if url is not empty
   if not M.zstr(url) then
+    -- Remove trailing slash
+    url = string.gsub(url, "(.-)/*$", "%1")
     env.http_proxy = url
     env.https_proxy = url
     return true, url
-  elseif (not M.zstr(env.HPROXY_HOST)) and (not M.zstr(env.HPROXY_PORT)) then
-    url = string.format("http://%s:%s/", env.HPROXY_HOST, env.HPROXY_PORT)
-    if M.zstr(env.http_proxy) then
-      env.http_proxy = url
-    end
-    if M.zstr(env.https_proxy) then
-      env.https_proxy = url
-    end
-    return true, url
-  else
-    return false, url
   end
+
+  -- Do not update if proxy is already set
+  local need_set = M.zstr(env.http_proxy) or M.zstr(env.https_proxy)
+  if not need_set then
+    return false
+  end
+
+  if M.zstr(env.HPROXY_HOST) or M.zstr(env.HPROXY_PORT) then
+    return false
+  end
+
+  url = string.format("http://%s:%s", env.HPROXY_HOST, env.HPROXY_PORT)
+
+  if M.zstr(env.http_proxy) then
+    env.http_proxy = url
+  end
+
+  if M.zstr(env.https_proxy) then
+    env.https_proxy = url
+  end
+
+  return true, url
 end
 
 M.is_lsp_attached = function ()
