@@ -14,6 +14,6 @@ if exists('g:GuiLoaded')
   GuiPopupmenu 0
   GuiLinespace 2
   "GuiFont! Hack\ NF:h10:l
-  GuiFont! InconsolataGo\ NFM:h13:l
+  GuiFont! InconsolataGo\ Nerd\ Font\ Mono:h13:l
 endif
 
