@@ -5,6 +5,7 @@ local api = vim.api
 local fn = vim.fn
 local lsp = vim.lsp
 local proto = vim.lsp.protocol
+local lspkind = require("lspkind")
 
 local config = {
   enabled = true,
@@ -20,18 +21,6 @@ local config = {
     Module = true,
     Property = true,
     Constructor = true,
-  },
-  kind_icons = {
-    Class = "ﴯ",
-    Function = "",
-    Method = "",
-    Struct = "פּ",
-    Enum = "",
-    Interface = "",
-    Namespace = "",
-    Module = "",
-    Property = "ﰠ",
-    Constructor = "",
   },
 }
 
@@ -164,7 +153,9 @@ local get_symbol = function(b, cur_pos)
     s = s..sym.text
   end
   if s ~= "" then
-    s = string.format("%s %s", config.kind_icons[symbols[#symbols].kind] or "", s)
+    local kind = symbols[#symbols].kind or "Text"
+    local icon = lspkind.symbolic(kind, { mode = "symbol" }) or ""
+    s = string.format("%s %s", icon, s)
   end
   return s
 end
