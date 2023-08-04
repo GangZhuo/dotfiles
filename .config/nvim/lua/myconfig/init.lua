@@ -26,4 +26,4 @@ require("myconfig.usercmds")
 require("myconfig.mappings")
 require("myconfig.plugins")
 
-require("myconfig.colorschemes").set_colorscheme("kanagawa")
+require("myconfig.colorschemes").set_colorscheme("sonokai")
