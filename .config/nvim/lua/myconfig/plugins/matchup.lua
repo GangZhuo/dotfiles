@@ -9,6 +9,6 @@ vim.g.matchup_surround_enabled = 1
 vim.g.matchup_delim_noskips = 0
 
 -- Show offscreen match pair in popup window
-vim.g.matchup_matchparen_offscreen = { method = 'popup' }
+vim.g.matchup_matchparen_offscreen = { }
 
 vim.keymap.set("n", "<leader>k", "<cmd>MatchupWhereAmI?<cr>", { desc = "matchup: where am i" })
