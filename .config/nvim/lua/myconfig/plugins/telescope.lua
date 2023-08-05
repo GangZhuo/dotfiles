@@ -28,6 +28,7 @@ telescope.setup({
   }
 })
 
+--[[
 -- previewer options
 vim.api.nvim_create_autocmd("User", {
   pattern = "TelescopePreviewerLoaded",
@@ -42,6 +43,7 @@ vim.api.nvim_create_autocmd("User", {
     end
   end,
 })
+--]]
 
 telescope.load_extension('fzf')
 telescope.load_extension("live_grep_args")
