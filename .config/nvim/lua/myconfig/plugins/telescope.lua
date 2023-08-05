@@ -11,10 +11,20 @@ telescope.setup({
       i = {
         ["<C-Down>"] = actions.cycle_history_next,
         ["<C-Up>"] = actions.cycle_history_prev,
+
+        ["<C-u>"] = actions.preview_scrolling_up,
+        ["<C-d>"] = actions.preview_scrolling_down,
+        ["<C-f>"] = actions.preview_scrolling_left,
+        ["<C-b>"] = actions.preview_scrolling_right,
       },
       n = {
         ["l"] = actions.select_default,
         ["o"] = actions.select_default, -- Open the file
+
+        ["<C-u>"] = actions.preview_scrolling_up,
+        ["<C-d>"] = actions.preview_scrolling_down,
+        ["<C-f>"] = actions.preview_scrolling_left,
+        ["<C-b>"] = actions.preview_scrolling_right,
       },
     }
   },
