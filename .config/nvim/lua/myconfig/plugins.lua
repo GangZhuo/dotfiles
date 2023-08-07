@@ -157,6 +157,10 @@ require("packer").startup {
       config = [[ require("myconfig.plugins.copilot") ]],
     }
 
+    use { "lukas-reineke/indent-blankline.nvim",
+      config = [[ require("myconfig.plugins.indent-blankline") ]],
+    }
+
     -- status line
     use { "nvim-lualine/lualine.nvim",
       config = [[ require("myconfig.plugins.statusline") ]],
