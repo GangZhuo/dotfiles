@@ -70,7 +70,6 @@ nvim_tree.setup {
     debounce_delay = 1000,
     show_on_dirs = true,
   },
-  remove_keymaps = { "<C-e>", },
   on_attach = on_attach,
   view = {
     adaptive_size = false,
