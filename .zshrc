@@ -216,16 +216,14 @@ export SOCKS5_PORT=1080
 export HPROXY_HOST=$IP4_GW
 export HPROXY_PORT=1081
 
+export no_proxy="localhost,127.0.0.1,$IP4_GW"
+
 set_proxy() {
-	export HTTP_PROXY=http://$HPROXY_HOST:$HPROXY_PORT
-	export HTTPS_PROXY=$HTTP_PROXY
-	export http_proxy=$HTTP_PROXY
-	export https_proxy=$HTTPS_PROXY
+	export http_proxy=http://$HPROXY_HOST:$HPROXY_PORT
+	export https_proxy=$http_proxy
 }
 
 unset_proxy() {
-	unset HTTP_PROXY
-	unset HTTPS_PROXY
 	unset http_proxy
 	unset https_proxy
 }
