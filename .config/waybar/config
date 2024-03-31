@@ -7,7 +7,7 @@
     "modules-right": ["idle_inhibitor", "pulseaudio", "network", "network#eth", "cpu", "memory", "battery", "tray", "clock"],
     "sway/workspaces": {
         "disable-scroll": true,
-        "all-outputs": true,
+        "all-outputs": false,
         "format": "{name}"
     },
 
