@@ -75,7 +75,7 @@
 
     "custom/music": {
         "format": "{}",
-        "max-length": 20,
+        "max-length": 200,
         "interval": 5,
         "exec": "$HOME/.config/waybar/mediaplayer.sh 2> /dev/null",
         "tooltip": false,
