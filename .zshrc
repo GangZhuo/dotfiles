@@ -204,11 +204,16 @@ zstyle :bracketed-paste-magic paste-finish pastefinish
 #	setterm --blank 10 --powerdown 12
 #fi
 
-#if [ -f /usr/bin/fcitx5 ]; then
-#	export XMODIFIERS=@im=fcitx
-#	export QT_IM_MODULE=fcitx
-#	export GTK_IM_MODULE=fcitx
-#fi
+if [ -f /usr/bin/fcitx5 ]; then
+	export XMODIFIERS=@im=fcitx
+	export QT_IM_MODULE=fcitx
+	export GTK_IM_MODULE=fcitx
+fi
+
+# Sway
+if [ -f /usr/bin/sway ]; then
+	export MOZ_ENABLE_WAYLAND=1
+fi
 
 export IP4_GW=$(ip -4 route | grep default | awk '{print $3}' | head -n 1)
 export SOCKS5_HOST=$IP4_GW
