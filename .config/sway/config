@@ -2,13 +2,9 @@
 # Read `man 5 sway` for a complete reference.
 
 ### Variables
-include /etc/sway/config-vars.d/*
 
 # Logo key. Use Mod1 for Alt.
 set $mod Mod4
-
-# opacity for floating window
-set $opacity 0.9
 
 # Home row direction keys, like vim
 set $left  h
@@ -30,13 +26,13 @@ set $term alacritty
 set $menu wofi --show run
 
 # Your preferred web browser
-set $browser MOZ_ENABLE_WAYLAND=1 /usr/bin/firefox
+set $browser /usr/bin/firefox
 
 # Your preferred editor
 set $editor /usr/bin/nvim-qt
 
 # Wallpaper for sway and swaylock
-set $bgimg /opt/share/wallpapers/1920x1246.jpg
+set $bgimg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png
 set $lockimg $bgimg
 set $bgcolor #1d1f21
 set $lockbgcolor 1d1f21
@@ -67,6 +63,8 @@ set $laptop LVDS-1
 
 # Output name for external monitor
 set $monitor VGA-1
+
+include /etc/sway/config-vars.d/*
 
 # Set wallpaper
 output * bg $bgimg fill
@@ -362,8 +360,6 @@ bar {
     swaybar_command waybar
 }
 
-include /etc/sway/config.d/*
-
 ### Theme
 default_border pixel 3
 default_floating_border normal 3
@@ -378,7 +374,7 @@ smart_gaps on
     for_window [app_id="firefox" title="Library"] floating enable
     for_window [app_id="swayhelp"] {
         floating enable
-        opacity $opacity
+        opacity 0.9
         border pixel 3px
         resize set 1200 700
     }
@@ -386,7 +382,7 @@ smart_gaps on
 ### Autostart programs
 
     # Notification Daemon
-    exec mako
+    #exec mako
 
     # Fcitx
     exec --no-startup-id [ -f /usr/bin/fcitx5 ] && /usr/bin/fcitx5 -d -r
@@ -394,3 +390,4 @@ smart_gaps on
 # Disable xwayland
 # xwayland disable
 
+include /etc/sway/config.d/*
