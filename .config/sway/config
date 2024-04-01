@@ -29,7 +29,21 @@ set $menu wofi --show run
 set $browser /usr/bin/firefox
 
 # Your preferred editor
-set $editor /usr/bin/nvim-qt
+set $editor alacritty -e nvim
+
+# Open your help window
+set $help alacritty --class swayhelp -e $scripts_dir/help.sh
+
+# Open your wiki window
+set $wiki alacritty --class swayhelp -e $scripts_dir/wiki.sh
+
+# Exit sway
+#set $exit swaynag \
+#    -t warning \
+#    -m \
+#    'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' \
+#    -b 'Yes, exit sway' 'swaymsg exit'
+set $exit alacritty --class swayexit -e $scripts_dir/sway-exit.sh
 
 # Wallpaper for sway and swaylock
 set $bgimg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png
@@ -152,10 +166,10 @@ seat * hide_cursor 8000
     bindsym $mod+e exec $editor
 
     # Show help window
-    bindsym $mod+s exec $term --class swayhelp -e $scripts_dir/help.sh
+    bindsym $mod+s exec $$help
 
     # Show wiki window
-    bindsym $mod+w exec $term --class swayhelp -e $scripts_dir/wiki.sh
+    bindsym $mod+w exec $wiki
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
@@ -171,7 +185,7 @@ seat * hide_cursor 8000
     bindsym $mod+Control+l exec $lock
 
     # Exit sway (logs you out of your Wayland session)
-    bindsym $mod+Shift+e exec swaynag -t warning -m 'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' -b 'Yes, exit sway' 'swaymsg exit'
+    bindsym $mod+Shift+e exec $exit
 
     bindsym $mod+u border none
     # bindsym $mod+n border normal
@@ -377,6 +391,12 @@ smart_gaps on
         opacity 0.9
         border pixel 3px
         resize set 1200 700
+    }
+    for_window [app_id="swayexit"] {
+        floating enable
+        opacity 0.9
+        border pixel 3px
+        resize set 500 70
     }
 
 ### Autostart programs
