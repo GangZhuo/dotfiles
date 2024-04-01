@@ -22,14 +22,17 @@ if test -f "$TMPFILE"; then
 fi
 
 # Select the output to turn off
-outputs=$(swaymsg -t get_outputs | jq -r ".[] | .name")
+outputs=$(swaymsg -t get_outputs | jq -r ".[] | .name + \" '\" + .make + \" \" + .model + \" \" + .serial + \"'\" + (if .focused then \" (focused)\" else \"\" end)")
 total_outputs=$(echo "${outputs}" | wc -l)
+total_outputs=$((total_outputs + 2))
 output_selection=$(echo "${outputs}" | $WOFI --dmenu --lines ${total_outputs} --prompt 'Output to turn off')
 
 if [ -z "$output_selection" ]
 then
     exit 0
 fi
+
+output_selection=$(echo "${output_selection}" | jq -R -r "split(\" '\") | .[0]")
 
 # Save the output name to a temporary file
 echo "$output_selection" > "$TMPFILE"
