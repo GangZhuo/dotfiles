@@ -402,7 +402,7 @@ smart_gaps on
 ### Autostart programs
 
     # Notification Daemon
-    #exec mako
+    exec mako
 
     # Fcitx
     exec --no-startup-id [ -f /usr/bin/fcitx5 ] && /usr/bin/fcitx5 -d -r
