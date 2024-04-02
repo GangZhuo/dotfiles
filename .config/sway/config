@@ -356,7 +356,7 @@ bindsym $mod+F8 exec pavucontrol
 ### Screenshots / Screensharing
 
 # Entire screen + menu
-bindsym print exec sway-interactive-screenshot
+bindsym print exec grim -g "$(slurp)" - | swappy -f -
 
 # Toggle Display Output
 bindsym --locked $mod+o exec "$scripts_dir/output-toggle.sh"
