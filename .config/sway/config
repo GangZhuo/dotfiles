@@ -16,8 +16,8 @@ set $right l
 set $scripts_dir "$HOME/.config/sway/scripts"
 
 # Your preferred terminal emulator
-#set $term foot
-set $term alacritty
+# set $term alacritty
+set $term foot
 
 # Your preferred application launcher
 # Note: pass the final command to swaymsg so that the resulting window can be opened
@@ -29,13 +29,16 @@ set $menu wofi --show run
 set $browser /usr/bin/firefox
 
 # Your preferred editor
-set $editor alacritty -e nvim
+# set $editor alacritty -e nvim
+set $editor foot nvim
 
 # Open your help window
-set $help alacritty --class swayhelp -e $scripts_dir/help.sh
+# set $help alacritty --class swayhelp -e $scripts_dir/help.sh
+set $help foot --title=Help --app-id=swayhelp $scripts_dir/help.sh
 
 # Open your wiki window
-set $wiki alacritty --class swayhelp -e $scripts_dir/wiki.sh
+# set $wiki alacritty --class swayhelp -e $scripts_dir/wiki.sh
+set $wiki foot --title=Wiki --app-id=swayhelp $scripts_dir/wiki.sh
 
 # Exit sway
 #set $exit swaynag \
@@ -43,7 +46,8 @@ set $wiki alacritty --class swayhelp -e $scripts_dir/wiki.sh
 #    -m \
 #    'You pressed the exit shortcut. Do you really want to exit sway? This will end your Wayland session.' \
 #    -b 'Yes, exit sway' 'swaymsg exit'
-set $exit alacritty --class swayexit -e $scripts_dir/sway-exit.sh
+# set $exit alacritty --class swayexit -e $scripts_dir/sway-exit.sh
+set $exit foot --title="Exit Sway" --app-id=swayexit $scripts_dir/sway-exit.sh
 
 # Wallpaper for sway and swaylock
 set $bgimg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png
