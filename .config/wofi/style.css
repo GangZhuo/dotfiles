@@ -2,8 +2,8 @@ window {
   margin: 0px;
   border: 1px solid #bd93f9;
   background-color: #282a36;
-  font-family: Hack NFM;
-  font-size: 16px;
+  font-family: Hack Nerd Font Mono, FontAwesome, Roboto, Helvetica, Arial, sans-serif;
+  font-size: 11px;
 }
 
 #input {
