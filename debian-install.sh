@@ -15,14 +15,17 @@ PIPEWIRE=0
 export http_proxy=$HPROXY_HOST:$HPROXY_PORT
 export https_proxy=$HPROXY_HOST:$HPROXY_PORT
 
-sudo apt-get update
-sudo apt-get upgrade
-sudo apt-get dist-upgrade
-
 print() {
   printf "\n========================================================\n"
   printf "$1"
   printf "\n========================================================\n"
+}
+
+upgrade_os() {
+  print "Upgrade os"
+  sudo apt-get update
+  sudo apt-get upgrade
+  sudo apt-get dist-upgrade
 }
 
 apt_get() {
@@ -101,11 +104,15 @@ setup_rustup() {
 setup_git() {
   print "Setup git"
   $INSTALL git
+
+  print "Configure git"
   if [ ! -f "$HOME/.gitconfig" ] ; then
     git config --global core.editor "nvim"
     git config --global pull.rebase true
     git config --global user.name "$GIT_USER_NAME"
     git config --global user.email "$GIT_USER_EMAIL"
+  else
+    echo git already configured
   fi
 }
 
@@ -123,11 +130,15 @@ clone_dotfles() {
 setup_tmux() {
   print "Setup tmux"
   $INSTALL tmux
+
+  print "Configure tmux"
   if [ ! -d "$HOME/.config/tmux" ] ; then
     mkdir -p $HOME/.config
     cd $HOME/.config
     ln -sf ../workspace/dotfiles/.config/tmux tmux
     cd "$CURRENT_DIR"
+  else
+    echo tmux already configured
   fi
 }
 
@@ -147,6 +158,8 @@ setup_ohmyzsh() {
     sudo chsh --shell /usr/bin/zsh $CURRENT_USER
     if [ "$?" -ne 0 ] ; then exit; fi
     cd "$CURRENT_DIR"
+  else
+    echo ohmyzsh already installed
   fi
 }
 
@@ -166,6 +179,8 @@ setup_python() {
     pyenv global 3
     eval "$(pyenv init -)"
     cd "$CURRENT_DIR"
+  else
+    echo python already installed
   fi
 }
 
@@ -213,26 +228,30 @@ setup_neovim() {
   else
     echo neovim already installed
   fi
-  if [ ! -d "$HOME/workspace/nvim-config" ] ; then
-    mkdir -p $HOME/workspace
-    git clone https://github.com/GangZhuo/nvim-config.git $HOME/workspace/nvim-config
-    if [ "$?" -ne 0 ] ; then exit; fi
-    cd "$CURRENT_DIR"
-  fi
+
+  print "Configure neovim"
   if [ ! -d "$HOME/.config/nvim" ] ; then
+    if [ ! -d "$HOME/workspace/nvim-config" ] ; then
+      mkdir -p $HOME/workspace
+      git clone https://github.com/GangZhuo/nvim-config.git $HOME/workspace/nvim-config
+      if [ "$?" -ne 0 ] ; then exit; fi
+      cd "$CURRENT_DIR"
+    fi
     mkdir -p $HOME/.config
     cd $HOME/.config
     ln -sf ../workspace/nvim-config nvim
     cd "$CURRENT_DIR"
-  fi
-  if [ ! -d "$HOME/.local/share/nvim/lazy/lazy.nvim" ] ; then
-    mkdir -p $HOME/.local/share/nvim/lazy
-    git clone \
-      --filter=blob:none \
-      https://github.com/folke/lazy.nvim.git \
-      --branch=stable \
-      $HOME/.local/share/nvim/lazy/lazy.nvim
-    if [ "$?" -ne 0 ] ; then exit; fi
+    if [ ! -d "$HOME/.local/share/nvim/lazy/lazy.nvim" ] ; then
+      mkdir -p $HOME/.local/share/nvim/lazy
+      git clone \
+        --filter=blob:none \
+        https://github.com/folke/lazy.nvim.git \
+        --branch=stable \
+        $HOME/.local/share/nvim/lazy/lazy.nvim
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+  else
+    echo neovim already configured
   fi
 }
 
@@ -320,6 +339,7 @@ setup_sway() {
   fi
 
   # Build mako
+  print "Build and install mako"
   if [ ! -x "/usr/local/bin/mako" ] ; then
     if [ ! -d "$HOME/workspace/mako" ] ; then
       git clone https://github.com/emersion/mako.git $HOME/workspace/mako
@@ -343,9 +363,12 @@ setup_sway() {
     if [ "$?" -ne 0 ] ; then exit; fi
     sudo meson install -C build
     if [ "$?" -ne 0 ] ; then exit; fi
+  else
+    echo mako already installed
   fi
 
   # Build swappy
+  print "Build and install swappy"
   if [ ! -x "/usr/local/bin/swappy" ] ; then
     if [ ! -d "$HOME/workspace/swappy" ] ; then
       git clone https://github.com/jtheoof/swappy.git $HOME/workspace/swappy
@@ -360,10 +383,13 @@ setup_sway() {
     if [ "$?" -ne 0 ] ; then exit; fi
     sudo meson install -C build
     if [ "$?" -ne 0 ] ; then exit; fi
+  else
+    echo swappy already installed
   fi
 
   # Build sway
-  if [ ! -x "/usr/local/bin/swappy" ] ; then
+  print "Build and install sway"
+  if [ ! -x "/usr/local/bin/sway" ] ; then
     if [ ! -d "$HOME/workspace/sway" ] ; then
       git clone https://github.com/swaywm/sway.git $HOME/workspace/sway
       if [ "$?" -ne 0 ] ; then exit; fi
@@ -413,16 +439,21 @@ add_project_arguments([\n\
     if [ "$?" -ne 0 ] ; then exit; fi
     sudo meson install -C build
     if [ "$?" -ne 0 ] ; then exit; fi
+  else
+    echo sway already installed
   fi
 
   sudo ldconfig
 
+  print "Configure sway"
   mkdir -p $HOME/.config
   cd $HOME/.config
   list="environment.d foot mako sway waybar wofi"
   for f in $list ; do
     if [ ! -d "$f" ] ; then
       ln -sf ../workspace/dotfiles/.config/$f $f
+    else
+      echo $f already configured
     fi
   done
 
@@ -438,6 +469,8 @@ download_font() {
       if [ "$?" -ne 0 ] ; then exit; fi
     fi
     sudo cp "$file" "/usr/local/share/fonts/$file"
+  else
+    echo $file already installed
   fi
 }
 
@@ -453,6 +486,8 @@ setup_fonts() {
     fonts-arphic-ukai \
     fonts-arphic-uming \
     fonts-font-awesome
+
+  print "Install Nerd Fonts"
 
   mkdir -p $HOME/Downloads/fonts
   cd $HOME/Downloads/fonts
@@ -521,6 +556,7 @@ setup_network() {
   # $INSTALL nm-tray
 }
 
+upgrade_os
 setup_sounds
 setup_light
 setup_base_utils
