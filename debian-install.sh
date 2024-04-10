@@ -89,6 +89,15 @@ setup_build_essential() {
   $INSTALL universal-ctags bear
 }
 
+setup_rustup() {
+  print "Setup rustup"
+  if [ ! -d "$HOME/.rustup" ] ; then
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+  else
+    echo rustup already installed
+  fi
+}
+
 setup_git() {
   print "Setup git"
   $INSTALL git
@@ -311,94 +320,100 @@ setup_sway() {
   fi
 
   # Build mako
-  if [ ! -d "$HOME/workspace/mako" ] ; then
-    git clone https://github.com/emersion/mako.git $HOME/workspace/mako
+  if [ ! -x "/usr/local/bin/mako" ] ; then
+    if [ ! -d "$HOME/workspace/mako" ] ; then
+      git clone https://github.com/emersion/mako.git $HOME/workspace/mako
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+    cd $HOME/workspace/mako || exit
+    mkdir -p subprojects
+    cd subprojects || exit
+    if [ ! -d "wayland" ] ; then
+      ln -sf ../../wayland wayland
+    fi
+    if [ ! -d "wayland-protocols" ] ; then
+      ln -sf ../../wayland-protocols wayland-protocols
+    fi
+    cd $HOME/workspace/mako
+    if [ ! -d "build" ] ; then
+      meson setup build --buildtype=release
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+    meson compile -C build
+    if [ "$?" -ne 0 ] ; then exit; fi
+    sudo meson install -C build
     if [ "$?" -ne 0 ] ; then exit; fi
   fi
-  cd $HOME/workspace/mako || exit
-  mkdir -p subprojects
-  cd subprojects || exit
-  if [ ! -d "wayland" ] ; then
-    ln -sf ../../wayland wayland
-  fi
-  if [ ! -d "wayland-protocols" ] ; then
-    ln -sf ../../wayland-protocols wayland-protocols
-  fi
-  cd $HOME/workspace/mako
-  if [ ! -d "build" ] ; then
-    meson setup build --buildtype=release
-    if [ "$?" -ne 0 ] ; then exit; fi
-  fi
-  meson compile -C build
-  if [ "$?" -ne 0 ] ; then exit; fi
-  sudo meson install -C build
-  if [ "$?" -ne 0 ] ; then exit; fi
 
   # Build swappy
-  if [ ! -d "$HOME/workspace/swappy" ] ; then
-    git clone https://github.com/jtheoof/swappy.git $HOME/workspace/swappy
+  if [ ! -x "/usr/local/bin/swappy" ] ; then
+    if [ ! -d "$HOME/workspace/swappy" ] ; then
+      git clone https://github.com/jtheoof/swappy.git $HOME/workspace/swappy
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+    cd $HOME/workspace/swappy || exit
+    if [ ! -d "build" ] ; then
+      meson setup build --buildtype=release
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+    meson compile -C build
+    if [ "$?" -ne 0 ] ; then exit; fi
+    sudo meson install -C build
     if [ "$?" -ne 0 ] ; then exit; fi
   fi
-  cd $HOME/workspace/swappy || exit
-  if [ ! -d "build" ] ; then
-    meson setup build --buildtype=release
-    if [ "$?" -ne 0 ] ; then exit; fi
-  fi
-  meson compile -C build
-  if [ "$?" -ne 0 ] ; then exit; fi
-  sudo meson install -C build
-  if [ "$?" -ne 0 ] ; then exit; fi
 
   # Build sway
-  if [ ! -d "$HOME/workspace/sway" ] ; then
-    git clone https://github.com/swaywm/sway.git $HOME/workspace/sway
-    if [ "$?" -ne 0 ] ; then exit; fi
-  fi
-  cd $HOME/workspace/sway || exit
-  mkdir -p subprojects
-  cd subprojects || exit
-  if [ ! -d "wayland" ] ; then
-    ln -sf ../../wayland wayland
-  fi
-  if [ ! -d "wayland-protocols" ] ; then
-    ln -sf ../../wayland-protocols wayland-protocols
-  fi
-  if [ ! -d "libdisplay-info" ] ; then
-    git clone https://gitlab.freedesktop.org/emersion/libdisplay-info.git libdisplay-info
-    if [ "$?" -ne 0 ] ; then exit; fi
-  fi
-  if [ ! -d "libdrm" ] ; then
-    git clone https://gitlab.freedesktop.org/mesa/drm.git libdrm
-    if [ "$?" -ne 0 ] ; then exit; fi
-      sed -i "/meson.get_compiler('c')/ i \
+  if [ ! -x "/usr/local/bin/swappy" ] ; then
+    if [ ! -d "$HOME/workspace/sway" ] ; then
+      git clone https://github.com/swaywm/sway.git $HOME/workspace/sway
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+    cd $HOME/workspace/sway || exit
+    mkdir -p subprojects
+    cd subprojects || exit
+    if [ ! -d "wayland" ] ; then
+      ln -sf ../../wayland wayland
+    fi
+    if [ ! -d "wayland-protocols" ] ; then
+      ln -sf ../../wayland-protocols wayland-protocols
+    fi
+    if [ ! -d "libdisplay-info" ] ; then
+      git clone https://gitlab.freedesktop.org/emersion/libdisplay-info.git libdisplay-info
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+    if [ ! -d "libdrm" ] ; then
+      git clone https://gitlab.freedesktop.org/mesa/drm.git libdrm
+      if [ "$?" -ne 0 ] ; then exit; fi
+        sed -i "/meson.get_compiler('c')/ i \
 add_project_arguments([\n\
   '-Wno-stringop-truncation',\n\
   '-Wno-error=packed',\n\
   '-Wno-error=array-bounds',\n\
   '-Wno-error=maybe-uninitialized',\n\
   ], language : 'c')\n" libdrm/meson.build
-  fi
-  if [ ! -d "libliftoff" ] ; then
-    git clone https://gitlab.freedesktop.org/emersion/libliftoff.git libliftoff
+    fi
+    if [ ! -d "libliftoff" ] ; then
+      git clone https://gitlab.freedesktop.org/emersion/libliftoff.git libliftoff
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+    if [ ! -d "seatd" ] ; then
+      git clone https://git.sr.ht/~kennylevinsen/seatd seatd
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+    if [ ! -d "wlroots" ] ; then
+      git clone https://gitlab.freedesktop.org/wlroots/wlroots.git wlroots
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+    cd $HOME/workspace/sway
+    if [ ! -d "build" ] ; then
+      meson setup build --buildtype=release
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+    meson compile -C build
+    if [ "$?" -ne 0 ] ; then exit; fi
+    sudo meson install -C build
     if [ "$?" -ne 0 ] ; then exit; fi
   fi
-  if [ ! -d "seatd" ] ; then
-    git clone https://git.sr.ht/~kennylevinsen/seatd seatd
-    if [ "$?" -ne 0 ] ; then exit; fi
-  fi
-  if [ ! -d "wlroots" ] ; then
-    git clone https://gitlab.freedesktop.org/wlroots/wlroots.git wlroots
-    if [ "$?" -ne 0 ] ; then exit; fi
-  fi
-  cd $HOME/workspace/sway
-  if [ ! -d "build" ] ; then
-    meson setup build --buildtype=release
-    if [ "$?" -ne 0 ] ; then exit; fi
-  fi
-  meson compile -C build
-  if [ "$?" -ne 0 ] ; then exit; fi
-  sudo meson install -C build
-  if [ "$?" -ne 0 ] ; then exit; fi
 
   sudo ldconfig
 
@@ -510,6 +525,7 @@ setup_sounds
 setup_light
 setup_base_utils
 setup_build_essential
+setup_rustup
 setup_git
 clone_dotfles
 setup_tmux
