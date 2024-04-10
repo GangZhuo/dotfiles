@@ -119,6 +119,23 @@ setup_tmux() {
   fi
 }
 
+setup_ohmyzsh() {
+  print "Setup ohmyzsh"
+  $INSTALL zsh
+  if [ ! -d "$HOME/.oh-my-zsh" ] ; then
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended --keep-zshrc
+    if [ "$?" -ne 0 ] ; then exit; fi
+    rm -rf $HOME/.zshrc
+    cd $HOME
+    ln -sf workspace/dotfiles/.zshrc .zshrc
+    git clone https://github.com/zsh-users/zsh-autosuggestions.git $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
+    if [ "$?" -ne 0 ] ; then exit; fi
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+    if [ "$?" -ne 0 ] ; then exit; fi
+    cd "$CURRENT_DIR"
+  fi
+}
+
 setup_python() {
   print "Setup python"
   $INSTALL libssl-dev zlib1g-dev libbz2-dev \
@@ -372,7 +389,7 @@ add_project_arguments([\n\
   sudo meson install -C build
   if [ "$?" -ne 0 ] ; then exit; fi
 
-  sudo ldconfig -v
+  sudo ldconfig
 }
 
 download_font() {
@@ -417,7 +434,7 @@ setup_fonts() {
     download_font "$font-$style.ttf" "$url/$style/$font-$style.ttf"
   done
 
-  fc-cache -fv
+  fc-cache -f
   cd "$CURRENT_DIR"
 }
 
@@ -474,6 +491,7 @@ setup_build_essential
 setup_git
 clone_dotfles
 setup_tmux
+setup_ohmyzsh
 setup_python
 setup_nodejs
 setup_neovim
