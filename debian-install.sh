@@ -2,6 +2,7 @@
 
 ROOT_DIR=$(dirname $(readlink -f "$0"))
 CURRENT_DIR=$(pwd)
+CURRENT_USER=$(whoami)
 GIT_USER_NAME=
 GIT_USER_EMAIL=
 SOCKS5_HOST=192.168.0.242
@@ -105,6 +106,8 @@ clone_dotfles() {
     mkdir -p $HOME/workspace
     git clone https://github.com/GangZhuo/dotfiles.git $HOME/workspace/dotfiles
     if [ "$?" -ne 0 ] ; then exit; fi
+  else
+    echo dotfiles already cloned
   fi
 }
 
@@ -131,6 +134,8 @@ setup_ohmyzsh() {
     git clone https://github.com/zsh-users/zsh-autosuggestions.git $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions
     if [ "$?" -ne 0 ] ; then exit; fi
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
+    if [ "$?" -ne 0 ] ; then exit; fi
+    sudo chsh --shell /usr/bin/zsh $CURRENT_USER
     if [ "$?" -ne 0 ] ; then exit; fi
     cd "$CURRENT_DIR"
   fi
@@ -174,6 +179,8 @@ setup_nodejs() {
     ln -sf ../node/bin/npm npm
     ln -sf ../node/bin/npx npx
     cd "$CURRENT_DIR"
+  else
+    echo nodejs already installed
   fi
 }
 
@@ -194,6 +201,8 @@ setup_neovim() {
     cd $HOME/.local/bin
     ln -sf ../nvim/bin/nvim nvim
     cd "$CURRENT_DIR"
+  else
+    echo neovim already installed
   fi
   if [ ! -d "$HOME/workspace/nvim-config" ] ; then
     mkdir -p $HOME/workspace
@@ -232,6 +241,8 @@ setup_treesitter() {
     if [ "$?" -ne 0 ] ; then exit; fi
     chmod a+x $HOME/.local/bin/tree-sitter
     cd "$CURRENT_DIR"
+  else
+    echo tree-sitter already installed
   fi
 }
 
@@ -390,6 +401,17 @@ add_project_arguments([\n\
   if [ "$?" -ne 0 ] ; then exit; fi
 
   sudo ldconfig
+
+  mkdir -p $HOME/.config
+  cd $HOME/.config
+  list="environment.d foot mako sway waybar wofi"
+  for f in $list ; do
+    if [ ! -d "$f" ] ; then
+      ln -sf ../workspace/dotfiles/.config/$f $f
+    fi
+  done
+
+  cd "$CURRENT_DIR"
 }
 
 download_font() {
@@ -506,6 +528,10 @@ setup_network
 
 #setup_awesome
 #setup_lightdm
+
+print "After rebooting, execute the 'sway' command to enter the desktop, \n\
+and execute 'pavucontrol' to initialize the sound, and execute 'fcitx5-config-qt' \n\
+to configure the input method, and execute 'nmcli' to configure the network."
 
 print "Completed!!!"
 
