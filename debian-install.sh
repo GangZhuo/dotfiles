@@ -397,7 +397,7 @@ add_project_arguments([\n\
     if [ ! -x "/usr/local/bin/start_sway.sh" ] ; then
       #sudo cp $HOME/workspace/dotfiles/.local/bin/start_sway.sh \
       #  /usr/local/bin/start_sway.sh
-      sudo cat <<EOOF > /usr/local/bin/start_sway.sh
+      cat <<EOOF | sudo tee /usr/local/bin/start_sway.sh &> /dev/null
 #!/usr/bin/env bash
 set -euo pipefail
 
