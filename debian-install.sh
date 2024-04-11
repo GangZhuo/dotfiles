@@ -391,6 +391,11 @@ add_project_arguments([\n\
     if [ "$?" -ne 0 ] ; then exit; fi
     sudo meson install -C build
     if [ "$?" -ne 0 ] ; then exit; fi
+    if [ ! -x "/usr/local/bin/start_sway.sh" ] ; then
+      sudo cp $HOME/workspace/dotfiles/.local/bin/start_sway.sh \
+        /usr/local/bin/start_sway.sh
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
   else
     echo sway already installed
   fi
@@ -467,7 +472,8 @@ setup_greetd() {
 
   if [ ! -x "/usr/local/bin/greetd" ] ; then
     if [ ! -d "$HOME/workspace/greetd" ] ; then
-      git clone https://git.sr.ht/\~kennylevinsen/greetd $HOME/workspace/greetd
+      git clone https://git.sr.ht/\~kennylevinsen/greetd \
+        $HOME/workspace/greetd
       if [ "$?" -ne 0 ] ; then exit; fi
     fi
 
@@ -483,11 +489,15 @@ setup_greetd() {
     sudo mkdir /etc/greetd
     sudo cp config.toml /etc/greetd/config.toml
 
+    # Change command to sway
+    sudo sed -i 's/^\(command = "agreety --cmd \/bin\/sh"\)/#\1\
+command = "agreety --cmd \/usr\/local\/bin\/start_sway.sh"/' \
+      /etc/greetd/config.toml
+
     # Create the greeter user
     sudo useradd -M -G video greeter
     sudo chmod -R go+r /etc/greetd/
 
-    # Look in the configuration file `/etc/greetd/config.toml` and edit as appropriate.
     # When done, enable and start greetd
     sudo systemctl enable greetd
 
