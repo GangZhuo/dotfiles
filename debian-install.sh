@@ -156,7 +156,9 @@ setup_ohmyzsh() {
     if [ "$?" -ne 0 ] ; then exit; fi
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting
     if [ "$?" -ne 0 ] ; then exit; fi
-    sudo chsh --shell /usr/bin/zsh $CURRENT_USER
+    print "Change your shell:"
+    echo input password for $CURRENT_DIR
+    chsh --shell /usr/bin/zsh
     if [ "$?" -ne 0 ] ; then exit; fi
     cd "$CURRENT_DIR"
   else
