@@ -181,6 +181,9 @@ setup_python() {
     eval "$(pyenv init -)"
     cd "$CURRENT_DIR"
   else
+    export PYENV_ROOT="$HOME/.pyenv"
+    export PATH="$PYENV_ROOT/bin:$PATH"
+    eval "$(pyenv init -)"
     echo python already installed
   fi
 }
@@ -203,8 +206,10 @@ setup_nodejs() {
     ln -sf ../node/bin/node node
     ln -sf ../node/bin/npm npm
     ln -sf ../node/bin/npx npx
+    export PATH="$HOME/.local/bin:$PATH"
     cd "$CURRENT_DIR"
   else
+    export PATH="$HOME/.local/bin:$PATH"
     echo nodejs already installed
   fi
 }
