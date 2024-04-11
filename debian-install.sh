@@ -486,6 +486,7 @@ setup_greetd() {
     # Put things into place
     sudo cp target/release/{greetd,agreety} /usr/local/bin/
     sudo cp greetd.service /etc/systemd/system/greetd.service
+    sudo cp /etc/pam.d/login /etc/pam.d/greetd
     sudo mkdir /etc/greetd
     sudo cp config.toml /etc/greetd/config.toml
 
