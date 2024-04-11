@@ -99,6 +99,7 @@ setup_rustup() {
   else
     echo rustup already installed
   fi
+  source "$HOME/.cargo/env"
 }
 
 setup_git() {
@@ -225,6 +226,8 @@ setup_neovim() {
     cd $HOME/.local/bin
     ln -sf ../nvim/bin/nvim nvim
     cd "$CURRENT_DIR"
+    pip install pynvim
+    if [ "$?" -ne 0 ] ; then exit; fi
   else
     echo neovim already installed
   fi
@@ -392,8 +395,23 @@ add_project_arguments([\n\
     sudo meson install -C build
     if [ "$?" -ne 0 ] ; then exit; fi
     if [ ! -x "/usr/local/bin/start_sway.sh" ] ; then
-      sudo cp $HOME/workspace/dotfiles/.local/bin/start_sway.sh \
-        /usr/local/bin/start_sway.sh
+      #sudo cp $HOME/workspace/dotfiles/.local/bin/start_sway.sh \
+      #  /usr/local/bin/start_sway.sh
+      sudo cat <<EOOF > /usr/local/bin/start_sway.sh
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Export all variables
+set -a
+# Call the systemd generator that reads all files in environment.d
+source /dev/fd/0 <<EOF
+$(/usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generator)
+EOF
+set +a
+
+exec sway $@
+EOOF
+      sudo chmod a+x /usr/local/bin/start_sway.sh
       if [ "$?" -ne 0 ] ; then exit; fi
     fi
   else
@@ -496,7 +514,7 @@ command = "agreety --cmd \/usr\/local\/bin\/start_sway.sh"/' \
       /etc/greetd/config.toml
 
     # Create the greeter user
-    sudo useradd -M -G video greeter
+    sudo useradd -m -r -G video greeter
     sudo chmod -R go+r /etc/greetd/
 
     # When done, enable and start greetd
@@ -509,16 +527,16 @@ command = "agreety --cmd \/usr\/local\/bin\/start_sway.sh"/' \
 }
 
 download_font() {
-  file=$1
-  url=$2
-  if [ ! -f "/usr/local/share/fonts/$file" ] ; then
-    if [ ! -f "$file" ] ; then
-      wget -O "$file" "$url"
+  f=$1
+  u=$2
+  if [ ! -f "/usr/local/share/fonts/$f" ] ; then
+    if [ ! -f "$f" ] ; then
+      wget -O "$f" "$u"
       if [ "$?" -ne 0 ] ; then exit; fi
     fi
-    sudo cp "$file" "/usr/local/share/fonts/$file"
+    sudo cp "$f" "/usr/local/share/fonts/$f"
   else
-    echo $file already installed
+    echo $f already installed
   fi
 }
 
