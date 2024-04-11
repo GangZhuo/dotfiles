@@ -400,7 +400,7 @@ smart_gaps on
         floating enable
         opacity 0.9
         border pixel 3px
-        resize set 500 70
+        resize set 600 200
     }
 
 ### Autostart programs

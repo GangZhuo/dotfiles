@@ -88,10 +88,5 @@ $(/usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generato
 EOF
 set +a
 
-if [ -x "/opt/AUR/sway/build/sway/sway" ]; then
-  SWAY_BUILD="/opt/AUR/sway/build"
-  export PATH="$SWAY_BUILD/sway:$SWAY_BUILD/swaybar:$SWAY_BUILD/swaymsg:$SWAY_BUILD/swaynag:$PATH"
-fi
-
 exec sway $@
 

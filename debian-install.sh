@@ -338,6 +338,63 @@ setup_sway() {
     if [ "$?" -ne 0 ] ; then exit; fi
   fi
 
+  # Build sway
+  print "Build and install sway"
+  if [ ! -x "/usr/local/bin/sway" ] ; then
+    if [ ! -d "$HOME/workspace/sway" ] ; then
+      git clone https://github.com/swaywm/sway.git $HOME/workspace/sway
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+    cd $HOME/workspace/sway || exit
+    mkdir -p subprojects
+    cd subprojects || exit
+    if [ ! -d "wayland" ] ; then
+      ln -sf ../../wayland wayland
+    fi
+    if [ ! -d "wayland-protocols" ] ; then
+      ln -sf ../../wayland-protocols wayland-protocols
+    fi
+    if [ ! -d "libdisplay-info" ] ; then
+      git clone https://gitlab.freedesktop.org/emersion/libdisplay-info.git libdisplay-info
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+    if [ ! -d "libdrm" ] ; then
+      git clone https://gitlab.freedesktop.org/mesa/drm.git libdrm
+      if [ "$?" -ne 0 ] ; then exit; fi
+        # $ROOT_DIR/patches/drm-patch.sh "$HOME/workspace/sway/subprojects/libdrm/meson.build"
+        sed -i "/meson.get_compiler('c')/ i \
+add_project_arguments([\n\
+  '-Wno-stringop-truncation',\n\
+  '-Wno-error=packed',\n\
+  '-Wno-error=array-bounds',\n\
+  '-Wno-error=maybe-uninitialized',\n\
+  ], language : 'c')\n" libdrm/meson.build
+    fi
+    if [ ! -d "libliftoff" ] ; then
+      git clone https://gitlab.freedesktop.org/emersion/libliftoff.git libliftoff
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+    if [ ! -d "seatd" ] ; then
+      git clone https://git.sr.ht/~kennylevinsen/seatd seatd
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+    if [ ! -d "wlroots" ] ; then
+      git clone https://gitlab.freedesktop.org/wlroots/wlroots.git wlroots
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+    cd $HOME/workspace/sway
+    if [ ! -d "build" ] ; then
+      meson setup build --buildtype=release
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+    meson compile -C build
+    if [ "$?" -ne 0 ] ; then exit; fi
+    sudo meson install -C build
+    if [ "$?" -ne 0 ] ; then exit; fi
+  else
+    echo sway already installed
+  fi
+
   # Build mako
   print "Build and install mako"
   if [ ! -x "/usr/local/bin/mako" ] ; then
@@ -387,62 +444,6 @@ setup_sway() {
     echo swappy already installed
   fi
 
-  # Build sway
-  print "Build and install sway"
-  if [ ! -x "/usr/local/bin/sway" ] ; then
-    if [ ! -d "$HOME/workspace/sway" ] ; then
-      git clone https://github.com/swaywm/sway.git $HOME/workspace/sway
-      if [ "$?" -ne 0 ] ; then exit; fi
-    fi
-    cd $HOME/workspace/sway || exit
-    mkdir -p subprojects
-    cd subprojects || exit
-    if [ ! -d "wayland" ] ; then
-      ln -sf ../../wayland wayland
-    fi
-    if [ ! -d "wayland-protocols" ] ; then
-      ln -sf ../../wayland-protocols wayland-protocols
-    fi
-    if [ ! -d "libdisplay-info" ] ; then
-      git clone https://gitlab.freedesktop.org/emersion/libdisplay-info.git libdisplay-info
-      if [ "$?" -ne 0 ] ; then exit; fi
-    fi
-    if [ ! -d "libdrm" ] ; then
-      git clone https://gitlab.freedesktop.org/mesa/drm.git libdrm
-      if [ "$?" -ne 0 ] ; then exit; fi
-        sed -i "/meson.get_compiler('c')/ i \
-add_project_arguments([\n\
-  '-Wno-stringop-truncation',\n\
-  '-Wno-error=packed',\n\
-  '-Wno-error=array-bounds',\n\
-  '-Wno-error=maybe-uninitialized',\n\
-  ], language : 'c')\n" libdrm/meson.build
-    fi
-    if [ ! -d "libliftoff" ] ; then
-      git clone https://gitlab.freedesktop.org/emersion/libliftoff.git libliftoff
-      if [ "$?" -ne 0 ] ; then exit; fi
-    fi
-    if [ ! -d "seatd" ] ; then
-      git clone https://git.sr.ht/~kennylevinsen/seatd seatd
-      if [ "$?" -ne 0 ] ; then exit; fi
-    fi
-    if [ ! -d "wlroots" ] ; then
-      git clone https://gitlab.freedesktop.org/wlroots/wlroots.git wlroots
-      if [ "$?" -ne 0 ] ; then exit; fi
-    fi
-    cd $HOME/workspace/sway
-    if [ ! -d "build" ] ; then
-      meson setup build --buildtype=release
-      if [ "$?" -ne 0 ] ; then exit; fi
-    fi
-    meson compile -C build
-    if [ "$?" -ne 0 ] ; then exit; fi
-    sudo meson install -C build
-    if [ "$?" -ne 0 ] ; then exit; fi
-  else
-    echo sway already installed
-  fi
-
   sudo ldconfig
 
   print "Configure sway"
@@ -458,6 +459,42 @@ add_project_arguments([\n\
   done
 
   cd "$CURRENT_DIR"
+}
+
+setup_greetd() {
+  setup_rustup
+  print "Setup greetd"
+
+  if [ ! -x "/usr/local/bin/greetd" ] ; then
+    if [ ! -d "$HOME/workspace/greetd" ] ; then
+      git clone https://git.sr.ht/\~kennylevinsen/greetd $HOME/workspace/greetd
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+
+    cd $HOME/workspace/greetd
+
+    # Compile greetd and agreety.
+    cargo build --release
+    if [ "$?" -ne 0 ] ; then exit; fi
+
+    # Put things into place
+    sudo cp target/release/{greetd,agreety} /usr/local/bin/
+    sudo cp greetd.service /etc/systemd/system/greetd.service
+    sudo mkdir /etc/greetd
+    sudo cp config.toml /etc/greetd/config.toml
+
+    # Create the greeter user
+    sudo useradd -M -G video greeter
+    sudo chmod -R go+r /etc/greetd/
+
+    # Look in the configuration file `/etc/greetd/config.toml` and edit as appropriate.
+    # When done, enable and start greetd
+    sudo systemctl enable greetd
+
+    cd "$CURRENT_DIR"
+  else
+    echo greetd already installed
+  fi
 }
 
 download_font() {
@@ -561,7 +598,6 @@ setup_sounds
 setup_light
 setup_base_utils
 setup_build_essential
-setup_rustup
 setup_git
 clone_dotfles
 setup_tmux
@@ -578,12 +614,14 @@ setup_fcitx5
 setup_firefox
 setup_network
 
+setup_greetd
+
 #setup_awesome
 #setup_lightdm
 
 print "After rebooting, execute the 'sway' command to enter the desktop, \n\
 and execute 'pavucontrol' to initialize the sound, and execute 'fcitx5-config-qt' \n\
-to configure the input method, and execute 'nmcli' to configure the network."
-
-print "Completed!!!"
+to configure the input method, and execute 'nmcli' to configure the network.\n\
+\n\
+Completed!!!\n"
 
