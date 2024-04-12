@@ -29,7 +29,8 @@ upgrade_os() {
 }
 
 apt_get() {
-  sudo apt-get install --no-install-recommends -y $@
+  #sudo apt-get install --no-install-recommends -y $@
+  sudo apt-get install -y $@
   if [ "$?" -ne 0 ] ; then exit; fi
 }
 
