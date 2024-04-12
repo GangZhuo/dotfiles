@@ -515,8 +515,8 @@ setup_greetd() {
     sudo mkdir /etc/greetd
     sudo cp config.toml /etc/greetd/config.toml
 
-    # Change vt to 7
-    sudo sed -i 's/^vt = 1/vt = 7/' /etc/greetd/config.toml
+    # Change vt to 3
+    sudo sed -i 's/^vt = 1/vt = 3/' /etc/greetd/config.toml
 
     # Change command to sway
     sudo sed -i 's/^\(command = "agreety --cmd \/bin\/sh"\)/#\1\
