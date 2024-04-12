@@ -286,7 +286,8 @@ setup_treesitter() {
 
 setup_sway() {
   print "Setup sway"
-  $INSTALL sway swaybg swayidle swaylock waybar swayimg
+  $INSTALL sway swaybg swayidle swaylock waybar swayimg sway-backgrounds
+  $INSTALL foot foot-terminfo
   $INSTALL wl-clipboard
   $INSTALL wofi
   $INSTALL jq
@@ -565,11 +566,11 @@ setup_tuigreet() {
       cat <<EOOF | sudo tee /usr/local/bin/start_tuigreet.sh &> /dev/null
 #!/bin/sh
 
-exec tuigreet \n\
-    --issue \n\
-    --time --time-format "%Y-%m-%d %H:%M %w" \n\
-    --power-shutdown 'sudo --non-interactive systemctl poweroff' \n\
-    --power-reboot 'sudo --non-interactive systemctl reboot' \n\
+exec tuigreet \\\
+    --issue \\\
+    --time --time-format "%Y-%m-%d %H:%M %w" \\\
+    --power-shutdown 'sudo --non-interactive systemctl poweroff' \\\
+    --power-reboot 'sudo --non-interactive systemctl reboot' \\\
     \$@
 EOOF
       sudo chmod a+x /usr/local/bin/start_tuigreet.sh
