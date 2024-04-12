@@ -29,7 +29,7 @@ upgrade_os() {
 }
 
 apt_get() {
-  sudo apt-get install -y $@
+  sudo apt-get install --no-install-recommends -y $@
   if [ "$?" -ne 0 ] ; then exit; fi
 }
 
@@ -306,7 +306,7 @@ setup_sway() {
   # $INSTALL libreoffice-gtk3
 
   # File manager
-  # $INSTALL --no-install-recommends nautilus
+  # $INSTALL nautilus
 
   # Build mako
   $INSTALL libcairo2-dev libpango1.0-dev \
@@ -567,7 +567,7 @@ setup_tuigreet() {
 
 exec tuigreet \n\
     --issue \n\
-    --time --time-format "%Y-%m-%d %H:%M" \n\
+    --time --time-format "%Y-%m-%d %H:%M %w" \n\
     --power-shutdown 'sudo --non-interactive systemctl poweroff' \n\
     --power-reboot 'sudo --non-interactive systemctl reboot' \n\
     \$@
@@ -685,6 +685,7 @@ setup_network() {
   print "Setup network-manager"
   # See https://blog.kelu.org/tech/2022/01/04/wifi-conn-with-nmcli.html
   $INSTALL network-manager
+  $INSTALL network-manager-gnome
   # $INSTALL nm-tray
 }
 

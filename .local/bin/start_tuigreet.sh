@@ -7,7 +7,7 @@
 #
 exec tuigreet \
     --issue \
-    --time --time-format "%Y-%m-%d %H:%M" \
+    --time --time-format "%Y-%m-%d %H:%M %w" \
     --power-shutdown 'sudo --non-interactive systemctl poweroff' \
     --power-reboot 'sudo --non-interactive systemctl reboot' \
     $@
