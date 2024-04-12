@@ -515,6 +515,9 @@ setup_greetd() {
     sudo mkdir /etc/greetd
     sudo cp config.toml /etc/greetd/config.toml
 
+    # Change vt to 7
+    sudo sed -i 's/^vt = 1/vt = 7/' /etc/greetd/config.toml
+
     # Change command to sway
     sudo sed -i 's/^\(command = "agreety --cmd \/bin\/sh"\)/#\1\
 command = "agreety --cmd \/usr\/local\/bin\/start_sway.sh"/' \
@@ -530,6 +533,61 @@ command = "agreety --cmd \/usr\/local\/bin\/start_sway.sh"/' \
     cd "$CURRENT_DIR"
   else
     echo greetd already installed
+  fi
+}
+
+setup_tuigreet() {
+  setup_rustup
+  print "Setup tuigreet"
+
+  if [ ! -x "/usr/local/bin/tuigreet" ] ; then
+    if [ ! -d "$HOME/workspace/tuigreet" ] ; then
+      git clone https://github.com/apognu/tuigreet \
+        $HOME/workspace/tuigreet
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+
+    cd $HOME/workspace/tuigreet
+
+    # Compile
+    cargo build --release
+    if [ "$?" -ne 0 ] ; then exit; fi
+
+    # Put things into place
+    sudo cp target/release/tuigreet /usr/local/bin
+    sudo mkdir /var/cache/tuigreet
+    sudo chown greeter:greeter /var/cache/tuigreet
+    sudo chmod 0755 /var/cache/tuigreet
+
+    if [ ! -x "/usr/local/bin/start_tuigreet.sh" ] ; then
+      #sudo cp $HOME/workspace/dotfiles/.local/bin/start_tuigreet.sh \
+      #  /usr/local/bin/start_tuigreet.sh
+      cat <<EOOF | sudo tee /usr/local/bin/start_tuigreet.sh &> /dev/null
+#!/bin/sh
+
+exec tuigreet \n\
+    --issue \n\
+    --time --time-format "%Y-%m-%d %H:%M" \n\
+    --power-shutdown 'sudo --non-interactive systemctl poweroff' \n\
+    --power-reboot 'sudo --non-interactive systemctl reboot' \n\
+    \$@
+EOOF
+      sudo chmod a+x /usr/local/bin/start_tuigreet.sh
+      if [ "$?" -ne 0 ] ; then exit; fi
+
+      # We need add below line into sudoers,
+      # see https://github.com/apognu/tuigreet?tab=readme-ov-file#power-management
+      #
+      # %greeter ALL=NOPASSWD: /bin/systemctl poweroff, /bin/systemctl reboot
+    fi
+
+    # Change to use tuigreet
+    sudo sed -i 's/^\(command = "agreety --cmd\) \(.*\)/command = "\/usr\/local\/bin\/start_tuigreet.sh --cmd \2/' \
+      /etc/greetd/config.toml
+
+    cd "$CURRENT_DIR"
+  else
+    echo tuigreet already installed
   fi
 }
 
@@ -651,9 +709,12 @@ setup_firefox
 setup_network
 
 setup_greetd
+setup_tuigreet
 
 #setup_awesome
 #setup_lightdm
+#
+#TODO: printer, sway greater
 
 print "After rebooting, execute the 'sway' command to enter the desktop, \n\
 and execute 'pavucontrol' to initialize the sound, and execute 'fcitx5-config-qt' \n\
