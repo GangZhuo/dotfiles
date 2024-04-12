@@ -32,7 +32,7 @@
         // Human Friendly
         "format-alt": "{:%A, %B %d at %I:%M %p}",
         // 24hr Robot Friendly
-        "format": "{:%Y-%m-%d %H:%M}"
+        "format": "{:%Y-%m-%d %H:%M %w}"
     },
     "cpu": {
         "format": "<span size='xx-large' rise='-3pt'></span> {usage}%",

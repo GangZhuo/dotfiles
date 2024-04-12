@@ -81,7 +81,7 @@ setup_light() {
 setup_base_utils() {
   print "Setup base utils"
   $INSTALL bat ncat curl tree zip unzip
-  $INSTALL ripgrep fzf fd-find
+  $INSTALL ripgrep fzf fd-find htop
   $INSTALL zsh
 }
 
@@ -683,6 +683,7 @@ setup_firefox() {
 
 setup_network() {
   print "Setup network-manager"
+  # See https://blog.kelu.org/tech/2022/01/04/wifi-conn-with-nmcli.html
   $INSTALL network-manager
   # $INSTALL nm-tray
 }
