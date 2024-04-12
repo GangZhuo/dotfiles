@@ -716,6 +716,13 @@ setup_tuigreet
 #
 #TODO: printer, sway greater
 
+print "We need add below line into sudoers, \n\
+see https://github.com/apognu/tuigreet?tab=readme-ov-file#power-management \n\
+\n\
+%%greeter ALL=NOPASSWD: /bin/systemctl poweroff, /bin/systemctl reboot\n\
+\n\
+You can using 'sudo visudo' command."
+
 print "After rebooting, execute the 'sway' command to enter the desktop, \n\
 and execute 'pavucontrol' to initialize the sound, and execute 'fcitx5-config-qt' \n\
 to configure the input method, and execute 'nmcli' to configure the network.\n\
