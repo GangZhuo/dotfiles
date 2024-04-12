@@ -308,7 +308,7 @@ setup_sway() {
   # $INSTALL libreoffice-gtk3
 
   # File manager
-  # $INSTALL nautilus
+  # $INSTALL --no-install-recommends nautilus
 
   # Build mako
   $INSTALL libcairo2-dev libpango1.0-dev \
