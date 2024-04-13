@@ -691,6 +691,12 @@ setup_network() {
   # $INSTALL nm-tray
 }
 
+setup_virt_manager() {
+  print "Setup virt-manager"
+  $INSTALL virt-manager
+  sudo usermod -aG libvirt $CURRENT_USER
+}
+
 upgrade_os
 setup_sounds
 setup_light
@@ -711,6 +717,8 @@ setup_fonts
 setup_fcitx5
 setup_firefox
 setup_network
+
+setup_virt_manager
 
 setup_greetd
 setup_tuigreet
