@@ -23,7 +23,8 @@ set $term foot
 # Note: pass the final command to swaymsg so that the resulting window can be opened
 # on the original workspace that the command was run on.
 #set $menu dmenu_path | dmenu | xargs swaymsg exec --
-set $menu wofi --show run
+#set $menu wofi --show run
+set $menu wofi --show drun --allow-images
 
 # Your preferred web browser
 set $browser /usr/bin/firefox
@@ -38,7 +39,7 @@ set $help foot --title=Help --app-id=swayhelp $scripts_dir/help.sh
 
 # Open your wiki window
 # set $wiki alacritty --class swayhelp -e $scripts_dir/wiki.sh
-set $wiki foot --title=Wiki --app-id=swayhelp $scripts_dir/wiki.sh
+# set $wiki foot --title=Wiki --app-id=swayhelp $scripts_dir/wiki.sh
 
 # Exit sway
 #set $exit swaynag \
