@@ -404,6 +404,9 @@ smart_gaps on
         border pixel 3px
         resize set 600 200
     }
+    for_window [app_id="qalculate"] {
+        floating enable
+    }
 
 ### Autostart programs
 
