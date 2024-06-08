@@ -392,6 +392,8 @@ smart_gaps on
     for_window [app_id="pavucontrol"] floating enable
     for_window [app_id="nm-connection-editor"] floating enable
     for_window [app_id="firefox" title="Library"] floating enable
+    for_window [app_id="Firefox-esr" title="Library"] floating enable
+    for_window [app_id="Firefox-esr" title="About Mozilla Firefox"] floating enable
     for_window [app_id="swayhelp"] {
         floating enable
         opacity 0.9
