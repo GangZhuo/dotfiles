@@ -10,7 +10,11 @@ SOCKS5_PORT=1080
 HPROXY_HOST=$SOCKS5_HOST
 HPROXY_PORT=1081
 
+UPDATE=1
+
 PIPEWIRE=0
+
+SWAY_SRC_ROOT=$HOME/workspace/swaywm
 
 export http_proxy=$HPROXY_HOST:$HPROXY_PORT
 export https_proxy=$HPROXY_HOST:$HPROXY_PORT
@@ -219,7 +223,7 @@ setup_nodejs() {
 
 setup_neovim() {
   print "Setup neovim"
-  if [ ! -d "$HOME/.local/nvim" ] ; then
+  if [ ! -d "$HOME/.local/nvim" ] || [ x"$UPDATE" == "x1" ] ; then
     mkdir -p $HOME/.local/bin
     cd $HOME/.local
     [ -f nvim-linux64.tar.gz ] && rm nvim-linux64.tar.gz
@@ -228,9 +232,15 @@ setup_neovim() {
       https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
     if [ "$?" -ne 0 ] ; then exit; fi
     tar -xzf nvim-linux64.tar.gz
+    mv nvim nvim.old
     mv nvim-linux64 nvim
-    if [ "$?" -ne 0 ] ; then exit; fi
+    if [ "$?" -ne 0 ] ; then
+      rm -rf nvim
+      mv nvim.old nvim
+      exit;
+    fi
     rm nvim-linux64.tar.gz
+    rm -rf nvim.old
     cd $HOME/.local/bin
     ln -sf ../nvim/bin/nvim nvim
     cd "$CURRENT_DIR"
@@ -268,7 +278,7 @@ setup_neovim() {
 
 setup_treesitter() {
   print "Setup tree-sitter"
-  if [ ! -x "$HOME/.local/bin/tree-sitter" ] ; then
+  if [ ! -x "$HOME/.local/bin/tree-sitter" ] || [ x"$UPDATE" == "x1" ] ; then
     mkdir -p $HOME/.local/bin
     cd $HOME/.local
     [ -f tree-sitter-linux-x64.gz ] && rm tree-sitter-linux-x64.gz
@@ -276,6 +286,7 @@ setup_treesitter() {
       https://github.com/tree-sitter/tree-sitter/releases/latest/download/tree-sitter-linux-x64.gz
     if [ "$?" -ne 0 ] ; then exit; fi
     gzip -d tree-sitter-linux-x64.gz
+    rm -rf $HOME/.local/bin/tree-sitter
     mv tree-sitter-linux-x64 $HOME/.local/bin/tree-sitter
     if [ "$?" -ne 0 ] ; then exit; fi
     chmod a+x $HOME/.local/bin/tree-sitter
@@ -283,6 +294,169 @@ setup_treesitter() {
   else
     echo tree-sitter already installed
   fi
+}
+
+git_clone() {
+  DEST_DIR=$1
+  SRC_URL=$2
+  if [ ! -d "$DEST_DIR" ] ; then
+    mkdir -p "$(dirname "$DEST_DIR")"
+    git clone "$SRC_URL" "$DEST_DIR"
+    if [ "$?" -ne 0 ] ; then exit; fi
+    return 1
+  elif [ x"$UPDATE" == "x1" ] ; then
+    CUR_DIR=$(pwd)
+    cd "$DEST_DIR" || exit
+    git pull --autostash || exit
+    git submodule update --init --recursive || exit
+    cd "$CUR_DIR"
+    return 2
+  fi
+  return 0
+}
+
+build_install_sway() {
+  print "Build and install sway"
+
+  git_clone "$SWAY_SRC_ROOT/wayland" \
+    https://gitlab.freedesktop.org/wayland/wayland.git
+  git_clone "$SWAY_SRC_ROOT/wayland-protocols" \
+    https://gitlab.freedesktop.org/wayland/wayland-protocols.git
+  git_clone "$SWAY_SRC_ROOT/libdisplay-info" \
+    https://gitlab.freedesktop.org/emersion/libdisplay-info.git
+  git_clone "$SWAY_SRC_ROOT/libdrm" \
+    https://gitlab.freedesktop.org/mesa/drm.git
+  if [ "$?" -eq 1 ] ; then
+    # $ROOT_DIR/patches/drm-patch.sh "$HOME/workspace/sway/subprojects/libdrm/meson.build"
+    sed -i "/meson.get_compiler('c')/ i \
+      add_project_arguments([\n\
+        '-Wno-stringop-truncation',\n\
+        '-Wno-error=packed',\n\
+        '-Wno-error=array-bounds',\n\
+        '-Wno-error=maybe-uninitialized',\n\
+        ], language : 'c')\n" libdrm/meson.build
+  fi
+  git_clone "$SWAY_SRC_ROOT/libliftoff" \
+    https://gitlab.freedesktop.org/emersion/libliftoff.git
+  git_clone "$SWAY_SRC_ROOT/seatd" \
+    https://git.sr.ht/~kennylevinsen/seatd
+  git_clone "$SWAY_SRC_ROOT/wlroots" \
+    https://gitlab.freedesktop.org/wlroots/wlroots.git
+  git_clone "$SWAY_SRC_ROOT/sway" \
+    https://github.com/swaywm/sway.git
+
+  mkdir -p "$SWAY_SRC_ROOT/sway/subprojects"
+  cd "$SWAY_SRC_ROOT/sway/subprojects" || exit
+  if [ ! -d "wayland" ] ; then
+    ln -sf ../../wayland wayland
+  fi
+  if [ ! -d "wayland-protocols" ] ; then
+    ln -sf ../../wayland-protocols wayland-protocols
+  fi
+
+  if [ ! -x "/usr/local/bin/sway" ] || [ x"$UPDATE" == "x1" ] ; then
+    cd $SWAY_SRC_ROOT/sway
+    if [ ! -d "build" ] ; then
+      meson setup build --buildtype=release
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+    meson compile -C build
+    if [ "$?" -ne 0 ] ; then exit; fi
+    sudo meson install -C build
+    if [ "$?" -ne 0 ] ; then exit; fi
+    if [ ! -x "/usr/local/bin/start_sway.sh" ] ; then
+      #sudo cp $HOME/workspace/dotfiles/.local/bin/start_sway.sh \
+      #  /usr/local/bin/start_sway.sh
+      cat <<EOOF | sudo tee /usr/local/bin/start_sway.sh &> /dev/null
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Export all variables
+set -a
+# Call the systemd generator that reads all files in environment.d
+source /dev/fd/0 <<EOF
+\$(/usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generator)
+EOF
+set +a
+
+exec sway \$@
+EOOF
+      sudo chmod a+x /usr/local/bin/start_sway.sh
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+  else
+    echo sway already installed
+  fi
+
+  cd "$CURRENT_DIR"
+}
+
+build_install_mako() {
+  print "Build and install mako"
+
+  git_clone "$SWAY_SRC_ROOT/mako" \
+      https://github.com/emersion/mako.git
+
+  mkdir -p "$SWAY_SRC_ROOT/mako/subprojects"
+  cd "$SWAY_SRC_ROOT/mako/subprojects" || exit
+  if [ ! -d "wayland" ] ; then
+    ln -sf ../../wayland wayland
+  fi
+  if [ ! -d "wayland-protocols" ] ; then
+    ln -sf ../../wayland-protocols wayland-protocols
+  fi
+
+  if [ ! -x "/usr/local/bin/mako" ] || [ x"$UPDATE" == "x1" ] ; then
+    cd $SWAY_SRC_ROOT/mako || exit
+    if [ ! -d "build" ] ; then
+      meson setup build --buildtype=release
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+    meson compile -C build
+    if [ "$?" -ne 0 ] ; then exit; fi
+    sudo meson install -C build
+    if [ "$?" -ne 0 ] ; then exit; fi
+  else
+    echo mako already installed
+  fi
+
+  cd "$CURRENT_DIR"
+}
+
+build_install_swappy() {
+  print "Build and install swappy"
+
+  git_clone "$SWAY_SRC_ROOT/swappy" \
+      https://github.com/jtheoof/swappy.git
+
+  if [ ! -x "/usr/local/bin/swappy" ] || [ x"$UPDATE" == "x1" ] ; then
+    cd $SWAY_SRC_ROOT/swappy || exit
+    if [ ! -d "build" ] ; then
+      meson setup build --buildtype=release
+      if [ "$?" -ne 0 ] ; then exit; fi
+    fi
+    meson compile -C build
+    if [ "$?" -ne 0 ] ; then exit; fi
+    sudo meson install -C build
+    if [ "$?" -ne 0 ] ; then exit; fi
+  else
+    echo swappy already installed
+  fi
+}
+
+config_sway() {
+  print "Configure sway"
+
+  mkdir -p $HOME/.config
+  cd $HOME/.config
+  list="environment.d foot mako sway waybar wofi"
+  for f in $list ; do
+    if [ ! -d "$f" ] ; then
+      ln -sf ../workspace/dotfiles/.config/$f $f
+    else
+      echo $f already configured
+    fi
+  done
 }
 
 setup_sway() {
@@ -340,155 +514,12 @@ setup_sway() {
       xwayland hwdata \
       meson pkgconf scdoc tree wayland-protocols
 
-  mkdir -p $HOME/workspace
-  if [ ! -d "$HOME/workspace/wayland" ] ; then
-    git clone https://gitlab.freedesktop.org/wayland/wayland.git $HOME/workspace/wayland
-    if [ "$?" -ne 0 ] ; then exit; fi
-  fi
-  if [ ! -d "$HOME/workspace/wayland-protocols" ] ; then
-    git clone https://gitlab.freedesktop.org/wayland/wayland-protocols.git $HOME/workspace/wayland-protocols
-    if [ "$?" -ne 0 ] ; then exit; fi
-  fi
-
-  # Build sway
-  print "Build and install sway"
-  if [ ! -x "/usr/local/bin/sway" ] ; then
-    if [ ! -d "$HOME/workspace/sway" ] ; then
-      git clone https://github.com/swaywm/sway.git $HOME/workspace/sway
-      if [ "$?" -ne 0 ] ; then exit; fi
-    fi
-    cd $HOME/workspace/sway || exit
-    mkdir -p subprojects
-    cd subprojects || exit
-    if [ ! -d "wayland" ] ; then
-      ln -sf ../../wayland wayland
-    fi
-    if [ ! -d "wayland-protocols" ] ; then
-      ln -sf ../../wayland-protocols wayland-protocols
-    fi
-    if [ ! -d "libdisplay-info" ] ; then
-      git clone https://gitlab.freedesktop.org/emersion/libdisplay-info.git libdisplay-info
-      if [ "$?" -ne 0 ] ; then exit; fi
-    fi
-    if [ ! -d "libdrm" ] ; then
-      git clone https://gitlab.freedesktop.org/mesa/drm.git libdrm
-      if [ "$?" -ne 0 ] ; then exit; fi
-        # $ROOT_DIR/patches/drm-patch.sh "$HOME/workspace/sway/subprojects/libdrm/meson.build"
-        sed -i "/meson.get_compiler('c')/ i \
-add_project_arguments([\n\
-  '-Wno-stringop-truncation',\n\
-  '-Wno-error=packed',\n\
-  '-Wno-error=array-bounds',\n\
-  '-Wno-error=maybe-uninitialized',\n\
-  ], language : 'c')\n" libdrm/meson.build
-    fi
-    if [ ! -d "libliftoff" ] ; then
-      git clone https://gitlab.freedesktop.org/emersion/libliftoff.git libliftoff
-      if [ "$?" -ne 0 ] ; then exit; fi
-    fi
-    if [ ! -d "seatd" ] ; then
-      git clone https://git.sr.ht/~kennylevinsen/seatd seatd
-      if [ "$?" -ne 0 ] ; then exit; fi
-    fi
-    if [ ! -d "wlroots" ] ; then
-      git clone https://gitlab.freedesktop.org/wlroots/wlroots.git wlroots
-      if [ "$?" -ne 0 ] ; then exit; fi
-    fi
-    cd $HOME/workspace/sway
-    if [ ! -d "build" ] ; then
-      meson setup build --buildtype=release
-      if [ "$?" -ne 0 ] ; then exit; fi
-    fi
-    meson compile -C build
-    if [ "$?" -ne 0 ] ; then exit; fi
-    sudo meson install -C build
-    if [ "$?" -ne 0 ] ; then exit; fi
-    if [ ! -x "/usr/local/bin/start_sway.sh" ] ; then
-      #sudo cp $HOME/workspace/dotfiles/.local/bin/start_sway.sh \
-      #  /usr/local/bin/start_sway.sh
-      cat <<EOOF | sudo tee /usr/local/bin/start_sway.sh &> /dev/null
-#!/usr/bin/env bash
-set -euo pipefail
-
-# Export all variables
-set -a
-# Call the systemd generator that reads all files in environment.d
-source /dev/fd/0 <<EOF
-$(/usr/lib/systemd/user-environment-generators/30-systemd-environment-d-generator)
-EOF
-set +a
-
-exec sway $@
-EOOF
-      sudo chmod a+x /usr/local/bin/start_sway.sh
-      if [ "$?" -ne 0 ] ; then exit; fi
-    fi
-  else
-    echo sway already installed
-  fi
-
-  # Build mako
-  print "Build and install mako"
-  if [ ! -x "/usr/local/bin/mako" ] ; then
-    if [ ! -d "$HOME/workspace/mako" ] ; then
-      git clone https://github.com/emersion/mako.git $HOME/workspace/mako
-      if [ "$?" -ne 0 ] ; then exit; fi
-    fi
-    cd $HOME/workspace/mako || exit
-    mkdir -p subprojects
-    cd subprojects || exit
-    if [ ! -d "wayland" ] ; then
-      ln -sf ../../wayland wayland
-    fi
-    if [ ! -d "wayland-protocols" ] ; then
-      ln -sf ../../wayland-protocols wayland-protocols
-    fi
-    cd $HOME/workspace/mako
-    if [ ! -d "build" ] ; then
-      meson setup build --buildtype=release
-      if [ "$?" -ne 0 ] ; then exit; fi
-    fi
-    meson compile -C build
-    if [ "$?" -ne 0 ] ; then exit; fi
-    sudo meson install -C build
-    if [ "$?" -ne 0 ] ; then exit; fi
-  else
-    echo mako already installed
-  fi
-
-  # Build swappy
-  print "Build and install swappy"
-  if [ ! -x "/usr/local/bin/swappy" ] ; then
-    if [ ! -d "$HOME/workspace/swappy" ] ; then
-      git clone https://github.com/jtheoof/swappy.git $HOME/workspace/swappy
-      if [ "$?" -ne 0 ] ; then exit; fi
-    fi
-    cd $HOME/workspace/swappy || exit
-    if [ ! -d "build" ] ; then
-      meson setup build --buildtype=release
-      if [ "$?" -ne 0 ] ; then exit; fi
-    fi
-    meson compile -C build
-    if [ "$?" -ne 0 ] ; then exit; fi
-    sudo meson install -C build
-    if [ "$?" -ne 0 ] ; then exit; fi
-  else
-    echo swappy already installed
-  fi
+  build_install_sway
+  build_install_mako
+  build_install_swappy
+  config_sway
 
   sudo ldconfig
-
-  print "Configure sway"
-  mkdir -p $HOME/.config
-  cd $HOME/.config
-  list="environment.d foot mako sway waybar wofi"
-  for f in $list ; do
-    if [ ! -d "$f" ] ; then
-      ln -sf ../workspace/dotfiles/.config/$f $f
-    else
-      echo $f already configured
-    fi
-  done
 
   cd "$CURRENT_DIR"
 }
@@ -497,14 +528,11 @@ setup_greetd() {
   setup_rustup
   print "Setup greetd"
 
-  if [ ! -x "/usr/local/bin/greetd" ] ; then
-    if [ ! -d "$HOME/workspace/greetd" ] ; then
-      git clone https://git.sr.ht/\~kennylevinsen/greetd \
-        $HOME/workspace/greetd
-      if [ "$?" -ne 0 ] ; then exit; fi
-    fi
+  git_clone "$SWAY_SRC_ROOT/greetd" \
+      https://git.sr.ht/\~kennylevinsen/greetd
 
-    cd $HOME/workspace/greetd
+  if [ ! -x "/usr/local/bin/greetd" ] || [ x"$UPDATE" == "x1" ] ; then
+    cd $SWAY_SRC_ROOT/greetd
 
     # Compile greetd and agreety.
     cargo build --release
@@ -512,25 +540,28 @@ setup_greetd() {
 
     # Put things into place
     sudo cp target/release/{greetd,agreety} /usr/local/bin/
-    sudo cp greetd.service /etc/systemd/system/greetd.service
-    sudo cp /etc/pam.d/login /etc/pam.d/greetd
-    sudo mkdir /etc/greetd
-    sudo cp config.toml /etc/greetd/config.toml
 
-    # Change vt to 3
-    sudo sed -i 's/^vt = 1/vt = 3/' /etc/greetd/config.toml
+    if [ ! -f "/etc/systemd/system/greetd.service" ] ; then
+      sudo cp greetd.service /etc/systemd/system/greetd.service
+      sudo cp /etc/pam.d/login /etc/pam.d/greetd
+      sudo mkdir /etc/greetd
+      sudo cp config.toml /etc/greetd/config.toml
 
-    # Change command to sway
-    sudo sed -i 's/^\(command = "agreety --cmd \/bin\/sh"\)/#\1\
+      # Change vt to 3
+      sudo sed -i 's/^vt = 1/vt = 3/' /etc/greetd/config.toml
+
+      # Change command to sway
+      sudo sed -i 's/^\(command = "agreety --cmd \/bin\/sh"\)/#\1\
 command = "agreety --cmd \/usr\/local\/bin\/start_sway.sh"/' \
-      /etc/greetd/config.toml
+        /etc/greetd/config.toml
 
-    # Create the greeter user
-    sudo useradd -m -r -G video greeter
-    sudo chmod -R go+r /etc/greetd/
+      # Create the greeter user
+      sudo useradd -m -r -G video greeter
+      sudo chmod -R go+r /etc/greetd/
 
-    # When done, enable and start greetd
-    sudo systemctl enable greetd
+      # When done, enable and start greetd
+      sudo systemctl enable greetd
+    fi
 
     cd "$CURRENT_DIR"
   else
@@ -542,14 +573,11 @@ setup_tuigreet() {
   setup_rustup
   print "Setup tuigreet"
 
-  if [ ! -x "/usr/local/bin/tuigreet" ] ; then
-    if [ ! -d "$HOME/workspace/tuigreet" ] ; then
-      git clone https://github.com/apognu/tuigreet \
-        $HOME/workspace/tuigreet
-      if [ "$?" -ne 0 ] ; then exit; fi
-    fi
+  git_clone "$SWAY_SRC_ROOT/tuigreet" \
+      https://github.com/apognu/tuigreet
 
-    cd $HOME/workspace/tuigreet
+  if [ ! -x "/usr/local/bin/tuigreet" ] || [ x"$UPDATE" == "x1" ] ; then
+    cd $SWAY_SRC_ROOT/tuigreet
 
     # Compile
     cargo build --release
