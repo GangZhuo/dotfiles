@@ -16,6 +16,9 @@ PIPEWIRE=0
 
 SWAY_SRC_ROOT=$HOME/workspace/swaywm
 
+INSTALL=apt_get
+MESON=$(which meson)
+
 export http_proxy=$HPROXY_HOST:$HPROXY_PORT
 export https_proxy=$HPROXY_HOST:$HPROXY_PORT
 
@@ -37,8 +40,6 @@ apt_get() {
   sudo apt-get install -y $@
   if [ "$?" -ne 0 ] ; then exit; fi
 }
-
-INSTALL=apt_get
 
 setup_sounds() {
   # Install sound
@@ -93,7 +94,7 @@ setup_base_utils() {
 setup_build_essential() {
   print "Setup build and development essential tools"
   $INSTALL build-essential autoconf-archive libtool pkg-config \
-      gdb gdbserver meson cmake scdoc gettext
+      gdb gdbserver cmake scdoc gettext
   $INSTALL universal-ctags bear
 }
 
@@ -193,6 +194,11 @@ setup_python() {
     eval "$(pyenv init -)"
     echo python already installed
   fi
+
+  pip install --upgrade meson || exit
+
+  MESON=$(which meson)
+  if [ -z "$MESON" ]; then exit; fi
 }
 
 setup_nodejs() {
@@ -200,15 +206,15 @@ setup_nodejs() {
   if [ ! -d "$HOME/.local/node" ] ; then
     mkdir -p $HOME/.local/bin
     cd $HOME/.local
-    [ -f node-v20.12.0-linux-x64.tar.gz ] && rm node-v20.12.0-linux-x64.tar.gz
-    [ -d node-v20.12.0-linux-x64 ] && rm -rf node-v20.12.0-linux-x64
-    wget -O node-v20.12.0-linux-x64.tar.gz \
-      https://nodejs.org/dist/v20.12.0/node-v20.12.0-linux-x64.tar.gz
+    [ -f node-v20.17.0-linux-x64.tar.xz ] && rm node-v20.17.0-linux-x64.tar.xz
+    [ -d node-v20.17.0-linux-x64 ] && rm -rf node-v20.17.0-linux-x64
+    wget -O node-v20.17.0-linux-x64.tar.xz \
+      https://nodejs.org/dist/v20.17.0/node-v20.17.0-linux-x64.tar.xz
     if [ "$?" -ne 0 ] ; then exit; fi
-    tar -xzf node-v20.12.0-linux-x64.tar.gz
-    mv node-v20.12.0-linux-x64 node
+    tar -xf node-v20.17.0-linux-x64.tar.xz || exit
+    mv node-v20.17.0-linux-x64 node
     if [ "$?" -ne 0 ] ; then exit; fi
-    rm node-v20.12.0-linux-x64.tar.gz
+    rm node-v20.17.0-linux-x64.tar.xz
     cd $HOME/.local/bin
     ln -sf ../node/bin/node node
     ln -sf ../node/bin/npm npm
@@ -244,9 +250,10 @@ setup_neovim() {
     cd $HOME/.local/bin
     ln -sf ../nvim/bin/nvim nvim
     cd "$CURRENT_DIR"
-    pip install pynvim
+    pip install --upgrade pynvim || exit
     if [ "$?" -ne 0 ] ; then exit; fi
   else
+    pip install --upgrade pynvim || exit
     echo neovim already installed
   fi
 
@@ -298,16 +305,39 @@ setup_treesitter() {
 
 git_clone() {
   DEST_DIR=$1
-  SRC_URL=$2
+  BRANCH=$2
+  SRC_URL=$3
+  if [ -z "$SRC_URL" ]; then
+    SRC_URL=$BRANCH
+    BRANCH=
+  fi
+  if [ -z "$BRANCH" ]; then
+    print "Clone $DEST_DIR"
+  else
+    print "Clone $DEST_DIR (branch: $BRANCH)"
+  fi
   if [ ! -d "$DEST_DIR" ] ; then
     mkdir -p "$(dirname "$DEST_DIR")"
     git clone "$SRC_URL" "$DEST_DIR"
     if [ "$?" -ne 0 ] ; then exit; fi
+    if [ ! -z "$BRANCH" ]; then
+      CUR_DIR=$(pwd)
+      cd "$DEST_DIR" || exit
+      git checkout $BRANCH
+      if [ "$?" -ne 0 ] ; then exit; fi
+      cd "$CUR_DIR"
+    fi
+    git submodule update --init --recursive || exit
     return 1
   elif [ x"$UPDATE" == "x1" ] ; then
     CUR_DIR=$(pwd)
     cd "$DEST_DIR" || exit
-    git pull --autostash || exit
+    if [ ! -z "$BRANCH" ]; then
+      git checkout $BRANCH || exit
+      git pull --autostash origin $BRANCH || exit
+    else
+      git pull --autostash || exit
+    fi
     git submodule update --init --recursive || exit
     cd "$CUR_DIR"
     return 2
@@ -318,9 +348,9 @@ git_clone() {
 build_install_sway() {
   print "Build and install sway"
 
-  git_clone "$SWAY_SRC_ROOT/wayland" \
+  git_clone "$SWAY_SRC_ROOT/wayland" 1.23 \
     https://gitlab.freedesktop.org/wayland/wayland.git
-  git_clone "$SWAY_SRC_ROOT/wayland-protocols" \
+  git_clone "$SWAY_SRC_ROOT/wayland-protocols" 1.37 \
     https://gitlab.freedesktop.org/wayland/wayland-protocols.git
   git_clone "$SWAY_SRC_ROOT/libdisplay-info" \
     https://gitlab.freedesktop.org/emersion/libdisplay-info.git
@@ -334,16 +364,22 @@ build_install_sway() {
         '-Wno-error=packed',\n\
         '-Wno-error=array-bounds',\n\
         '-Wno-error=maybe-uninitialized',\n\
-        ], language : 'c')\n" libdrm/meson.build
+        ], language : 'c')\n" "$SWAY_SRC_ROOT/libdrm/meson.build"
   fi
   git_clone "$SWAY_SRC_ROOT/libliftoff" \
     https://gitlab.freedesktop.org/emersion/libliftoff.git
   git_clone "$SWAY_SRC_ROOT/seatd" \
     https://git.sr.ht/~kennylevinsen/seatd
-  git_clone "$SWAY_SRC_ROOT/wlroots" \
+  git_clone "$SWAY_SRC_ROOT/libinput" \
+    https://gitlab.freedesktop.org/libinput/libinput.git
+  git_clone "$SWAY_SRC_ROOT/wlroots" 0.18 \
     https://gitlab.freedesktop.org/wlroots/wlroots.git
-  git_clone "$SWAY_SRC_ROOT/sway" \
+  git_clone "$SWAY_SRC_ROOT/sway" v1.10\
     https://github.com/swaywm/sway.git
+  if [ "$?" -eq 1 ] ; then
+    sed -i "/'-Wvla',/ i \
+      '-Wno-switch',\n" "$SWAY_SRC_ROOT/sway/meson.build"
+  fi
 
   mkdir -p "$SWAY_SRC_ROOT/sway/subprojects"
   cd "$SWAY_SRC_ROOT/sway/subprojects" || exit
@@ -353,16 +389,34 @@ build_install_sway() {
   if [ ! -d "wayland-protocols" ] ; then
     ln -sf ../../wayland-protocols wayland-protocols
   fi
+  if [ ! -d "wlroots" ] ; then
+    ln -sf ../../wlroots wlroots
+  fi
+  if [ ! -d "libdisplay-info" ] ; then
+    ln -sf ../../libdisplay-info libdisplay-info
+  fi
+  if [ ! -d "libdrm" ] ; then
+    ln -sf ../../libdrm libdrm
+  fi
+  if [ ! -d "libliftoff" ] ; then
+    ln -sf ../../libliftoff libliftoff
+  fi
+  if [ ! -d "seatd" ] ; then
+    ln -sf ../../seatd seatd
+  fi
+  if [ ! -d "libinput" ] ; then
+    ln -sf ../../libinput libinput
+  fi
 
   if [ ! -x "/usr/local/bin/sway" ] || [ x"$UPDATE" == "x1" ] ; then
     cd $SWAY_SRC_ROOT/sway
     if [ ! -d "build" ] ; then
-      meson setup build --buildtype=release
+      $MESON setup build --buildtype=release
       if [ "$?" -ne 0 ] ; then exit; fi
     fi
-    meson compile -C build
+    $MESON compile -C build
     if [ "$?" -ne 0 ] ; then exit; fi
-    sudo meson install -C build
+    sudo $MESON install -C build
     if [ "$?" -ne 0 ] ; then exit; fi
     if [ ! -x "/usr/local/bin/start_sway.sh" ] ; then
       #sudo cp $HOME/workspace/dotfiles/.local/bin/start_sway.sh \
@@ -394,7 +448,7 @@ EOOF
 build_install_mako() {
   print "Build and install mako"
 
-  git_clone "$SWAY_SRC_ROOT/mako" \
+  git_clone "$SWAY_SRC_ROOT/mako" v1.9.0 \
       https://github.com/emersion/mako.git
 
   mkdir -p "$SWAY_SRC_ROOT/mako/subprojects"
@@ -409,12 +463,12 @@ build_install_mako() {
   if [ ! -x "/usr/local/bin/mako" ] || [ x"$UPDATE" == "x1" ] ; then
     cd $SWAY_SRC_ROOT/mako || exit
     if [ ! -d "build" ] ; then
-      meson setup build --buildtype=release
+      $MESON setup build --buildtype=release
       if [ "$?" -ne 0 ] ; then exit; fi
     fi
-    meson compile -C build
+    $MESON compile -C build
     if [ "$?" -ne 0 ] ; then exit; fi
-    sudo meson install -C build
+    sudo $MESON install -C build
     if [ "$?" -ne 0 ] ; then exit; fi
   else
     echo mako already installed
@@ -432,12 +486,12 @@ build_install_swappy() {
   if [ ! -x "/usr/local/bin/swappy" ] || [ x"$UPDATE" == "x1" ] ; then
     cd $SWAY_SRC_ROOT/swappy || exit
     if [ ! -d "build" ] ; then
-      meson setup build --buildtype=release
+      $MESON setup build --buildtype=release
       if [ "$?" -ne 0 ] ; then exit; fi
     fi
-    meson compile -C build
+    $MESON compile -C build
     if [ "$?" -ne 0 ] ; then exit; fi
-    sudo meson install -C build
+    sudo $MESON install -C build
     if [ "$?" -ne 0 ] ; then exit; fi
   else
     echo swappy already installed
@@ -507,12 +561,13 @@ setup_sway() {
   # Dependencies to build sway, https://github.com/vcrhonek/hwdata.git
   $INSTALL glslang-tools libcairo2-dev libcap-dev libdbus-1-dev \
       libdisplay-info-dev libevdev-dev libgdk-pixbuf2.0-dev \
-      libinput-dev libjson-c-dev libliftoff-dev libpam0g-dev \
+      libjson-c-dev libliftoff-dev libpam0g-dev \
       libpango1.0-dev libpcre2-dev libpixman-1-dev libseat-dev \
       libsystemd-dev libvulkan-dev libwayland-dev libwayland-egl1 \
       libwlroots-dev libxcb-ewmh-dev libxkbcommon-dev \
       xwayland hwdata \
-      meson pkgconf scdoc tree wayland-protocols
+      pkgconf scdoc tree wayland-protocols
+  # $INSTALL libinput-dev
 
   build_install_sway
   build_install_mako
