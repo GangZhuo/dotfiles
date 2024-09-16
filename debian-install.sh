@@ -95,6 +95,7 @@ setup_build_essential() {
   print "Setup build and development essential tools"
   $INSTALL build-essential autoconf-archive libtool pkg-config \
       gdb gdbserver cmake scdoc gettext
+  $INSTALL meson
   $INSTALL universal-ctags bear
 }
 
@@ -372,9 +373,9 @@ build_install_sway() {
     https://git.sr.ht/~kennylevinsen/seatd
   git_clone "$SWAY_SRC_ROOT/libinput" \
     https://gitlab.freedesktop.org/libinput/libinput.git
-  git_clone "$SWAY_SRC_ROOT/wlroots" 0.18 \
+  git_clone "$SWAY_SRC_ROOT/wlroots" 0.17 \
     https://gitlab.freedesktop.org/wlroots/wlroots.git
-  git_clone "$SWAY_SRC_ROOT/sway" v1.10\
+  git_clone "$SWAY_SRC_ROOT/sway" v1.9\
     https://github.com/swaywm/sway.git
   if [ "$?" -eq 1 ] ; then
     sed -i "/'-Wvla',/ i \
@@ -567,7 +568,7 @@ setup_sway() {
       libwlroots-dev libxcb-ewmh-dev libxkbcommon-dev \
       xwayland hwdata \
       pkgconf scdoc tree wayland-protocols
-  # $INSTALL libinput-dev
+  $INSTALL libinput-dev
 
   build_install_sway
   build_install_mako
@@ -801,7 +802,7 @@ setup_fcitx5
 setup_firefox
 setup_network
 
-setup_virt_manager
+#setup_virt_manager
 
 setup_greetd
 setup_tuigreet
