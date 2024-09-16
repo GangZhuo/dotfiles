@@ -112,7 +112,7 @@ exec_always $scripts_dir/clamshell.sh $laptop
 exec swayidle -w \
     timeout 300 '$lock' \
     timeout 310 'swaymsg "output * dpms off"' \
-    resume 'swaymsg "output * dpms on"' \
+        resume 'swaymsg "output * dpms on"' \
     before-sleep '$lock'
 
 ### Input configuration
@@ -388,6 +388,7 @@ smart_borders on
 smart_gaps on
 
 ### For windows config
+    for_window [shell="xwayland"] title_format "%title <small>[XWayland]</small>"
     for_window [app_id="^launcher$"] floating enable
     for_window [app_id="pavucontrol"] floating enable
     for_window [app_id="nm-connection-editor"] floating enable
