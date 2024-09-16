@@ -651,11 +651,11 @@ setup_tuigreet() {
       cat <<EOOF | sudo tee /usr/local/bin/start_tuigreet.sh &> /dev/null
 #!/bin/sh
 
-exec tuigreet \\\
-    --issue \\\
-    --time --time-format "%Y-%m-%d %H:%M %w" \\\
-    --power-shutdown 'sudo --non-interactive systemctl poweroff' \\\
-    --power-reboot 'sudo --non-interactive systemctl reboot' \\\
+exec tuigreet \\
+    --issue \\
+    --time --time-format "%Y-%m-%d %H:%M %w" \\
+    --power-shutdown 'sudo --non-interactive systemctl poweroff' \\
+    --power-reboot 'sudo --non-interactive systemctl reboot' \\
     \$@
 EOOF
       sudo chmod a+x /usr/local/bin/start_tuigreet.sh
