@@ -776,6 +776,22 @@ setup_network() {
   # $INSTALL nm-tray
 }
 
+setup_printer() {
+  print "Setup printer"
+  $INSTALL cups cups-pdf printer-driver-all
+  print "Open http://localhost:631 to add p910nd printer\n\
+  1. Open the CUPS web interface.\n\
+  2. Select Add Printer.\n\
+  3. Under Device, select AppSocket/JetDirect \n\
+     (P910nd printers are NOT auto-detected by CUPS)\n\
+  4. Under Connection, enter the following URI, using\n\
+     the IP address of the server: socket://aaa.bbb.cc.dd:9100\n\
+  5. Select the printer Make and Model as usual. If a driver\n\
+      package like hplip_print is needed, you must first\n\
+      install it on the client machine.\n\
+  "
+}
+
 setup_virt_manager() {
   print "Setup virt-manager"
   $INSTALL virt-manager
@@ -802,6 +818,7 @@ setup_fonts
 setup_fcitx5
 setup_firefox
 setup_network
+setup_printer
 
 #setup_virt_manager
 
