@@ -66,7 +66,8 @@ set $lock swaylock \
 # Lock screens, and stop sending output to monitor.
 set $locksoff swayidle -w  \
   timeout 1 '$lock' \
-  timeout 2 'swaymsg "output * dpms off"' \
+  timeout 300 'swaymsg "output * dpms off"' \
+  idlehint 600 \
   resume 'swaymsg "output * dpms on"; pkill -nx swayidle'
 
 ### Output configuration
@@ -111,8 +112,9 @@ exec_always $scripts_dir/clamshell.sh $laptop
 # resumed. It will also lock your screen before your computer goes to sleep.
 exec swayidle -w \
     timeout 300 '$lock' \
-    timeout 310 'swaymsg "output * dpms off"' \
+    timeout 600 'swaymsg "output * dpms off"' \
         resume 'swaymsg "output * dpms on"' \
+    idlehint 900 \
     before-sleep '$lock'
 
 ### Input configuration
