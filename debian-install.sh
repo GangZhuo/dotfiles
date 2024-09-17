@@ -373,9 +373,9 @@ build_install_sway() {
     https://git.sr.ht/~kennylevinsen/seatd
   git_clone "$SWAY_SRC_ROOT/libinput" \
     https://gitlab.freedesktop.org/libinput/libinput.git
-  git_clone "$SWAY_SRC_ROOT/wlroots" 0.17 \
+  git_clone "$SWAY_SRC_ROOT/wlroots" 0.18 \
     https://gitlab.freedesktop.org/wlroots/wlroots.git
-  git_clone "$SWAY_SRC_ROOT/sway" v1.9\
+  git_clone "$SWAY_SRC_ROOT/sway" 818ea173\
     https://github.com/swaywm/sway.git
   if [ "$?" -eq 1 ] ; then
     sed -i "/'-Wvla',/ i \
