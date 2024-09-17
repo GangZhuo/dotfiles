@@ -600,6 +600,7 @@ setup_greetd() {
 
     if [ ! -f "/etc/systemd/system/greetd.service" ] ; then
       sudo cp greetd.service /etc/systemd/system/greetd.service
+      sudo chmod a-x /etc/systemd/system/greetd.service
       sudo cp /etc/pam.d/login /etc/pam.d/greetd
       sudo mkdir /etc/greetd
       sudo cp config.toml /etc/greetd/config.toml
