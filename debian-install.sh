@@ -523,7 +523,10 @@ setup_sway() {
   $INSTALL jq
   $INSTALL pavucontrol
   $INSTALL fonts-font-awesome
-  $INSTALL pcmanfm qalculate-gtk
+
+  $INSTALL pcmanfm
+  $INSTALL qalculate-gtk
+  # $INSTALL gimp
 
   # Screencasts
   $INSTALL wf-recorder
