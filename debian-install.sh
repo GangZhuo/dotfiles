@@ -523,7 +523,7 @@ setup_sway() {
   $INSTALL jq
   $INSTALL pavucontrol
   $INSTALL fonts-font-awesome
-  $INSTALL pcmanfm
+  $INSTALL pcmanfm qalculate-gtk
 
   # Screencasts
   $INSTALL wf-recorder
@@ -791,6 +791,26 @@ setup_printer() {
       package like hplip_print is needed, you must first\n\
       install it on the client machine.\n\
   "
+}
+
+setup_wps() {
+  print "Setup wps"
+
+  $INSTALL qalculate-gtk
+
+  # Install wps-fonts
+  # https://github.com/udoyen/wps-fonts
+  #
+
+  # The wps office pdf reader is not working on Ubuntu 24.04
+  # I also encountered this problem, unable to open pdf and
+  # unable to convert other files to pdf. It was found that
+  # there is no libtiff.so.5 in Ubuntu 23.04 and Ubuntu 24.04.
+  # You can create a symlink to guide to libtiff.so.6
+  #
+  #   cd /usr/lib/x86_64-linux-gnu
+  #   sudo ln -s libtiff.so.6 libtiff.so.5
+  #
 }
 
 setup_virt_manager() {
