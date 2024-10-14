@@ -1,24 +1,6 @@
+export LANG=en_US.UTF-8
 
-if [ ! -d "$HOME/.zsh/plugins/zsh-syntax-highlighting" ]; then
-  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$HOME/.zsh/plugins/zsh-syntax-highlighting"
-fi
-
-if [ ! -d "$HOME/.zsh/plugins/zsh-history-substring-search" ]; then
-  git clone https://github.com/zsh-users/zsh-history-substring-search.git "$HOME/.zsh/plugins/zsh-history-substring-search"
-fi
-
-if [ ! -d "$HOME/.zsh/plugins/zsh-autosuggestions" ]; then
-  git clone https://github.com/zsh-users/zsh-autosuggestions.git "$HOME/.zsh/plugins/zsh-autosuggestions"
-fi
-
-if [ ! -d "$HOME/.zsh/plugins/z" ]; then
-  git clone https://github.com/rupa/z.git "$HOME/.zsh/plugins/z"
-fi
-
-source "$HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-source "$HOME/.zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh"
-source "$HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
-source "$HOME/.zsh/plugins/z/z.sh"
+setopt PROMPT_SUBST
 
 function git_prompt_info() {
   # If we are on a folder not tracked by git, get out.
@@ -40,7 +22,7 @@ function git_prompt_info() {
   echo "%F{magenta} \Ue725(${ref:gs/%/%%})"
 }
 
-PROMPT="%(?:%F{green}➜ :%F{red}➜ )%F{yellow}%1~$(git_prompt_info)%f %# "
+PROMPT='%(?:%F{green}➜ :%F{red}➜ )%F{yellow}%1~$(git_prompt_info)%f %# '
 
 # zsh won't save the history if you don't set the SAVEHIST and HISTFILE variables.
 HISTFILE=${ZDOTDIR:-$HOME}/.zsh_history
@@ -55,3 +37,30 @@ if [ -f "$HOME/.dircolors" ]; then
 	eval `dircolors -b ~/.dir_colors`
 fi
 alias ls="/usr/bin/ls --color"
+
+
+if [ ! -d "$HOME/.zsh/plugins/zsh-syntax-highlighting" ]; then
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$HOME/.zsh/plugins/zsh-syntax-highlighting"
+fi
+
+if [ ! -d "$HOME/.zsh/plugins/zsh-history-substring-search" ]; then
+  git clone https://github.com/zsh-users/zsh-history-substring-search.git "$HOME/.zsh/plugins/zsh-history-substring-search"
+fi
+
+if [ ! -d "$HOME/.zsh/plugins/zsh-autosuggestions" ]; then
+  git clone https://github.com/zsh-users/zsh-autosuggestions.git "$HOME/.zsh/plugins/zsh-autosuggestions"
+fi
+
+if [ ! -d "$HOME/.zsh/plugins/z" ]; then
+  git clone https://github.com/rupa/z.git "$HOME/.zsh/plugins/z"
+fi
+
+source "$HOME/.zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+source "$HOME/.zsh/plugins/z/z.sh"
+source "$HOME/.zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+source "$HOME/.zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh"
+
+bindkey -v
+
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
