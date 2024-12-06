@@ -804,6 +804,7 @@ setup_wps() {
   # Install wps-fonts
   # https://github.com/udoyen/wps-fonts
   #
+  # fc-cache -f -v
 
   # The wps office pdf reader is not working on Ubuntu 24.04
   # I also encountered this problem, unable to open pdf and
@@ -814,6 +815,21 @@ setup_wps() {
   #   cd /usr/lib/x86_64-linux-gnu
   #   sudo ln -s libtiff.so.6 libtiff.so.5
   #
+  # Sometimes when you want to use the APT command on Debian or
+  # Ubuntu you see an error like below file '/var/cache/apt/archives/partial/
+  # couldn't be accessed by user '_apt'. - pkgAcquire::Run (13: Permission denied)
+  #
+  # If you face this error message during your installation or updates,
+  # you can follow these steps and solve the issue.
+  #
+  #   sudo vi /etc/apt/apt.conf.d/10sandbox
+  #
+  # Add the following line to the file:
+  #
+  #   APT::Sandbox::User "root";
+  #
+  # Then save and close the editor, and try again to update or upgrade your
+  # Debian/Ubuntu with the APT command.
 }
 
 setup_virt_manager() {
