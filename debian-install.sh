@@ -834,7 +834,7 @@ setup_wps() {
 
 setup_virt_manager() {
   print "Setup virt-manager"
-  $INSTALL virt-manager
+  $INSTALL virt-manager qemu-kvm bridge-utils
   sudo usermod -aG libvirt $CURRENT_USER
 }
 
