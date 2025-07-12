@@ -216,13 +216,14 @@ zstyle :bracketed-paste-magic paste-finish pastefinish
 #	export MOZ_ENABLE_WAYLAND=1
 #fi
 
-export IP4_GW=$(ip -4 route | grep default | awk '{print $3}' | head -n 1)
-export SOCKS5_HOST=$IP4_GW
+#export IP4_GW=$(ip -4 route | grep default | awk '{print $3}' | head -n 1)
+export PROXY_HOST=pear.lan
+export SOCKS5_HOST=$PROXY_HOST
 export SOCKS5_PORT=1080
-export HPROXY_HOST=$IP4_GW
+export HPROXY_HOST=$PROXY_HOST
 export HPROXY_PORT=1081
 
-export no_proxy="localhost,127.0.0.1,$IP4_GW"
+export no_proxy="localhost,127.0.0.1,192.168.*.*,*.lan"
 
 set_proxy() {
 	export http_proxy=http://$HPROXY_HOST:$HPROXY_PORT
