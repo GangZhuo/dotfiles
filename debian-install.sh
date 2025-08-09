@@ -3,9 +3,9 @@
 ROOT_DIR=$(dirname $(readlink -f "$0"))
 CURRENT_DIR=$(pwd)
 CURRENT_USER=$(whoami)
-GIT_USER_NAME=
-GIT_USER_EMAIL=
-SOCKS5_HOST=127.0.0.1
+GIT_USER_NAME=""
+GIT_USER_EMAIL=""
+SOCKS5_HOST=pear.lan
 SOCKS5_PORT=1080
 HPROXY_HOST=$SOCKS5_HOST
 HPROXY_PORT=1081
@@ -207,15 +207,17 @@ setup_nodejs() {
   if [ ! -d "$HOME/.local/node" ] ; then
     mkdir -p $HOME/.local/bin
     cd $HOME/.local
-    [ -f node-v20.17.0-linux-x64.tar.xz ] && rm node-v20.17.0-linux-x64.tar.xz
-    [ -d node-v20.17.0-linux-x64 ] && rm -rf node-v20.17.0-linux-x64
-    wget -O node-v20.17.0-linux-x64.tar.xz \
-      https://nodejs.org/dist/v20.17.0/node-v20.17.0-linux-x64.tar.xz
+    NODEJS_VER="v22.18.0"
+    NODEJS_FILENAME="node-$NODEJS_VER-linux-x64"
+    [ -f $NODEJS_FILENAME.tar.xz ] && rm $NODEJS_FILENAME.tar.xz
+    [ -d $NODEJS_FILENAME ] && rm -rf $NODEJS_FILENAME
+    wget -O $NODEJS_FILENAME.tar.xz \
+      https://nodejs.org/dist/$NODEJS_VER/$NODEJS_FILENAME.tar.xz
     if [ "$?" -ne 0 ] ; then exit; fi
-    tar -xf node-v20.17.0-linux-x64.tar.xz || exit
-    mv node-v20.17.0-linux-x64 node
+    tar -xf $NODEJS_FILENAME.tar.xz || exit
+    mv $NODEJS_FILENAME node
     if [ "$?" -ne 0 ] ; then exit; fi
-    rm node-v20.17.0-linux-x64.tar.xz
+    rm $NODEJS_FILENAME.tar.xz
     cd $HOME/.local/bin
     ln -sf ../node/bin/node node
     ln -sf ../node/bin/npm npm
@@ -233,20 +235,21 @@ setup_neovim() {
   if [ ! -d "$HOME/.local/nvim" ] || [ x"$UPDATE" == "x1" ] ; then
     mkdir -p $HOME/.local/bin
     cd $HOME/.local
-    [ -f nvim-linux64.tar.gz ] && rm nvim-linux64.tar.gz
-    [ -d nvim-linux64 ] && rm -rf nvim-linux64
-    wget -O nvim-linux64.tar.gz \
-      https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz
+    NVIM_FILENAME="nvim-linux-x86_64"
+    [ -f $NVIM_FILENAME.tar.gz ] && rm $NVIM_FILENAME.tar.gz
+    [ -d $NVIM_FILENAME ] && rm -rf $NVIM_FILENAME
+    wget -O $NVIM_FILENAME.tar.gz \
+      https://github.com/neovim/neovim/releases/latest/download/$NVIM_FILENAME.tar.gz
     if [ "$?" -ne 0 ] ; then exit; fi
-    tar -xzf nvim-linux64.tar.gz
+    tar -xzf $NVIM_FILENAME.tar.gz
     mv nvim nvim.old
-    mv nvim-linux64 nvim
+    mv $NVIM_FILENAME nvim
     if [ "$?" -ne 0 ] ; then
       rm -rf nvim
       mv nvim.old nvim
       exit;
     fi
-    rm nvim-linux64.tar.gz
+    rm $NVIM_FILENAME.tar.gz
     rm -rf nvim.old
     cd $HOME/.local/bin
     ln -sf ../nvim/bin/nvim nvim
@@ -852,18 +855,18 @@ setup_nodejs
 setup_neovim
 setup_treesitter
 
-setup_sway
+#setup_sway
 
-setup_fonts
-setup_fcitx5
-setup_firefox
-setup_network
-setup_printer
+#setup_fonts
+#setup_fcitx5
+#setup_firefox
+#setup_network
+#setup_printer
 
 #setup_virt_manager
 
-setup_greetd
-setup_tuigreet
+#setup_greetd
+#setup_tuigreet
 
 #setup_awesome
 #setup_lightdm
