@@ -12,7 +12,7 @@ HPROXY_PORT=1081
 
 UPDATE=0
 
-PIPEWIRE=0
+PIPEWIRE=1
 
 SWAY_SRC_ROOT=$HOME/workspace/swaywm
 
@@ -879,7 +879,8 @@ setup_printer
 print "We need add below line into sudoers, \n\
 see https://github.com/apognu/tuigreet?tab=readme-ov-file#power-management \n\
 \n\
-%%greeter ALL=NOPASSWD: /bin/systemctl poweroff, /bin/systemctl reboot\n\
+%%video ALL=NOPASSWD: /bin/systemctl poweroff, /bin/systemctl reboot, /bin/systemctl hibernate\n\
+%%greeter ALL=NOPASSWD: /bin/systemctl poweroff, /bin/systemctl reboot, /bin/systemctl hibernate\n\
 \n\
 You can using 'sudo visudo' command."
 
