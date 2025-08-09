@@ -10,7 +10,7 @@ SOCKS5_PORT=1080
 HPROXY_HOST=$SOCKS5_HOST
 HPROXY_PORT=1081
 
-UPDATE=1
+UPDATE=0
 
 PIPEWIRE=0
 
@@ -526,6 +526,11 @@ setup_sway() {
   $INSTALL jq
   $INSTALL pavucontrol
   $INSTALL fonts-font-awesome
+  $INSTALL mako-notifier
+
+  # Screenshots: swappy + grim + slurp
+  $INSTALL grim slurp
+  $INSTALL swappy
 
   $INSTALL pcmanfm
   $INSTALL qalculate-gtk
@@ -546,13 +551,10 @@ setup_sway() {
   # File manager
   # $INSTALL --no-install-recommends nautilus
 
-  # Build mako
-  $INSTALL libcairo2-dev libpango1.0-dev \
-      libsystemd-dev libgdk-pixbuf2.0-dev \
-      dbus libnotify-bin
-
-  # Screenshots: swappy + grim + slurp
-  $INSTALL grim slurp
+  # Dependencies to build mako
+  #$INSTALL libcairo2-dev libpango1.0-dev \
+  #    libsystemd-dev libgdk-pixbuf2.0-dev \
+  #    dbus libnotify-bin
 
   # Dependencies to build swappy, https://github.com/jtheoof/swappy
   #
@@ -564,25 +566,26 @@ setup_sway() {
   # meson compile -C build
   # meson install -C build
   # ```
-  $INSTALL libcairo2-dev libpango1.0-dev libgtk-3-dev
+  #$INSTALL libcairo2-dev libpango1.0-dev libgtk-3-dev
 
   # Dependencies to build sway, https://github.com/vcrhonek/hwdata.git
-  $INSTALL glslang-tools libcairo2-dev libcap-dev libdbus-1-dev \
-      libdisplay-info-dev libevdev-dev libgdk-pixbuf2.0-dev \
-      libjson-c-dev libliftoff-dev libpam0g-dev \
-      libpango1.0-dev libpcre2-dev libpixman-1-dev libseat-dev \
-      libsystemd-dev libvulkan-dev libwayland-dev libwayland-egl1 \
-      libwlroots-dev libxcb-ewmh-dev libxkbcommon-dev \
-      xwayland hwdata \
-      pkgconf scdoc tree wayland-protocols
-  $INSTALL libinput-dev
+  #$INSTALL glslang-tools libcairo2-dev libcap-dev libdbus-1-dev \
+  #    libdisplay-info-dev libevdev-dev libgdk-pixbuf2.0-dev \
+  #    libjson-c-dev libliftoff-dev libpam0g-dev \
+  #    libpango1.0-dev libpcre2-dev libpixman-1-dev libseat-dev \
+  #    libsystemd-dev libvulkan-dev libwayland-dev libwayland-egl1 \
+  #    libwlroots-dev libxcb-ewmh-dev libxkbcommon-dev \
+  #    xwayland hwdata \
+  #    pkgconf scdoc tree wayland-protocols
+  #$INSTALL libinput-dev
 
-  build_install_sway
-  build_install_mako
-  build_install_swappy
+  #build_install_sway
+  #build_install_mako
+  #build_install_swappy
+
+  #sudo ldconfig
+
   config_sway
-
-  sudo ldconfig
 
   cd "$CURRENT_DIR"
 }
@@ -855,13 +858,13 @@ setup_nodejs
 setup_neovim
 setup_treesitter
 
-#setup_sway
+setup_sway
 
-#setup_fonts
-#setup_fcitx5
-#setup_firefox
-#setup_network
-#setup_printer
+setup_fonts
+setup_fcitx5
+setup_firefox
+setup_network
+setup_printer
 
 #setup_virt_manager
 
