@@ -4,7 +4,7 @@
     "height": 15,
     "modules-left": ["sway/mode", "sway/workspaces", "sway/window", "custom/music"],
     "modules-center": [],
-    "modules-right": ["idle_inhibitor", "pulseaudio", "network", "network#eth", "cpu", "memory", "battery", "tray", "clock"],
+    "modules-right": ["idle_inhibitor", "pulseaudio", "cpu", "memory", "battery", "tray", "clock"],
     "sway/workspaces": {
         "disable-scroll": true,
         "all-outputs": false,
