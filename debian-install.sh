@@ -107,6 +107,7 @@ setup_rustup() {
     echo rustup already installed
   fi
   source "$HOME/.cargo/env"
+  rustup component add rust-analyzer
 }
 
 setup_git() {
