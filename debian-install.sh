@@ -696,12 +696,13 @@ EOOF
 download_font() {
   f=$1
   u=$2
-  if [ ! -f "/usr/local/share/fonts/$f" ] ; then
+  FONTS_DIR="$HOME/.fonts"
+  if [ ! -f "$FONTS_DIR/$f" ] ; then
     if [ ! -f "$f" ] ; then
       wget -O "$f" "$u"
       if [ "$?" -ne 0 ] ; then exit; fi
     fi
-    sudo cp "$f" "/usr/local/share/fonts/$f"
+    cp "$f" "$FONTS_DIR/$f"
   else
     echo $f already installed
   fi
