@@ -591,6 +591,11 @@ setup_sway() {
 }
 
 setup_greetd() {
+  print "Setup greetd"
+  $INSTALL greetd
+}
+
+build_setup_greetd() {
   setup_rustup
   print "Setup greetd"
 
@@ -788,7 +793,7 @@ setup_network() {
 
 setup_printer() {
   print "Setup printer"
-  $INSTALL cups cups-pdf printer-driver-all
+  $INSTALL cups printer-driver-cups-pdf printer-driver-all
   print "Open http://localhost:631 to add p910nd printer\n\
   1. Open the CUPS web interface.\n\
   2. Select Add Printer.\n\
@@ -858,6 +863,11 @@ setup_nodejs
 setup_neovim
 setup_treesitter
 
+#setup_rustup
+
+setup_greetd
+#setup_tuigreet
+
 setup_sway
 
 setup_fonts
@@ -867,9 +877,6 @@ setup_network
 setup_printer
 
 #setup_virt_manager
-
-#setup_greetd
-#setup_tuigreet
 
 #setup_awesome
 #setup_lightdm
