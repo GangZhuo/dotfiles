@@ -72,7 +72,6 @@ button:hover {
     border-bottom: 3px solid #ffffff;
 }
 
-#clock,
 #battery,
 #cpu,
 #memory,
@@ -85,10 +84,19 @@ button:hover {
 #custom-media,
 #tray,
 #mode,
-#idle_inhibitor,
 #scratchpad,
 #mpd {
     padding: 0 10px;
+    color: #ffffff;
+}
+
+#clock {
+    padding: 0px 4px 0px 8px;
+    color: #ffffff;
+}
+
+#idle_inhibitor {
+    padding: 0px 8px 0px 4px;
     color: #ffffff;
 }
 

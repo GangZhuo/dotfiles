@@ -4,7 +4,7 @@
     "height": 15,
     "modules-left": ["sway/mode", "sway/workspaces", "sway/window", "custom/music"],
     "modules-center": [],
-    "modules-right": ["idle_inhibitor", "pulseaudio", "cpu", "memory", "battery", "tray", "clock"],
+    "modules-right": ["pulseaudio", "cpu", "memory", "battery", "tray", "clock", "idle_inhibitor"],
     "sway/workspaces": {
         "disable-scroll": true,
         "all-outputs": false,
@@ -14,9 +14,10 @@
     "idle_inhibitor": {
         "format": "<span size='xx-large' rise='-3pt'>{icon}</span>",
         "format-icons": {
-            "activated": "",
-            "deactivated": ""
-        }
+            "activated": "",
+            "deactivated": ""
+        },
+        "start-activated": false
     },
 
     "sway/mode": {
@@ -32,7 +33,7 @@
         // Human Friendly
         "format-alt": "{:%A, %B %d at %I:%M %p}",
         // 24hr Robot Friendly
-        "format": "{:%Y-%m-%d %H:%M %w}"
+        "format": "{:%Y-%m-%d %H:%M %a}"
     },
     "cpu": {
         "format": "<span size='xx-large' rise='-3pt'></span> {usage}%",
