@@ -796,6 +796,7 @@ setup_network() {
 setup_printer() {
   print "Setup printer"
   $INSTALL cups printer-driver-cups-pdf printer-driver-all
+  sudo usermod -aG lpadmin $CURRENT_USER
   print "Open http://localhost:631 to add p910nd printer\n\
   1. Open the CUPS web interface.\n\
   2. Select Add Printer.\n\
