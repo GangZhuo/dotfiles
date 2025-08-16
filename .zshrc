@@ -218,7 +218,7 @@ zstyle :bracketed-paste-magic paste-finish pastefinish
 
 #export IP4_GW=$(ip -4 route | grep default | awk '{print $3}' | head -n 1)
 export PROXY_HOST=pear.lan
-export SOCKS5_HOST=$PROXY_HOST
+export SOCKS5_HOST=127.0.0.1
 export SOCKS5_PORT=1080
 export HPROXY_HOST=$PROXY_HOST
 export HPROXY_PORT=1081
