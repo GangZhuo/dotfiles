@@ -508,7 +508,7 @@ config_sway() {
 
   mkdir -p $HOME/.config
   cd $HOME/.config
-  list="environment.d foot mako sway waybar wofi"
+  list="foot mako sway waybar wofi"
   for f in $list ; do
     if [ ! -d "$f" ] ; then
       ln -sf ../workspace/dotfiles/.config/$f $f
@@ -516,6 +516,10 @@ config_sway() {
       echo $f already configured
     fi
   done
+
+  if [ ! -x "/usr/local/bin/start_sway.sh" ] ; then
+    sudo cp $HOME/workspace/dotfiles/.local/bin/start_sway.sh /usr/local/bin/start_sway.sh
+  fi
 }
 
 setup_sway() {
