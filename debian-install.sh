@@ -508,7 +508,7 @@ config_sway() {
 
   mkdir -p $HOME/.config
   cd $HOME/.config
-  list="foot mako sway waybar wofi"
+  list="environment.d foot mako sway waybar wofi"
   for f in $list ; do
     if [ ! -d "$f" ] ; then
       ln -sf ../workspace/dotfiles/.config/$f $f
