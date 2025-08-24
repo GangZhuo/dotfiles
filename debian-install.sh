@@ -905,7 +905,7 @@ setup_fcitx5
 setup_firefox
 setup_network
 setup_printer
-setup_samb
+#setup_samb
 
 #setup_virt_manager
 
