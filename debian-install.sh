@@ -547,7 +547,7 @@ setup_sway() {
   $INSTALL mpd
 
   # Office
-  # $INSTALL libreoffice-gtk3
+  $INSTALL libreoffice libreoffice-gtk3
 
   # File manager
   # $INSTALL --no-install-recommends nautilus
@@ -852,6 +852,29 @@ setup_virt_manager() {
   sudo usermod -aG libvirt $CURRENT_USER
 }
 
+setup_samb() {
+  print "Setup samb"
+  $INSTALL samb
+
+  #  /etc/samba/smb.conf
+  cat <<EOOF | sudo tee --append /etc/samba/smb.conf &> /dev/null
+[sharefs]
+    comment = sharefs on pear
+    path = /data
+    guest ok = no
+    browseable = yes
+    read only = no
+    force user = root
+    force group = root
+    create mask = 0664
+    directory mask = 0775
+    valid users = gzhuo
+EOOF
+
+  echo "setup smbpasswd for $CURRENT_USER"
+  sudo smbpasswd -a $CURRENT_USER
+}
+
 upgrade_os
 setup_sounds
 setup_light
@@ -878,6 +901,7 @@ setup_fcitx5
 setup_firefox
 setup_network
 setup_printer
+setup_samb
 
 #setup_virt_manager
 
