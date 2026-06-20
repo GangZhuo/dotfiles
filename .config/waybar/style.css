@@ -1,6 +1,6 @@
 * {
     /* `otf-font-awesome` is required to be installed for icons */
-    font-family: Hack Nerd Font Mono, FontAwesome, Roboto, Helvetica, Arial, sans-serif;
+    font-family: Hack Nerd Font Mono, Inconsolata LGC Nerd Font Mono, FontAwesome, Roboto, Helvetica, Arial, sans-serif;
     font-size: 11px;
 }
 
@@ -82,6 +82,9 @@ button:hover {
 #pulseaudio,
 #wireplumber,
 #custom-media,
+#custom-gpu,
+#custom-gpu-temp,
+#custom-gpu-mem,
 #tray,
 #mode,
 #scratchpad,

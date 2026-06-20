@@ -4,7 +4,20 @@
     "height": 15,
     "modules-left": ["sway/mode", "sway/workspaces", "sway/window", "custom/music"],
     "modules-center": [],
-    "modules-right": ["pulseaudio", "cpu", "temperature#1", "temperature#0", "memory", "battery", "tray", "clock", "idle_inhibitor"],
+    "modules-right": [
+        "pulseaudio",
+        "custom/gpu",
+        "custom/gpu-temp",
+        "custom/gpu-mem",
+        "cpu",
+        "temperature#1",
+        "temperature#0",
+        "memory",
+        "battery",
+        "tray",
+        "clock",
+        "idle_inhibitor"
+    ],
     "sway/workspaces": {
         "disable-scroll": true,
         "all-outputs": false,
@@ -35,6 +48,7 @@
         // 24hr Robot Friendly
         "format": "{:%Y-%m-%d %H:%M %a}"
     },
+
     "cpu": {
         "format": "<span size='xx-large' rise='-3pt'></span> {usage}%",
         "on-click": "foot -T 'Floating Terminal' -e htop"
@@ -101,6 +115,32 @@
         "on-click": "playerctl play-pause",
         "on-scroll-up": "playerctl previous",
         "on-scroll-down": "playerctl next"
+    },
+
+    "custom/gpu": {
+        "format": "<span size='xx-large' rise='-3pt'></span> {}%",
+        "exec": "$HOME/.config/waybar/gpuinfo.sh",
+        "return-type": "json",
+        "interval": 2,
+        "tooltip": true
+    },
+
+    "custom/gpu-temp": {
+        "format": " {}°C",
+        "exec": "$HOME/.config/waybar/gpuinfo.sh TEMP",
+        "return-type": "json",
+        "interval": 2,
+        "tooltip": true
+    },
+
+    "custom/gpu-mem": {
+        "format": "<span size='xx-large' rise='-3pt'></span> {}%",
+        "exec": "$HOME/.config/waybar/gpuinfo.sh MEM",
+        "return-type": "json",
+        "interval": 2,
+        "tooltip": true
     }
+
+
    }
 }
